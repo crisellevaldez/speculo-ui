@@ -1,0 +1,318 @@
+# Drawer
+
+A panel that slides out from the edge of the screen.
+
+## Usage
+
+```tsx
+import {
+  Drawer,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
+} from "@/components/Drawer/Drawer";
+
+export default function DrawerDemo() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <>
+      <Button onClick={() => setOpen(true)}>Open Drawer</Button>
+
+      <Drawer open={open} onClose={() => setOpen(false)}>
+        <DrawerHeader>
+          <h2 className="text-lg font-semibold">Drawer Title</h2>
+        </DrawerHeader>
+        <DrawerBody>Drawer content goes here</DrawerBody>
+        <DrawerFooter>
+          <Button onClick={() => setOpen(false)}>Close</Button>
+        </DrawerFooter>
+      </Drawer>
+    </>
+  );
+}
+```
+
+## Props
+
+- `open` - Control the drawer's open state
+- `onClose` - Callback when drawer should close
+- `side` - Which edge to slide from
+  - `left`
+  - `right` (default)
+  - `top`
+  - `bottom`
+- `size` - Width/height of drawer
+  - `sm`
+  - `md` (default)
+  - `lg`
+  - `xl`
+  - `full`
+- `overlay` - Show backdrop overlay (default: true)
+- `closeOnOverlayClick` - Close when clicking overlay (default: true)
+- `closeOnEsc` - Close when pressing Escape (default: true)
+
+## Examples
+
+### Different Sides
+
+```tsx
+function SideExample() {
+  const [open, setOpen] = React.useState(false);
+  const [side, setSide] = React.useState<"left" | "right" | "top" | "bottom">(
+    "right"
+  );
+
+  return (
+    <div className="flex gap-4">
+      <Button
+        onClick={() => {
+          setSide("left");
+          setOpen(true);
+        }}
+      >
+        Left Drawer
+      </Button>
+
+      <Button
+        onClick={() => {
+          setSide("right");
+          setOpen(true);
+        }}
+      >
+        Right Drawer
+      </Button>
+
+      <Button
+        onClick={() => {
+          setSide("top");
+          setOpen(true);
+        }}
+      >
+        Top Drawer
+      </Button>
+
+      <Button
+        onClick={() => {
+          setSide("bottom");
+          setOpen(true);
+        }}
+      >
+        Bottom Drawer
+      </Button>
+
+      <Drawer open={open} onClose={() => setOpen(false)} side={side}>
+        <DrawerHeader>{side} Drawer</DrawerHeader>
+        <DrawerBody>Content</DrawerBody>
+      </Drawer>
+    </div>
+  );
+}
+```
+
+### Different Sizes
+
+```tsx
+<Drawer size="sm">
+  Small drawer content
+</Drawer>
+
+<Drawer size="lg">
+  Large drawer content
+</Drawer>
+
+<Drawer size="full">
+  Full-screen drawer content
+</Drawer>
+```
+
+### Without Overlay
+
+```tsx
+<Drawer overlay={false} open={open} onClose={() => setOpen(false)}>
+  Content without backdrop
+</Drawer>
+```
+
+### Custom Close Behavior
+
+```tsx
+<Drawer
+  closeOnOverlayClick={false}
+  closeOnEsc={false}
+  open={open}
+  onClose={() => setOpen(false)}
+>
+  <DrawerHeader>
+    <h2>Controlled Close</h2>
+  </DrawerHeader>
+  <DrawerBody>This drawer can only be closed via the button</DrawerBody>
+  <DrawerFooter>
+    <Button onClick={() => setOpen(false)}>Close Drawer</Button>
+  </DrawerFooter>
+</Drawer>
+```
+
+### Form in Drawer
+
+```tsx
+function FormDrawer() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Drawer open={open} onClose={() => setOpen(false)}>
+      <DrawerHeader>
+        <h2>Edit Profile</h2>
+      </DrawerHeader>
+      <DrawerBody>
+        <form className="space-y-4">
+          <div>
+            <Label htmlFor="name">Name</Label>
+            <Input id="name" />
+          </div>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" type="email" />
+          </div>
+          <div>
+            <Label htmlFor="bio">Bio</Label>
+            <Textarea id="bio" />
+          </div>
+        </form>
+      </DrawerBody>
+      <DrawerFooter className="flex justify-end gap-4">
+        <Button variant="outline" onClick={() => setOpen(false)}>
+          Cancel
+        </Button>
+        <Button onClick={() => setOpen(false)}>Save Changes</Button>
+      </DrawerFooter>
+    </Drawer>
+  );
+}
+```
+
+## Accessibility
+
+- Manages focus when opened/closed
+- Supports keyboard navigation
+- Uses proper ARIA attributes
+- Traps focus within drawer
+- Handles Escape key
+- Maintains scroll position
+
+## Best Practices
+
+1. Content Organization
+
+   - Use appropriate size for content
+   - Structure content logically
+   - Consider mobile viewports
+   - Handle overflow properly
+
+2. Interaction Design
+
+   - Clear close actions
+   - Predictable behavior
+   - Smooth animations
+   - Handle edge cases
+
+3. Visual Design
+
+   - Consistent styling
+   - Clear visual hierarchy
+   - Proper spacing
+   - Consider dark mode
+
+4. Performance
+
+   - Optimize animations
+   - Lazy load content
+   - Clean up on unmount
+   - Handle rapid open/close
+
+5. Accessibility
+   - Keyboard navigation
+   - Screen reader support
+   - Focus management
+   - ARIA attributes
+
+## Examples in Context
+
+### Settings Panel
+
+```tsx
+function SettingsDrawer() {
+  const [open, setOpen] = React.useState(false);
+
+  return (
+    <Drawer open={open} onClose={() => setOpen(false)} size="lg">
+      <DrawerHeader>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Settings</h2>
+          <Button variant="ghost" size="icon" onClick={() => setOpen(false)}>
+            <XIcon className="h-4 w-4" />
+          </Button>
+        </div>
+      </DrawerHeader>
+
+      <DrawerBody>
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-medium mb-4">Account</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Email</div>
+                  <div className="text-sm text-muted-foreground">
+                    user@example.com
+                  </div>
+                </div>
+                <Button variant="outline">Change</Button>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Password</div>
+                  <div className="text-sm text-muted-foreground">
+                    Last changed 3 months ago
+                  </div>
+                </div>
+                <Button variant="outline">Update</Button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="text-lg font-medium mb-4">Preferences</h3>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Dark Mode</div>
+                  <div className="text-sm text-muted-foreground">
+                    Toggle dark mode theme
+                  </div>
+                </div>
+                <Switch />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Notifications</div>
+                  <div className="text-sm text-muted-foreground">
+                    Manage notification settings
+                  </div>
+                </div>
+                <Button variant="outline">Configure</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </DrawerBody>
+
+      <DrawerFooter className="flex justify-end">
+        <Button onClick={() => setOpen(false)}>Done</Button>
+      </DrawerFooter>
+    </Drawer>
+  );
+}
+```

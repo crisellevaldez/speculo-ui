@@ -1,0 +1,147 @@
+# Typography
+
+The Typography component is used to present your content in clear hierarchical structure and consistent styling.
+
+## Usage
+
+```tsx
+import { Typography } from "@/components/Typography/Typography";
+
+export default function TypographyDemo() {
+  return (
+    <div className="space-y-6">
+      <Typography variant="h1">The Quick Brown Fox</Typography>
+      <Typography variant="h2">The Quick Brown Fox</Typography>
+      <Typography variant="h3">The Quick Brown Fox</Typography>
+      <Typography variant="p">
+        The quick brown fox jumps over the lazy dog. This is a paragraph of text
+        that demonstrates the typography component's default text styling.
+      </Typography>
+      <Typography variant="blockquote">
+        "The quick brown fox jumps over the lazy dog."
+      </Typography>
+      <Typography variant="lead">
+        A lead paragraph that stands out from regular text.
+      </Typography>
+      <Typography variant="large">Larger than normal text</Typography>
+      <Typography variant="small">Smaller text for less emphasis</Typography>
+      <Typography variant="muted">
+        Muted text for secondary information
+      </Typography>
+    </div>
+  );
+}
+```
+
+## Props
+
+- `variant` - The style variant to use
+  - `h1` - Main heading
+  - `h2` - Section heading
+  - `h3` - Subsection heading
+  - `h4` - Fourth level heading
+  - `h5` - Fifth level heading
+  - `h6` - Sixth level heading
+  - `p` - Paragraph text
+  - `blockquote` - Quote blocks
+  - `lead` - Lead paragraph
+  - `large` - Large text
+  - `small` - Small text
+  - `muted` - Muted text
+- `as` - Override the rendered element
+- `className` - Additional CSS classes
+- `children` - Text content
+
+## Examples
+
+### All Variants
+
+```tsx
+<div className="space-y-6">
+  <Typography variant="h1">Heading 1</Typography>
+  <Typography variant="h2">Heading 2</Typography>
+  <Typography variant="h3">Heading 3</Typography>
+  <Typography variant="h4">Heading 4</Typography>
+  <Typography variant="h5">Heading 5</Typography>
+  <Typography variant="h6">Heading 6</Typography>
+
+  <Typography variant="p">
+    Regular paragraph text. Lorem ipsum dolor sit amet, consectetur adipiscing
+    elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  </Typography>
+
+  <Typography variant="blockquote">
+    "Design is not just what it looks like and feels like. Design is how it
+    works." - Steve Jobs
+  </Typography>
+
+  <Typography variant="lead">
+    This is a lead paragraph that introduces an important section of content.
+  </Typography>
+
+  <Typography variant="large">
+    This text is larger than normal for emphasis
+  </Typography>
+
+  <Typography variant="small">
+    This is smaller text, perfect for captions or supporting text
+  </Typography>
+
+  <Typography variant="muted">
+    This is muted text, ideal for secondary information or metadata
+  </Typography>
+</div>
+```
+
+### Custom Element Type
+
+You can override the default HTML element using the `as` prop:
+
+```tsx
+<Typography variant="h1" as="div">
+  This is styled like an h1 but rendered as a div
+</Typography>
+```
+
+### Custom Styling
+
+The Typography component accepts custom classes through the `className` prop:
+
+```tsx
+<Typography
+  variant="h1"
+  className="text-blue-600 hover:text-blue-700 transition-colors"
+>
+  Custom styled heading
+</Typography>
+```
+
+## Accessibility
+
+- Use heading levels (`h1`-`h6`) in a logical order that reflects the document structure
+- Don't skip heading levels - this helps screen reader users understand your content hierarchy
+- Use semantic HTML elements when possible (e.g., `<blockquote>` for quotes)
+- Ensure sufficient color contrast for all text variants
+- Consider using `lead` variant for introductory paragraphs to provide better context
+
+## Best Practices
+
+1. Document Structure
+
+   - Use `h1` for the main page title
+   - Use `h2` for major sections
+   - Use `h3`-`h6` for subsections
+   - Use `p` for regular paragraphs
+
+2. Content Hierarchy
+
+   - Use `lead` for introductory text
+   - Use `muted` for supplementary information
+   - Use `small` for metadata or supporting text
+   - Use `large` sparingly for emphasis
+
+3. Styling
+   - Avoid overriding the base styles unless necessary
+   - Use the built-in dark mode support
+   - Maintain consistent spacing between typography elements
+   - Use the className prop for minor style adjustments

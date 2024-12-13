@@ -1,0 +1,236 @@
+# Textarea
+
+A flexible textarea component with auto-resize capability and character counting.
+
+## Basic Usage
+
+```jsx
+import { Textarea } from "components/Textarea";
+
+// Basic textarea
+<Textarea
+  placeholder="Enter your message"
+/>
+
+// With helper text
+<Textarea
+  placeholder="Enter your bio"
+  helperText="Tell us about yourself"
+/>
+
+// With error state
+<Textarea
+  placeholder="Enter description"
+  error="Description is required"
+/>
+```
+
+## Auto-resize
+
+The textarea can automatically adjust its height based on content:
+
+```jsx
+<Textarea
+  placeholder="Start typing..."
+  autoResize
+  defaultValue="This textarea will grow as you type more content."
+/>
+```
+
+## Character Limit
+
+Implement character limits with visual feedback:
+
+```jsx
+// With character count
+<Textarea
+  placeholder="Limited to 280 characters"
+  maxLength={280}
+  showCount
+/>
+
+// With character count and auto-resize
+<Textarea
+  placeholder="Share your thoughts..."
+  maxLength={500}
+  showCount
+  autoResize
+/>
+```
+
+## Form Integration
+
+The Textarea component works seamlessly with react-hook-form:
+
+```jsx
+import { Textarea } from "components/Textarea";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  bio: z
+    .string()
+    .min(10, "Bio must be at least 10 characters")
+    .max(500, "Bio cannot exceed 500 characters"),
+  feedback: z.string().min(20, "Please provide more detailed feedback"),
+});
+
+export function ProfileForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Textarea
+        {...register("bio")}
+        placeholder="Tell us about yourself"
+        error={errors.bio?.message}
+        autoResize
+        maxLength={500}
+        showCount
+      />
+
+      <Textarea
+        {...register("feedback")}
+        placeholder="Your feedback"
+        error={errors.feedback?.message}
+        helperText="Please provide detailed feedback"
+        autoResize
+      />
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+## Validation
+
+Example with real-time validation:
+
+```jsx
+import { useState } from "react";
+import { Textarea } from "components/Textarea";
+
+export function ValidatedTextarea() {
+  const [value, setValue] = useState("");
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+
+    if (newValue.length < 10) {
+      setError("Text must be at least 10 characters");
+    } else if (newValue.length > 1000) {
+      setError("Text cannot exceed 1000 characters");
+    } else {
+      setError("");
+    }
+  };
+
+  return (
+    <Textarea
+      value={value}
+      onChange={handleChange}
+      error={error}
+      autoResize
+      showCount
+      maxLength={1000}
+      placeholder="Enter at least 10 characters"
+    />
+  );
+}
+```
+
+## Component API
+
+### Props
+
+| Prop       | Type    | Default   | Description                  |
+| ---------- | ------- | --------- | ---------------------------- |
+| error      | string  | undefined | Error message to display     |
+| helperText | string  | undefined | Helper text to display       |
+| autoResize | boolean | false     | Enable auto-resizing         |
+| maxLength  | number  | undefined | Maximum number of characters |
+| showCount  | boolean | false     | Show character count         |
+| disabled   | boolean | false     | Whether textarea is disabled |
+| className  | string  | undefined | Additional CSS classes       |
+
+Plus all standard HTML textarea attributes.
+
+## Accessibility
+
+The Textarea component follows accessibility best practices:
+
+- Uses semantic HTML textarea element
+- Proper ARIA attributes for states and errors
+- Error messages are announced to screen readers
+- Maintains proper color contrast
+- Supports keyboard navigation
+- Helper text and error messages are programmatically associated
+
+## Best Practices
+
+1. Use appropriate placeholder text
+2. Enable auto-resize for longer content
+3. Show character count for limited inputs
+4. Provide clear error messages
+5. Use helper text to guide users
+6. Consider mobile responsiveness
+7. Validate input in real-time when appropriate
+8. Maintain proper spacing around the component
+
+## Styling Examples
+
+### Custom Sizes
+
+```jsx
+// Small textarea
+<Textarea
+  className="text-sm"
+  rows={2}
+/>
+
+// Large textarea
+<Textarea
+  className="text-lg"
+  rows={6}
+/>
+```
+
+### With Label and Required Field
+
+```jsx
+<div>
+  <label htmlFor="message" className="block text-sm font-medium text-gray-700">
+    Message
+    <span className="text-red-500">*</span>
+  </label>
+  <Textarea
+    id="message"
+    required
+    className="mt-1"
+    helperText="Your message will be sent to our support team"
+  />
+</div>
+```
+
+### With Custom Styling
+
+```jsx
+<Textarea
+  className="border-2 border-purple-500 focus:border-purple-600 focus:ring-purple-600"
+  placeholder="Custom styled textarea"
+/>
+```

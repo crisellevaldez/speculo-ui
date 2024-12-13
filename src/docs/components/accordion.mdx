@@ -1,0 +1,293 @@
+# Accordion
+
+A vertically stacked set of interactive headings that each reveal a section of content.
+
+## Usage
+
+```tsx
+import { Accordion } from "@/components/Accordion/Accordion";
+
+export default function AccordionDemo() {
+  return (
+    <Accordion
+      type="single"
+      items={[
+        {
+          title: "What is your refund policy?",
+          children:
+            "If you're unhappy with your purchase for any reason, email us within 90 days and we'll refund you in full, no questions asked.",
+        },
+        {
+          title: "Do you offer technical support?",
+          children:
+            "Yes, we provide technical support via email. Response time is typically within 24 hours.",
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+- `items` - Array of accordion items
+  - `title` - Header content for the item
+  - `children` - Content to be revealed
+  - `disabled` - Whether the item can be interacted with
+- `type` - Expand behavior
+  - `single` - Only one item can be open at a time (default)
+  - `multiple` - Multiple items can be open simultaneously
+- `defaultValue` - Initial expanded item(s)
+- `value` - Controlled expanded item(s)
+- `onChange` - Callback when expanded items change
+- `className` - Additional CSS classes
+
+## Examples
+
+### Single Item Expansion
+
+```tsx
+<Accordion
+  type="single"
+  defaultValue="item-0"
+  items={[
+    {
+      title: "Section 1",
+      children: "Content for section 1",
+    },
+    {
+      title: "Section 2",
+      children: "Content for section 2",
+    },
+  ]}
+/>
+```
+
+### Multiple Item Expansion
+
+```tsx
+<Accordion
+  type="multiple"
+  defaultValue={["item-0", "item-1"]}
+  items={[
+    {
+      title: "Section 1",
+      children: "Content for section 1",
+    },
+    {
+      title: "Section 2",
+      children: "Content for section 2",
+    },
+    {
+      title: "Section 3",
+      children: "Content for section 3",
+    },
+  ]}
+/>
+```
+
+### Disabled Items
+
+```tsx
+<Accordion
+  type="single"
+  items={[
+    {
+      title: "Available Section",
+      children: "This section can be opened",
+    },
+    {
+      title: "Disabled Section",
+      children: "This content cannot be accessed",
+      disabled: true,
+    },
+  ]}
+/>
+```
+
+### Custom Styling
+
+```tsx
+<Accordion
+  className="border-2 border-primary rounded-lg"
+  items={[
+    {
+      title: (
+        <div className="flex items-center gap-2">
+          <Icon className="h-4 w-4" />
+          <span>Custom Header</span>
+        </div>
+      ),
+      children: "Custom styled content",
+    },
+  ]}
+/>
+```
+
+### Controlled Component
+
+```tsx
+function ControlledAccordion() {
+  const [value, setValue] = React.useState<string>("item-0");
+
+  return (
+    <Accordion
+      type="single"
+      value={value}
+      onChange={(newValue) => setValue(newValue as string)}
+      items={[
+        {
+          title: "Controlled Section 1",
+          children: "Content for section 1",
+        },
+        {
+          title: "Controlled Section 2",
+          children: "Content for section 2",
+        },
+      ]}
+    />
+  );
+}
+```
+
+### With Complex Content
+
+```tsx
+<Accordion
+  items={[
+    {
+      title: "Account Settings",
+      children: (
+        <div className="space-y-4">
+          <div className="flex justify-between">
+            <span>Email</span>
+            <span>user@example.com</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Password</span>
+            <button>Change</button>
+          </div>
+        </div>
+      ),
+    },
+  ]}
+/>
+```
+
+## Accessibility
+
+- Uses appropriate ARIA attributes (aria-expanded, aria-controls)
+- Keyboard navigation support
+  - Enter or Space to expand/collapse
+  - Tab to navigate between headers
+- Proper focus management
+- Semantic HTML structure
+- Animated transitions respect reduced motion preferences
+
+## Best Practices
+
+1. Content Organization
+
+   - Group related content together
+   - Keep titles clear and concise
+   - Ensure content is meaningful
+   - Consider content hierarchy
+
+2. Interaction Design
+
+   - Use appropriate expansion type
+   - Provide visual feedback
+   - Consider loading states
+   - Handle keyboard interactions
+
+3. Visual Design
+
+   - Maintain consistent spacing
+   - Use clear visual indicators
+   - Consider mobile viewports
+   - Ensure sufficient contrast
+
+4. Performance
+
+   - Lazy load content when possible
+   - Optimize animations
+   - Handle large content areas
+   - Consider initial load state
+
+5. Accessibility
+   - Provide keyboard navigation
+   - Include proper ARIA labels
+   - Support screen readers
+   - Consider motion sensitivity
+
+## Examples in Context
+
+### FAQ Section
+
+```tsx
+function FAQAccordion() {
+  return (
+    <div className="max-w-2xl mx-auto">
+      <Typography variant="h2" className="mb-4">
+        Frequently Asked Questions
+      </Typography>
+      <Accordion
+        type="single"
+        items={[
+          {
+            title: "How do I get started?",
+            children: (
+              <div className="prose">
+                <p>Getting started is easy! Follow these steps:</p>
+                <ol>
+                  <li>Create an account</li>
+                  <li>Verify your email</li>
+                  <li>Complete your profile</li>
+                </ol>
+              </div>
+            ),
+          },
+          {
+            title: "What payment methods do you accept?",
+            children:
+              "We accept all major credit cards, PayPal, and bank transfers.",
+          },
+        ]}
+      />
+    </div>
+  );
+}
+```
+
+### Settings Panel
+
+```tsx
+function SettingsAccordion() {
+  return (
+    <Accordion
+      type="multiple"
+      className="w-full max-w-3xl"
+      items={[
+        {
+          title: (
+            <div className="flex items-center gap-2">
+              <UserIcon className="h-4 w-4" />
+              <span>Profile Settings</span>
+            </div>
+          ),
+          children: "Profile settings content...",
+        },
+        {
+          title: (
+            <div className="flex items-center gap-2">
+              <BellIcon className="h-4 w-4" />
+              <span>Notifications</span>
+            </div>
+          ),
+          children: "Notification settings content...",
+        },
+      ]}
+    />
+  );
+}
+```

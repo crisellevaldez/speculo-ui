@@ -1,0 +1,340 @@
+# Modal
+
+A flexible modal/dialog component that supports different sizes, nested modals, and form integration.
+
+## Basic Usage
+
+```jsx
+import { Modal } from "components/Modal";
+
+function BasicExample() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)}>
+        <Modal.Header>Modal Title</Modal.Header>
+        <Modal.Body>This is the modal content.</Modal.Body>
+        <Modal.Footer>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="rounded-md bg-gray-100 px-4 py-2"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => {
+              // Handle confirmation
+              setIsOpen(false);
+            }}
+            className="rounded-md bg-blue-600 px-4 py-2 text-white"
+          >
+            Confirm
+          </button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Size Variants
+
+The Modal component supports different sizes:
+
+```jsx
+function SizeExample() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [size, setSize] = useState("md");
+
+  return (
+    <>
+      <div className="space-x-4">
+        <button
+          onClick={() => {
+            setSize("sm");
+            setIsOpen(true);
+          }}
+        >
+          Small Modal
+        </button>
+        <button
+          onClick={() => {
+            setSize("md");
+            setIsOpen(true);
+          }}
+        >
+          Medium Modal
+        </button>
+        <button
+          onClick={() => {
+            setSize("lg");
+            setIsOpen(true);
+          }}
+        >
+          Large Modal
+        </button>
+        <button
+          onClick={() => {
+            setSize("xl");
+            setIsOpen(true);
+          }}
+        >
+          Extra Large Modal
+        </button>
+        <button
+          onClick={() => {
+            setSize("full");
+            setIsOpen(true);
+          }}
+        >
+          Full Screen Modal
+        </button>
+      </div>
+
+      <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size={size}>
+        <Modal.Header>{size.toUpperCase()} Modal</Modal.Header>
+        <Modal.Body>This modal is {size} sized.</Modal.Body>
+        <Modal.Footer>
+          <button onClick={() => setIsOpen(false)}>Close</button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Nested Modals
+
+Using the ModalProvider and useModal hook for nested modals:
+
+```jsx
+import { ModalProvider, useModal } from "components/Modal";
+
+function NestedModals() {
+  const { openModal, closeModal } = useModal();
+
+  const openNestedModal = () => {
+    openModal(
+      <Modal isOpen onClose={closeModal}>
+        <Modal.Header>Nested Modal</Modal.Header>
+        <Modal.Body>
+          This is a nested modal.
+          <button
+            onClick={() =>
+              openModal(
+                <Modal isOpen onClose={closeModal}>
+                  <Modal.Header>Deeply Nested Modal</Modal.Header>
+                  <Modal.Body>
+                    You can nest modals as deep as you need.
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <button onClick={closeModal}>Close</button>
+                  </Modal.Footer>
+                </Modal>
+              )
+            }
+          >
+            Open Another Modal
+          </button>
+        </Modal.Body>
+        <Modal.Footer>
+          <button onClick={closeModal}>Close</button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  return <button onClick={openNestedModal}>Open Modal</button>;
+}
+
+// Wrap your app with ModalProvider
+function App() {
+  return (
+    <ModalProvider>
+      <NestedModals />
+    </ModalProvider>
+  );
+}
+```
+
+## Form Integration
+
+Example of a modal with a form:
+
+```jsx
+import { Modal } from "components/Modal";
+import { Form } from "components/Form";
+import { Input } from "components/Input";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email address"),
+});
+
+function FormModal() {
+  const [isOpen, setIsOpen] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
+    await saveData(data);
+    setIsOpen(false);
+    reset();
+  };
+
+  return (
+    <>
+      <button onClick={() => setIsOpen(true)}>Open Form</button>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={() => {
+          setIsOpen(false);
+          reset();
+        }}
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Modal.Header>User Information</Modal.Header>
+          <Modal.Body>
+            <div className="space-y-4">
+              <Form.Control error={errors.name?.message}>
+                <Form.Label htmlFor="name" required>
+                  Name
+                </Form.Label>
+                <Input id="name" {...register("name")} />
+              </Form.Control>
+
+              <Form.Control error={errors.email?.message}>
+                <Form.Label htmlFor="email" required>
+                  Email
+                </Form.Label>
+                <Input id="email" type="email" {...register("email")} />
+              </Form.Control>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false);
+                reset();
+              }}
+              className="rounded-md bg-gray-100 px-4 py-2"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-md bg-blue-600 px-4 py-2 text-white"
+            >
+              Submit
+            </button>
+          </Modal.Footer>
+        </form>
+      </Modal>
+    </>
+  );
+}
+```
+
+## Component API
+
+### Modal Props
+
+| Prop                | Type                                   | Default   | Description                       |
+| ------------------- | -------------------------------------- | --------- | --------------------------------- |
+| isOpen              | boolean                                | required  | Controls modal visibility         |
+| onClose             | () => void                             | required  | Callback when modal should close  |
+| size                | "sm" \| "md" \| "lg" \| "xl" \| "full" | "md"      | Modal size variant                |
+| closeOnOverlayClick | boolean                                | true      | Close modal when clicking overlay |
+| closeOnEsc          | boolean                                | true      | Close modal when pressing ESC     |
+| initialFocus        | RefObject<HTMLElement>                 | undefined | Element to focus when modal opens |
+| className           | string                                 | undefined | Additional CSS classes            |
+| children            | React.ReactNode                        | required  | Modal content                     |
+
+### Modal.Header Props
+
+| Prop      | Type            | Default   | Description            |
+| --------- | --------------- | --------- | ---------------------- |
+| children  | React.ReactNode | required  | Header content         |
+| className | string          | undefined | Additional CSS classes |
+
+### Modal.Body Props
+
+| Prop      | Type            | Default   | Description            |
+| --------- | --------------- | --------- | ---------------------- |
+| children  | React.ReactNode | required  | Body content           |
+| className | string          | undefined | Additional CSS classes |
+
+### Modal.Footer Props
+
+| Prop      | Type            | Default   | Description            |
+| --------- | --------------- | --------- | ---------------------- |
+| children  | React.ReactNode | required  | Footer content         |
+| className | string          | undefined | Additional CSS classes |
+
+## Accessibility
+
+The Modal component follows accessibility best practices:
+
+- Uses proper ARIA attributes (role="dialog", aria-modal="true")
+- Traps focus within the modal
+- Supports keyboard navigation
+- Closes on ESC key press
+- Returns focus to trigger element on close
+- Announces modal to screen readers
+- Prevents background scrolling
+- Maintains proper focus management with nested modals
+
+## Best Practices
+
+1. Modal Management
+
+   - Use modals sparingly
+   - Keep content focused and concise
+   - Provide clear actions
+   - Handle loading states
+   - Consider mobile viewports
+
+2. Form Integration
+
+   - Reset form on close
+   - Validate before closing
+   - Show submission feedback
+   - Handle errors appropriately
+   - Preserve form state when needed
+
+3. Nested Modals
+
+   - Use the ModalProvider
+   - Maintain proper z-index
+   - Handle focus management
+   - Consider user flow
+   - Limit nesting depth
+
+4. Performance
+
+   - Use portals for rendering
+   - Clean up event listeners
+   - Handle animations smoothly
+   - Optimize re-renders
+   - Load content efficiently
+
+5. User Experience
+   - Provide clear close actions
+   - Handle background interactions
+   - Consider loading states
+   - Maintain consistent sizing
+   - Use appropriate animations

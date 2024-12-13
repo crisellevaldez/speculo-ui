@@ -1,0 +1,97 @@
+# Button
+
+Buttons are interactive elements that allow users to trigger actions. They come in different variants and sizes to accommodate various use cases.
+
+## Basic Usage
+
+```jsx
+import { Button } from "@/components/Button";
+
+// Basic button with default variant (primary)
+<Button>Default Button</Button>
+
+// Secondary variant
+<Button variant="secondary">Secondary Button</Button>
+
+// Outline variant
+<Button variant="outline">Outline Button</Button>
+```
+
+## Button Sizes
+
+The Button component supports three sizes: small (sm), medium (md), and large (lg).
+
+```jsx
+<Button size="sm">Small</Button>
+<Button size="md">Medium</Button>
+<Button size="lg">Large</Button>
+```
+
+## States
+
+### Loading State
+
+The Button component includes a built-in loading state that displays a spinner and prevents user interaction.
+
+```jsx
+<Button isLoading>Loading</Button>
+```
+
+### Disabled State
+
+Buttons can be disabled to prevent user interaction.
+
+```jsx
+<Button disabled>Disabled</Button>
+```
+
+## Component API
+
+### Props
+
+| Prop      | Type                                  | Default   | Description                              |
+| --------- | ------------------------------------- | --------- | ---------------------------------------- |
+| variant   | "primary" \| "secondary" \| "outline" | "primary" | The visual style variant of the button   |
+| size      | "sm" \| "md" \| "lg"                  | "md"      | The size of the button                   |
+| isLoading | boolean                               | false     | Whether the button is in a loading state |
+| disabled  | boolean                               | false     | Whether the button is disabled           |
+| className | string                                | undefined | Additional CSS classes to apply          |
+
+## Form Integration
+
+The Button component works seamlessly with form libraries like react-hook-form:
+
+```jsx
+import { Button } from "@/components/Button";
+import { useForm } from "react-hook-form";
+
+export function LoginForm() {
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    // Handle form submission
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Form fields */}
+      <Button type="submit" isLoading={isSubmitting}>
+        Submit
+      </Button>
+    </form>
+  );
+}
+```
+
+## Accessibility
+
+The Button component follows accessibility best practices:
+
+- Uses native `button` element for proper semantics
+- Supports keyboard navigation and focus management
+- Visible focus indicator for keyboard users
+- Disabled state prevents interaction and is properly conveyed to assistive technology
+- Loading state prevents interaction and maintains button dimensions to prevent layout shifts

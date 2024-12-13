@@ -1,0 +1,313 @@
+# ComboBox
+
+A searchable select component with support for filtering and custom option rendering.
+
+## Usage
+
+```tsx
+import { ComboBox } from "@/components/ComboBox/ComboBox";
+
+export default function ComboBoxDemo() {
+  const [value, setValue] = React.useState("");
+
+  return (
+    <ComboBox
+      options={[
+        { value: "apple", label: "Apple" },
+        { value: "banana", label: "Banana" },
+        { value: "orange", label: "Orange" },
+      ]}
+      value={value}
+      onChange={setValue}
+    />
+  );
+}
+```
+
+## Props
+
+- `options` - Array of options to display
+  - `value` - Unique identifier for the option
+  - `label` - Display text for the option
+  - `disabled` - Whether the option is disabled
+- `value` - Selected value(s)
+- `onChange` - Callback when selection changes
+- `placeholder` - Input placeholder text
+- `disabled` - Disable the combobox
+- `loading` - Show loading indicator
+- `multiple` - Allow multiple selections
+- `maxItems` - Maximum number of selections (for multiple mode)
+- `onInputChange` - Callback when input text changes
+- `renderOption` - Custom option rendering function
+- `className` - Additional CSS classes
+
+## Examples
+
+### Basic Usage
+
+```tsx
+<ComboBox
+  options={[
+    { value: "1", label: "Option 1" },
+    { value: "2", label: "Option 2" },
+    { value: "3", label: "Option 3" },
+  ]}
+  placeholder="Select an option..."
+/>
+```
+
+### Multiple Selection
+
+```tsx
+function MultipleSelect() {
+  const [selected, setSelected] = React.useState<string[]>([]);
+
+  return (
+    <ComboBox
+      multiple
+      value={selected}
+      onChange={(value) => setSelected(value as string[])}
+      options={[
+        { value: "react", label: "React" },
+        { value: "vue", label: "Vue" },
+        { value: "angular", label: "Angular" },
+        { value: "svelte", label: "Svelte" },
+      ]}
+      placeholder="Select frameworks..."
+    />
+  );
+}
+```
+
+### With Maximum Items
+
+```tsx
+<ComboBox
+  multiple
+  maxItems={3}
+  options={[
+    { value: "red", label: "Red" },
+    { value: "blue", label: "Blue" },
+    { value: "green", label: "Green" },
+    { value: "yellow", label: "Yellow" },
+  ]}
+  placeholder="Select up to 3 colors..."
+/>
+```
+
+### Custom Option Rendering
+
+```tsx
+<ComboBox
+  options={[
+    { value: "user1", label: "John Doe", avatar: "/avatars/john.jpg" },
+    { value: "user2", label: "Jane Smith", avatar: "/avatars/jane.jpg" },
+  ]}
+  renderOption={(option) => (
+    <div className="flex items-center gap-2">
+      <img src={option.avatar} alt="" className="h-6 w-6 rounded-full" />
+      {option.label}
+    </div>
+  )}
+/>
+```
+
+### Loading State
+
+```tsx
+function AsyncComboBox() {
+  const [loading, setLoading] = React.useState(false);
+  const [options, setOptions] = React.useState([]);
+
+  const handleInputChange = async (value) => {
+    setLoading(true);
+    // Simulate API call
+    const results = await fetchOptions(value);
+    setOptions(results);
+    setLoading(false);
+  };
+
+  return (
+    <ComboBox
+      loading={loading}
+      options={options}
+      onInputChange={handleInputChange}
+      placeholder="Search..."
+    />
+  );
+}
+```
+
+### Disabled Options
+
+```tsx
+<ComboBox
+  options={[
+    { value: "1", label: "Available" },
+    { value: "2", label: "Unavailable", disabled: true },
+  ]}
+/>
+```
+
+### Form Integration
+
+```tsx
+function ComboBoxForm() {
+  const form = useForm({
+    defaultValues: {
+      category: "",
+    },
+  });
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="space-y-4">
+        <Label htmlFor="category">Category</Label>
+        <Controller
+          control={form.control}
+          name="category"
+          render={({ field }) => (
+            <ComboBox
+              {...field}
+              options={[
+                { value: "electronics", label: "Electronics" },
+                { value: "clothing", label: "Clothing" },
+                { value: "books", label: "Books" },
+              ]}
+            />
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </div>
+    </form>
+  );
+}
+```
+
+## Accessibility
+
+- Full keyboard navigation support
+- ARIA attributes for combobox pattern
+- Focus management
+- Screen reader announcements
+- Proper labeling
+- Disabled state handling
+
+## Best Practices
+
+1. Usage Guidelines
+
+   - Use for large option sets
+   - Enable filtering for many options
+   - Consider mobile interaction
+   - Handle loading states
+
+2. Selection Behavior
+
+   - Clear feedback on selection
+   - Intuitive multiple selection
+   - Handle max items gracefully
+   - Maintain selection state
+
+3. Filtering
+
+   - Fast response times
+   - Clear no-results state
+   - Case-insensitive matching
+   - Handle special characters
+
+4. Keyboard Navigation
+
+   - Arrow key navigation
+   - Enter to select
+   - Escape to close
+   - Tab for focus management
+
+5. Performance
+   - Optimize large lists
+   - Debounce search
+   - Handle async loading
+   - Clean up event listeners
+
+## Examples in Context
+
+### User Assignment
+
+```tsx
+function UserAssignment() {
+  const [assignedUsers, setAssignedUsers] = React.useState([]);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-medium">Assign Users</h3>
+        <Badge>{assignedUsers.length} assigned</Badge>
+      </div>
+
+      <ComboBox
+        multiple
+        value={assignedUsers}
+        onChange={setAssignedUsers}
+        options={[
+          {
+            value: "user1",
+            label: "John Doe",
+            avatar: "/avatars/john.jpg",
+          },
+          {
+            value: "user2",
+            label: "Jane Smith",
+            avatar: "/avatars/jane.jpg",
+          },
+        ]}
+        renderOption={(option) => (
+          <div className="flex items-center gap-3">
+            <img src={option.avatar} alt="" className="h-6 w-6 rounded-full" />
+            <div>
+              <div>{option.label}</div>
+              <div className="text-sm text-muted-foreground">
+                @{option.value}
+              </div>
+            </div>
+          </div>
+        )}
+        placeholder="Search users..."
+      />
+
+      {assignedUsers.length > 0 && (
+        <div className="rounded-lg border p-4">
+          <h4 className="font-medium mb-2">Assigned Users</h4>
+          <div className="space-y-2">
+            {assignedUsers.map((userId) => {
+              const user = options.find((opt) => opt.value === userId);
+              return (
+                <div key={userId} className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={user.avatar}
+                      alt=""
+                      className="h-8 w-8 rounded-full"
+                    />
+                    <span>{user.label}</span>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setAssignedUsers((prev) =>
+                        prev.filter((id) => id !== userId)
+                      );
+                    }}
+                  >
+                    Remove
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```

@@ -1,0 +1,375 @@
+# Toast
+
+A flexible toast notification system with support for different variants, custom durations, and queue management.
+
+## Implementation
+
+First, wrap your app with the ToastProvider:
+
+```jsx
+import { ToastProvider } from "components/Toast";
+
+function App() {
+  return (
+    <ToastProvider>
+      <YourApp />
+    </ToastProvider>
+  );
+}
+```
+
+Then use the useToast hook to show notifications:
+
+```jsx
+import { useToast } from "components/Toast";
+
+function Example() {
+  const { showToast } = useToast();
+
+  return (
+    <button
+      onClick={() =>
+        showToast({
+          message: "Action completed successfully!",
+          variant: "success",
+        })
+      }
+    >
+      Show Toast
+    </button>
+  );
+}
+```
+
+## Variants
+
+The Toast component supports four variants:
+
+```jsx
+function Variants() {
+  const { showToast } = useToast();
+
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={() =>
+          showToast({
+            message: "Operation successful!",
+            variant: "success",
+          })
+        }
+      >
+        Success Toast
+      </button>
+
+      <button
+        onClick={() =>
+          showToast({
+            message: "An error occurred.",
+            variant: "error",
+          })
+        }
+      >
+        Error Toast
+      </button>
+
+      <button
+        onClick={() =>
+          showToast({
+            message: "Please be careful!",
+            variant: "warning",
+          })
+        }
+      >
+        Warning Toast
+      </button>
+
+      <button
+        onClick={() =>
+          showToast({
+            message: "Did you know?",
+            variant: "info",
+          })
+        }
+      >
+        Info Toast
+      </button>
+    </div>
+  );
+}
+```
+
+## Custom Examples
+
+### Custom Duration
+
+```jsx
+function CustomDuration() {
+  const { showToast } = useToast();
+
+  return (
+    <div className="space-y-2">
+      {/* Short duration */}
+      <button
+        onClick={() =>
+          showToast({
+            message: "Gone in 2 seconds!",
+            duration: 2000,
+          })
+        }
+      >
+        Quick Toast
+      </button>
+
+      {/* Long duration */}
+      <button
+        onClick={() =>
+          showToast({
+            message: "I'll stick around for 10 seconds.",
+            duration: 10000,
+          })
+        }
+      >
+        Long Toast
+      </button>
+
+      {/* Persistent toast */}
+      <button
+        onClick={() =>
+          showToast({
+            message: "I'll stay until you close me.",
+            duration: Infinity,
+          })
+        }
+      >
+        Persistent Toast
+      </button>
+    </div>
+  );
+}
+```
+
+### Custom Rendering
+
+```jsx
+function CustomRendering() {
+  const { showToast } = useToast();
+
+  const showCustomToast = () => {
+    showToast({
+      message: (
+        <div className="flex items-center gap-3">
+          <img src="/avatar.jpg" alt="" className="h-10 w-10 rounded-full" />
+          <div>
+            <div className="font-medium">John Doe</div>
+            <div className="text-sm text-gray-500">Just sent you a message</div>
+          </div>
+        </div>
+      ),
+      duration: 5000,
+    });
+  };
+
+  return <button onClick={showCustomToast}>Show Custom Toast</button>;
+}
+```
+
+### With Progress Bar
+
+```jsx
+function ProgressToast() {
+  const { showToast } = useToast();
+
+  const showProgressToast = () => {
+    const duration = 5000;
+    const startTime = Date.now();
+
+    const message = (
+      <div className="space-y-2">
+        <div>Uploading file...</div>
+        <div className="h-1 w-full rounded-full bg-gray-200">
+          <div
+            className="h-full rounded-full bg-blue-600 transition-all duration-200"
+            style={{
+              width: `${((Date.now() - startTime) / duration) * 100}%`,
+            }}
+          />
+        </div>
+      </div>
+    );
+
+    showToast({
+      message,
+      duration,
+      onClose: () => console.log("Upload complete!"),
+    });
+  };
+
+  return <button onClick={showProgressToast}>Start Upload</button>;
+}
+```
+
+## Component API
+
+### ToastProvider Props
+
+| Prop      | Type                                                         | Default        | Description                      |
+| --------- | ------------------------------------------------------------ | -------------- | -------------------------------- |
+| position  | "top-right" \| "top-left" \| "bottom-right" \| "bottom-left" | "bottom-right" | Position of toast notifications  |
+| maxToasts | number                                                       | 5              | Maximum number of visible toasts |
+| children  | React.ReactNode                                              | required       | App content                      |
+
+### Toast Options
+
+| Option   | Type                                        | Default   | Description                                               |
+| -------- | ------------------------------------------- | --------- | --------------------------------------------------------- |
+| message  | React.ReactNode                             | required  | Content to display in toast                               |
+| variant  | "success" \| "error" \| "warning" \| "info" | "info"    | Visual style variant                                      |
+| duration | number                                      | 5000      | Time in ms before auto-close (Infinity for no auto-close) |
+| onClose  | () => void                                  | undefined | Callback when toast closes                                |
+
+## Animation Guide
+
+The Toast component includes smooth animations for:
+
+1. Entry Animation
+
+```css
+.toast-enter {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+.toast-enter-active {
+  transform: translateX(0);
+  opacity: 1;
+  transition: all 200ms ease-out;
+}
+```
+
+2. Exit Animation
+
+```css
+.toast-exit {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.toast-exit-active {
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 200ms ease-in;
+}
+```
+
+## Best Practices
+
+1. Toast Content
+
+   - Keep messages concise and clear
+   - Use appropriate variants for context
+   - Include necessary actions only
+   - Consider mobile viewports
+   - Use icons to enhance meaning
+
+2. Duration
+
+   - Use shorter durations for simple messages
+   - Use longer durations for important information
+   - Consider user reading speed
+   - Use infinite duration for critical messages
+   - Allow manual dismissal
+
+3. Positioning
+
+   - Consider user's focus area
+   - Avoid covering important content
+   - Maintain consistent positioning
+   - Consider multiple screen sizes
+   - Account for fixed headers/footers
+
+4. Queue Management
+
+   - Limit maximum visible toasts
+   - Stack in logical order
+   - Remove old toasts when limit reached
+   - Group similar notifications
+   - Preserve important messages
+
+5. Accessibility
+
+   - Use proper ARIA attributes
+   - Ensure keyboard accessibility
+   - Provide sufficient contrast
+   - Allow sufficient reading time
+   - Announce to screen readers
+
+6. Performance
+   - Clean up timers
+   - Optimize animations
+   - Handle queue efficiently
+   - Manage memory usage
+   - Remove completed toasts
+
+## Usage Examples
+
+### Form Submission Feedback
+
+```jsx
+function FormExample() {
+  const { showToast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (data) => {
+    setIsSubmitting(true);
+    try {
+      await submitForm(data);
+      showToast({
+        message: "Form submitted successfully!",
+        variant: "success",
+      });
+    } catch (error) {
+      showToast({
+        message: error.message,
+        variant: "error",
+        duration: 7000,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return <form onSubmit={handleSubmit}>...</form>;
+}
+```
+
+### API Response Handling
+
+```jsx
+function DataFetch() {
+  const { showToast } = useToast();
+
+  const fetchData = async () => {
+    const toastId = showToast({
+      message: "Fetching data...",
+      variant: "info",
+      duration: Infinity,
+    });
+
+    try {
+      const data = await fetchAPI();
+      showToast({
+        message: "Data updated successfully!",
+        variant: "success",
+      });
+    } catch (error) {
+      showToast({
+        message: "Failed to fetch data",
+        variant: "error",
+      });
+    }
+  };
+
+  return <button onClick={fetchData}>Refresh Data</button>;
+}
+```

@@ -1,0 +1,318 @@
+# Tabs
+
+A flexible tabs component that supports different styles, orientations, and both controlled and uncontrolled modes.
+
+## Basic Usage
+
+```jsx
+import { Tabs, Tab } from "components/Tabs";
+
+function BasicExample() {
+  return (
+    <Tabs defaultValue="account">
+      <Tabs.List>
+        <Tab value="account" label="Account" />
+        <Tab value="password" label="Password" />
+        <Tab value="notifications" label="Notifications" />
+      </Tabs.List>
+
+      <Tabs.Panel value="account">Account settings content</Tabs.Panel>
+      <Tabs.Panel value="password">Password settings content</Tabs.Panel>
+      <Tabs.Panel value="notifications">
+        Notification preferences content
+      </Tabs.Panel>
+    </Tabs>
+  );
+}
+```
+
+## Styling Options
+
+The Tabs component supports three visual styles:
+
+```jsx
+function StylesExample() {
+  const tabs = [
+    { value: "tab1", label: "Tab 1", content: "Content 1" },
+    { value: "tab2", label: "Tab 2", content: "Content 2" },
+    { value: "tab3", label: "Tab 3", content: "Content 3" },
+  ];
+
+  return (
+    <div className="space-y-8">
+      {/* Line style (default) */}
+      <Tabs defaultValue="tab1" variant="line">
+        <Tabs.List>
+          {tabs.map((tab) => (
+            <Tab key={tab.value} {...tab} />
+          ))}
+        </Tabs.List>
+        {tabs.map((tab) => (
+          <Tabs.Panel key={tab.value} value={tab.value}>
+            {tab.content}
+          </Tabs.Panel>
+        ))}
+      </Tabs>
+
+      {/* Enclosed style */}
+      <Tabs defaultValue="tab1" variant="enclosed">
+        <Tabs.List>
+          {tabs.map((tab) => (
+            <Tab key={tab.value} {...tab} />
+          ))}
+        </Tabs.List>
+        {tabs.map((tab) => (
+          <Tabs.Panel key={tab.value} value={tab.value}>
+            {tab.content}
+          </Tabs.Panel>
+        ))}
+      </Tabs>
+
+      {/* Soft style */}
+      <Tabs defaultValue="tab1" variant="soft">
+        <Tabs.List>
+          {tabs.map((tab) => (
+            <Tab key={tab.value} {...tab} />
+          ))}
+        </Tabs.List>
+        {tabs.map((tab) => (
+          <Tabs.Panel key={tab.value} value={tab.value}>
+            {tab.content}
+          </Tabs.Panel>
+        ))}
+      </Tabs>
+    </div>
+  );
+}
+```
+
+## Custom Content
+
+Example with custom tab rendering and content:
+
+```jsx
+function CustomExample() {
+  return (
+    <Tabs defaultValue="overview">
+      <Tabs.List>
+        <Tab
+          value="overview"
+          label={
+            <div className="flex items-center gap-2">
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                />
+              </svg>
+              <span>Overview</span>
+            </div>
+          }
+        />
+        <Tab
+          value="analytics"
+          label={
+            <div className="flex items-center gap-2">
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                />
+              </svg>
+              <span>Analytics</span>
+              <span className="ml-1.5 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                New
+              </span>
+            </div>
+          }
+        />
+      </Tabs.List>
+
+      <Tabs.Panel value="overview">
+        <div className="rounded-lg border p-4">
+          <h3 className="text-lg font-medium">Overview</h3>
+          <p className="mt-2 text-gray-600">
+            Your account overview and summary...
+          </p>
+        </div>
+      </Tabs.Panel>
+
+      <Tabs.Panel value="analytics">
+        <div className="rounded-lg border p-4">
+          <h3 className="text-lg font-medium">Analytics</h3>
+          <div className="mt-4">
+            {/* Add your analytics content/charts here */}
+          </div>
+        </div>
+      </Tabs.Panel>
+    </Tabs>
+  );
+}
+```
+
+## Responsive Behavior
+
+The Tabs component supports both horizontal and vertical orientations:
+
+```jsx
+function ResponsiveExample() {
+  const [orientation, setOrientation] = useState("horizontal");
+
+  // Update orientation based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setOrientation(window.innerWidth < 640 ? "vertical" : "horizontal");
+    };
+
+    window.addEventListener("resize", handleResize);
+    handleResize(); // Initial check
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return (
+    <Tabs defaultValue="tab1" orientation={orientation}>
+      <Tabs.List>
+        <Tab value="tab1" label="Profile" />
+        <Tab value="tab2" label="Settings" />
+        <Tab value="tab3" label="Messages" />
+      </Tabs.List>
+
+      <Tabs.Panel value="tab1">Profile content</Tabs.Panel>
+      <Tabs.Panel value="tab2">Settings content</Tabs.Panel>
+      <Tabs.Panel value="tab3">Messages content</Tabs.Panel>
+    </Tabs>
+  );
+}
+```
+
+## Controlled Mode
+
+Example of controlled tabs with external state:
+
+```jsx
+function ControlledExample() {
+  const [activeTab, setActiveTab] = useState("tab1");
+
+  return (
+    <div>
+      <div className="mb-4">Active tab: {activeTab}</div>
+
+      <Tabs value={activeTab} onChange={setActiveTab}>
+        <Tabs.List>
+          <Tab value="tab1" label="Tab 1" />
+          <Tab value="tab2" label="Tab 2" />
+          <Tab value="tab3" label="Tab 3" disabled />
+        </Tabs.List>
+
+        <Tabs.Panel value="tab1">Content 1</Tabs.Panel>
+        <Tabs.Panel value="tab2">Content 2</Tabs.Panel>
+        <Tabs.Panel value="tab3">Content 3</Tabs.Panel>
+      </Tabs>
+    </div>
+  );
+}
+```
+
+## Component API
+
+### Tabs Props
+
+| Prop         | Type                           | Default      | Description                            |
+| ------------ | ------------------------------ | ------------ | -------------------------------------- |
+| defaultValue | string                         | undefined    | Initial active tab (uncontrolled mode) |
+| value        | string                         | undefined    | Active tab value (controlled mode)     |
+| onChange     | (value: string) => void        | undefined    | Change handler for controlled mode     |
+| variant      | "line" \| "enclosed" \| "soft" | "line"       | Visual style variant                   |
+| orientation  | "horizontal" \| "vertical"     | "horizontal" | Tab list orientation                   |
+| className    | string                         | undefined    | Additional CSS classes                 |
+
+### Tab Props
+
+| Prop     | Type            | Default  | Description                   |
+| -------- | --------------- | -------- | ----------------------------- |
+| value    | string          | required | Unique identifier for the tab |
+| label    | React.ReactNode | required | Content to display in the tab |
+| disabled | boolean         | false    | Whether the tab is disabled   |
+
+### Tabs.List Props
+
+| Prop      | Type            | Default   | Description            |
+| --------- | --------------- | --------- | ---------------------- |
+| children  | React.ReactNode | required  | Tab components         |
+| className | string          | undefined | Additional CSS classes |
+
+### Tabs.Panel Props
+
+| Prop      | Type            | Default   | Description             |
+| --------- | --------------- | --------- | ----------------------- |
+| value     | string          | required  | Corresponding tab value |
+| children  | React.ReactNode | required  | Panel content           |
+| className | string          | undefined | Additional CSS classes  |
+
+## Accessibility
+
+The Tabs component follows accessibility best practices:
+
+- Uses proper ARIA roles (tablist, tab, tabpanel)
+- Keyboard navigation support (arrow keys, Home, End)
+- Proper focus management
+- Automatic activation on focus
+- Clear visual indicators
+- Screen reader announcements
+- Proper tab indexing
+
+## Best Practices
+
+1. Tab Organization
+
+   - Keep tab labels short and clear
+   - Use consistent styling
+   - Group related content
+   - Consider mobile viewports
+   - Limit number of tabs
+
+2. Content Management
+
+   - Keep content focused
+   - Maintain consistent structure
+   - Consider loading states
+   - Handle dynamic content
+   - Preserve scroll position
+
+3. Interaction Design
+
+   - Provide clear feedback
+   - Consider hover states
+   - Handle loading states
+   - Support keyboard navigation
+   - Maintain focus management
+
+4. Responsive Design
+
+   - Adapt to screen sizes
+   - Consider orientation changes
+   - Handle overflow gracefully
+   - Maintain touch targets
+   - Support mobile gestures
+
+5. Performance
+   - Lazy load content
+   - Optimize transitions
+   - Handle state efficiently
+   - Manage memory usage
+   - Clean up event listeners

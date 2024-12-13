@@ -1,0 +1,285 @@
+# Pagination
+
+A component for navigating through multiple pages of content.
+
+## Usage
+
+```tsx
+import { Pagination } from "@/components/Pagination/Pagination";
+
+export default function PaginationDemo() {
+  const [page, setPage] = React.useState(1);
+
+  return (
+    <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
+  );
+}
+```
+
+## Props
+
+- `currentPage` - Current active page number
+- `totalPages` - Total number of pages
+- `onPageChange` - Callback when page changes
+- `siblingCount` - Number of siblings on each side (default: 1)
+- `showFirstLast` - Show first/last page buttons (default: true)
+- `size` - Size of pagination buttons
+  - `sm` - Small
+  - `md` - Medium (default)
+  - `lg` - Large
+- `disabled` - Disable all interactions
+- `className` - Additional CSS classes
+
+## Examples
+
+### Basic Usage
+
+```tsx
+function BasicPagination() {
+  const [page, setPage] = React.useState(1);
+
+  return (
+    <Pagination currentPage={page} totalPages={10} onPageChange={setPage} />
+  );
+}
+```
+
+### Different Sizes
+
+```tsx
+<div className="space-y-4">
+  <Pagination
+    size="sm"
+    currentPage={1}
+    totalPages={5}
+    onPageChange={() => {}}
+  />
+
+  <Pagination
+    size="md"
+    currentPage={1}
+    totalPages={5}
+    onPageChange={() => {}}
+  />
+
+  <Pagination
+    size="lg"
+    currentPage={1}
+    totalPages={5}
+    onPageChange={() => {}}
+  />
+</div>
+```
+
+### Without First/Last Buttons
+
+```tsx
+<Pagination
+  currentPage={1}
+  totalPages={10}
+  onPageChange={() => {}}
+  showFirstLast={false}
+/>
+```
+
+### More Siblings
+
+```tsx
+<Pagination
+  currentPage={5}
+  totalPages={10}
+  onPageChange={() => {}}
+  siblingCount={2}
+/>
+```
+
+### Disabled State
+
+```tsx
+<Pagination currentPage={1} totalPages={10} onPageChange={() => {}} disabled />
+```
+
+### With Item Count
+
+```tsx
+function PaginationWithCount() {
+  const [page, setPage] = React.useState(1);
+  const itemsPerPage = 10;
+  const totalItems = 87;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const startItem = (page - 1) * itemsPerPage + 1;
+  const endItem = Math.min(page * itemsPerPage, totalItems);
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <div className="text-sm text-muted-foreground">
+        Showing {startItem} to {endItem} of {totalItems} items
+      </div>
+      <Pagination
+        currentPage={page}
+        totalPages={totalPages}
+        onPageChange={setPage}
+      />
+    </div>
+  );
+}
+```
+
+### Custom Styling
+
+```tsx
+<Pagination
+  currentPage={1}
+  totalPages={5}
+  onPageChange={() => {}}
+  className="gap-4"
+  style={{
+    "--pagination-active-bg": "var(--purple-500)",
+    "--pagination-active-fg": "white",
+  }}
+/>
+```
+
+### With Table
+
+```tsx
+function TableWithPagination() {
+  const [page, setPage] = React.useState(1);
+  const itemsPerPage = 5;
+  const items = [
+    /* ... your data ... */
+  ];
+
+  const paginatedItems = items.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
+  return (
+    <div className="space-y-4">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+            <TableHead>Email</TableHead>
+            <TableHead>Status</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {paginatedItems.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>{item.email}</TableCell>
+              <TableCell>{item.status}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <div className="flex justify-center">
+        <Pagination
+          currentPage={page}
+          totalPages={Math.ceil(items.length / itemsPerPage)}
+          onPageChange={setPage}
+        />
+      </div>
+    </div>
+  );
+}
+```
+
+## Accessibility
+
+- Uses semantic navigation element
+- Proper ARIA labels for buttons
+- Keyboard navigation support
+- Clear visual indicators
+- Disabled state handling
+
+## Best Practices
+
+1. Usage Guidelines
+
+   - Use for long lists of items
+   - Show clear page indicators
+   - Maintain reasonable page sizes
+   - Consider mobile viewports
+
+2. Navigation
+
+   - Clear current page indicator
+   - Intuitive controls
+   - Consistent behavior
+   - Handle edge cases
+
+3. Visual Design
+
+   - Clear active state
+   - Sufficient spacing
+   - Consistent sizing
+   - Mobile-friendly targets
+
+4. Performance
+
+   - Efficient page calculation
+   - Smooth transitions
+   - Handle large datasets
+   - Optimize rerenders
+
+5. Accessibility
+   - Keyboard navigation
+   - Screen reader support
+   - Clear labeling
+   - Sufficient contrast
+
+## Examples in Context
+
+### Search Results
+
+```tsx
+function SearchResults() {
+  const [page, setPage] = React.useState(1);
+  const [results, setResults] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
+  const itemsPerPage = 10;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Search Results</h2>
+        <span className="text-sm text-muted-foreground">
+          {results.length} items found
+        </span>
+      </div>
+
+      {loading ? (
+        <div className="flex justify-center">
+          <Spinner />
+        </div>
+      ) : (
+        <>
+          <div className="grid gap-4">
+            {results
+              .slice((page - 1) * itemsPerPage, page * itemsPerPage)
+              .map((result) => (
+                <ResultCard key={result.id} {...result} />
+              ))}
+          </div>
+
+          <div className="flex flex-col items-center gap-2">
+            <Pagination
+              currentPage={page}
+              totalPages={Math.ceil(results.length / itemsPerPage)}
+              onPageChange={setPage}
+            />
+            <div className="text-sm text-muted-foreground">
+              Page {page} of {Math.ceil(results.length / itemsPerPage)}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+```

@@ -1,0 +1,272 @@
+# Container
+
+A responsive container component that centers content and provides consistent max-widths at different breakpoints.
+
+## Usage
+
+```tsx
+import {
+  Container,
+  PageContainer,
+  SectionContainer,
+  ContentContainer,
+  NarrowContainer,
+  FullWidthContainer,
+} from "@/components/Container/Container";
+
+export default function ContainerDemo() {
+  return (
+    <Container>Content will be centered with responsive max-width</Container>
+  );
+}
+```
+
+## Props
+
+- `size` - Maximum width at breakpoints
+  - `sm` - 640px
+  - `md` - 768px
+  - `lg` - 1024px (default)
+  - `xl` - 1280px
+  - `2xl` - 1536px
+  - `full` - 100%
+- `padding` - Apply horizontal padding (default: true)
+- `centered` - Center the container (default: true)
+- `as` - HTML element to render as ('div' | 'section' | 'article' | 'main')
+- `className` - Additional CSS classes
+
+## Semantic Containers
+
+### PageContainer
+
+Main container for page layouts. Uses xl (1280px) max-width.
+
+```tsx
+function PageLayout() {
+  return (
+    <PageContainer>
+      <h1>Page Title</h1>
+      <p>Page content goes here...</p>
+    </PageContainer>
+  );
+}
+```
+
+### SectionContainer
+
+Container for major page sections. Uses lg (1024px) max-width.
+
+```tsx
+function PageWithSections() {
+  return (
+    <PageContainer>
+      <SectionContainer className="py-12">
+        <h2>Hero Section</h2>
+        {/* Hero content */}
+      </SectionContainer>
+
+      <SectionContainer className="py-12 bg-muted">
+        <h2>Features</h2>
+        {/* Features grid */}
+      </SectionContainer>
+    </PageContainer>
+  );
+}
+```
+
+### ContentContainer
+
+Container for content areas. Uses md (768px) max-width.
+
+```tsx
+function BlogPost() {
+  return (
+    <PageContainer>
+      <ContentContainer className="py-8">
+        <h1>Blog Post Title</h1>
+        <div className="prose">{/* Blog content */}</div>
+      </ContentContainer>
+    </PageContainer>
+  );
+}
+```
+
+### NarrowContainer
+
+Container for narrow content. Uses sm (640px) max-width.
+
+```tsx
+function LoginForm() {
+  return (
+    <PageContainer>
+      <NarrowContainer className="py-8">
+        <h2>Login</h2>
+        <form>{/* Form fields */}</form>
+      </NarrowContainer>
+    </PageContainer>
+  );
+}
+```
+
+### FullWidthContainer
+
+Container that spans the full width while maintaining padding.
+
+```tsx
+function FullWidthSection() {
+  return (
+    <PageContainer>
+      <FullWidthContainer className="bg-primary text-white py-12">
+        <SectionContainer>
+          <h2>Full Width Banner</h2>
+          {/* Banner content */}
+        </SectionContainer>
+      </FullWidthContainer>
+    </PageContainer>
+  );
+}
+```
+
+## Examples
+
+### Basic Page Layout
+
+```tsx
+function HomePage() {
+  return (
+    <PageContainer>
+      <FullWidthContainer className="bg-primary/10 py-12">
+        <SectionContainer>
+          <h1>Welcome to Our Site</h1>
+          <p>Hero content...</p>
+        </SectionContainer>
+      </FullWidthContainer>
+
+      <SectionContainer className="py-16">
+        <h2>Features</h2>
+        <div className="grid grid-cols-3 gap-8">{/* Feature cards */}</div>
+      </SectionContainer>
+
+      <FullWidthContainer className="bg-muted py-12">
+        <SectionContainer>
+          <h2>Testimonials</h2>
+          {/* Testimonials slider */}
+        </SectionContainer>
+      </FullWidthContainer>
+
+      <ContentContainer className="py-16">
+        <h2>Latest Posts</h2>
+        <div className="space-y-8">{/* Blog post previews */}</div>
+      </ContentContainer>
+    </PageContainer>
+  );
+}
+```
+
+### Article Layout
+
+```tsx
+function ArticlePage() {
+  return (
+    <PageContainer>
+      <FullWidthContainer className="bg-muted py-8">
+        <ContentContainer>
+          <h1>Article Title</h1>
+          <div className="flex items-center gap-4">
+            <img
+              src="/author.jpg"
+              alt="Author"
+              className="h-10 w-10 rounded-full"
+            />
+            <div>
+              <p className="font-medium">Author Name</p>
+              <p className="text-sm text-muted-foreground">
+                Published on Jan 1, 2024
+              </p>
+            </div>
+          </div>
+        </ContentContainer>
+      </FullWidthContainer>
+
+      <ContentContainer className="py-12">
+        <div className="prose">{/* Article content */}</div>
+      </ContentContainer>
+
+      <SectionContainer className="py-12 border-t">
+        <h2>Related Articles</h2>
+        <div className="grid grid-cols-3 gap-8">{/* Article cards */}</div>
+      </SectionContainer>
+    </PageContainer>
+  );
+}
+```
+
+### Form Layout
+
+```tsx
+function SignupPage() {
+  return (
+    <PageContainer>
+      <NarrowContainer className="py-12">
+        <div className="space-y-6">
+          <div className="text-center">
+            <h1>Create Account</h1>
+            <p className="text-muted-foreground">
+              Fill in the form below to get started
+            </p>
+          </div>
+
+          <form className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input id="email" type="email" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input id="password" type="password" />
+            </div>
+            <Button className="w-full">Sign Up</Button>
+          </form>
+        </div>
+      </NarrowContainer>
+    </PageContainer>
+  );
+}
+```
+
+## Best Practices
+
+1. Container Selection
+
+   - Use PageContainer for main page wrapper
+   - Use SectionContainer for major page sections
+   - Use ContentContainer for article/text content
+   - Use NarrowContainer for forms and focused content
+   - Use FullWidthContainer for edge-to-edge sections
+
+2. Layout Structure
+
+   - Nest containers appropriately
+   - Maintain consistent spacing
+   - Use semantic HTML elements
+   - Consider content width for readability
+
+3. Responsive Design
+
+   - Test at all breakpoints
+   - Use appropriate padding
+   - Consider mobile-first design
+   - Handle overflow properly
+
+4. Performance
+
+   - Avoid deeply nested containers
+   - Use appropriate semantic containers
+   - Consider content reflow
+   - Optimize for layout shifts
+
+5. Accessibility
+   - Use semantic HTML
+   - Maintain proper heading structure
+   - Consider reading width
+   - Ensure proper spacing

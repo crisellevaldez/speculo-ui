@@ -1,0 +1,213 @@
+# Select
+
+Select is a form component that allows users to choose one or multiple options from a dropdown list. It supports searching, custom rendering, and integration with form libraries.
+
+## Basic Usage
+
+```jsx
+import { Select } from "components/Select";
+
+const options = [
+  { value: "apple", label: "Apple" },
+  { value: "banana", label: "Banana" },
+  { value: "orange", label: "Orange" },
+];
+
+// Single select
+<Select
+  options={options}
+  value="apple"
+  onChange={(value) => console.log(value)}
+  placeholder="Choose a fruit"
+/>
+
+// With error state
+<Select
+  options={options}
+  error="Please select a fruit"
+  placeholder="Choose a fruit"
+/>
+
+// With helper text
+<Select
+  options={options}
+  helperText="Select your favorite fruit"
+  placeholder="Choose a fruit"
+/>
+```
+
+## Multi-select
+
+The Select component supports multiple selection:
+
+```jsx
+const [selectedFruits, setSelectedFruits] = useState([]);
+
+<Select
+  options={options}
+  value={selectedFruits}
+  onChange={setSelectedFruits}
+  multiple
+  placeholder="Choose fruits"
+/>;
+```
+
+## Search Implementation
+
+Enable search functionality to filter options:
+
+```jsx
+<Select options={options} searchable placeholder="Search and select..." />
+```
+
+## Custom Rendering
+
+Customize how options are rendered in the dropdown:
+
+```jsx
+const options = [
+  {
+    value: "user1",
+    label: "John Doe",
+    avatar: "path/to/avatar1.jpg",
+    email: "john@example.com",
+  },
+  {
+    value: "user2",
+    label: "Jane Smith",
+    avatar: "path/to/avatar2.jpg",
+    email: "jane@example.com",
+  },
+];
+
+<Select
+  options={options}
+  renderOption={(option) => (
+    <div className="flex items-center gap-2">
+      <img src={option.avatar} alt="" className="h-6 w-6 rounded-full" />
+      <div>
+        <div className="font-medium">{option.label}</div>
+        <div className="text-sm text-gray-500">{option.email}</div>
+      </div>
+    </div>
+  )}
+  placeholder="Select a user"
+/>;
+```
+
+## Form Integration
+
+The Select component works seamlessly with react-hook-form:
+
+```jsx
+import { Select } from "components/Select";
+import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  fruit: z.string().min(1, "Please select a fruit"),
+  fruits: z.array(z.string()).min(1, "Please select at least one fruit"),
+});
+
+export function FruitForm() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Single select */}
+      <Controller
+        name="fruit"
+        control={control}
+        render={({ field }) => (
+          <Select
+            options={options}
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.fruit?.message}
+            placeholder="Choose a fruit"
+          />
+        )}
+      />
+
+      {/* Multi select */}
+      <Controller
+        name="fruits"
+        control={control}
+        render={({ field }) => (
+          <Select
+            options={options}
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.fruits?.message}
+            multiple
+            placeholder="Choose fruits"
+          />
+        )}
+      />
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+## Component API
+
+### Props
+
+| Prop         | Type                                      | Default            | Description                        |
+| ------------ | ----------------------------------------- | ------------------ | ---------------------------------- |
+| options      | SelectOption[]                            | required           | Array of options to display        |
+| value        | string \| string[]                        | undefined          | Selected value(s)                  |
+| onChange     | (value: string \| string[]) => void       | undefined          | Callback when selection changes    |
+| placeholder  | string                                    | "Select an option" | Placeholder text when no selection |
+| error        | string                                    | undefined          | Error message to display           |
+| helperText   | string                                    | undefined          | Helper text to display             |
+| disabled     | boolean                                   | false              | Whether the select is disabled     |
+| multiple     | boolean                                   | false              | Enable multiple selection          |
+| searchable   | boolean                                   | false              | Enable search functionality        |
+| className    | string                                    | undefined          | Additional CSS classes             |
+| renderOption | (option: SelectOption) => React.ReactNode | undefined          | Custom option rendering function   |
+
+### SelectOption Interface
+
+```typescript
+interface SelectOption {
+  value: string;
+  label: string;
+}
+```
+
+## Accessibility
+
+The Select component follows accessibility best practices:
+
+- Uses ARIA attributes for proper semantics
+- Supports keyboard navigation
+- Announces selected options to screen readers
+- Error states are properly conveyed to assistive technology
+- Maintains proper focus management
+- Search input is properly labeled
+- Options are announced as they are filtered
+
+## Best Practices
+
+1. Use clear and concise option labels
+2. Provide meaningful placeholder text
+3. Enable search for long option lists
+4. Use multi-select only when necessary
+5. Group related options when appropriate
+6. Provide clear error messages
+7. Consider mobile users when customizing option rendering
+8. Use helper text to provide additional context when needed

@@ -1,0 +1,161 @@
+# Progress
+
+Display progress feedback for ongoing operations.
+
+## Usage
+
+```tsx
+import { Progress } from "@/components/Progress/Progress";
+
+export default function ProgressDemo() {
+  return <Progress value={60} />;
+}
+```
+
+## Props
+
+- `value` - Current progress value (0-100)
+- `max` - Maximum value (default: 100)
+- `variant` - Progress indicator style
+  - `bar` - Linear progress bar (default)
+  - `circle` - Circular progress indicator
+- `size` - Size of the progress indicator
+  - `sm` - Small
+  - `md` - Medium (default)
+  - `lg` - Large
+- `indeterminate` - Show indeterminate loading state
+- `className` - Additional CSS classes
+
+## Examples
+
+### Progress Bar
+
+```tsx
+<div className="space-y-4">
+  <Progress value={30} />
+  <Progress value={60} />
+  <Progress value={90} />
+</div>
+```
+
+### Circular Progress
+
+```tsx
+<div className="flex gap-4">
+  <Progress variant="circle" value={30} />
+  <Progress variant="circle" value={60} />
+  <Progress variant="circle" value={90} />
+</div>
+```
+
+### Sizes
+
+```tsx
+<div className="space-y-4">
+  {/* Bar sizes */}
+  <Progress size="sm" value={60} />
+  <Progress size="md" value={60} />
+  <Progress size="lg" value={60} />
+
+  {/* Circle sizes */}
+  <div className="flex gap-4">
+    <Progress variant="circle" size="sm" value={60} />
+    <Progress variant="circle" size="md" value={60} />
+    <Progress variant="circle" size="lg" value={60} />
+  </div>
+</div>
+```
+
+### Indeterminate State
+
+```tsx
+<div className="space-y-4">
+  <Progress indeterminate />
+  <Progress variant="circle" indeterminate />
+</div>
+```
+
+### Custom Colors
+
+```tsx
+<div className="space-y-4">
+  <Progress value={60} className="bg-purple-100 [&>div]:bg-purple-500" />
+  <Progress
+    variant="circle"
+    value={60}
+    className="[&_circle]:text-purple-100 [&_circle:last-child]:text-purple-500"
+  />
+</div>
+```
+
+### With Label
+
+```tsx
+<div className="space-y-2">
+  <div className="flex justify-between text-sm">
+    <span>Uploading...</span>
+    <span>60%</span>
+  </div>
+  <Progress value={60} />
+</div>
+```
+
+### Dynamic Progress
+
+```tsx
+function DynamicProgress() {
+  const [progress, setProgress] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setProgress((prev) => (prev >= 100 ? 0 : prev + 10));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return <Progress value={progress} />;
+}
+```
+
+## Accessibility
+
+- Uses proper ARIA attributes (role="progressbar", aria-valuenow, aria-valuemin, aria-valuemax)
+- Provides visual feedback for progress
+- Supports high contrast modes
+- Animations respect reduced motion preferences
+
+## Best Practices
+
+1. Usage Guidelines
+
+   - Use for operations that take time
+   - Show progress when possible rather than indeterminate state
+   - Consider using with descriptive labels
+   - Use appropriate size for the context
+
+2. Progress Indication
+
+   - Use determinate progress when you can estimate completion
+   - Use indeterminate progress for unknown duration tasks
+   - Update progress smoothly to avoid jumps
+   - Consider adding text labels for clarity
+
+3. Visual Design
+
+   - Maintain sufficient contrast for progress indicator
+   - Use consistent colors across your application
+   - Consider using brand colors for progress
+   - Ensure visibility in different color modes
+
+4. Performance
+
+   - Optimize animation performance
+   - Update progress efficiently
+   - Consider debouncing rapid updates
+   - Clean up intervals/timers when component unmounts
+
+5. Accessibility
+   - Include descriptive labels when possible
+   - Ensure color is not the only indicator
+   - Support high contrast modes
+   - Consider screen reader announcements for important progress changes

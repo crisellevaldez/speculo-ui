@@ -1,0 +1,243 @@
+# Calendar
+
+A date picker component that displays a calendar grid.
+
+## Usage
+
+```tsx
+import { Calendar } from "@/components/Calendar/Calendar";
+
+export default function CalendarDemo() {
+  const [date, setDate] = React.useState<Date>(new Date());
+
+  return <Calendar value={date} onChange={setDate} />;
+}
+```
+
+## Props
+
+- `value` - Selected date
+- `onChange` - Callback when date changes
+- `minDate` - Minimum selectable date
+- `maxDate` - Maximum selectable date
+- `disabled` - Disable the calendar
+- `locale` - Locale for formatting (default: 'en-US')
+- `weekStartsOn` - First day of week (0-6, 0 = Sunday)
+- `disabledDates` - Array of dates to disable
+- `highlightedDates` - Array of dates to highlight
+- `className` - Additional CSS classes
+
+## Examples
+
+### Basic Usage
+
+```tsx
+function BasicCalendar() {
+  const [date, setDate] = React.useState<Date>(new Date());
+
+  return <Calendar value={date} onChange={setDate} />;
+}
+```
+
+### Date Range Constraints
+
+```tsx
+<Calendar minDate={new Date(2024, 0, 1)} maxDate={new Date(2024, 11, 31)} />
+```
+
+### Disabled Dates
+
+```tsx
+<Calendar
+  disabledDates={[
+    new Date(2024, 0, 1), // New Year's Day
+    new Date(2024, 11, 25), // Christmas
+  ]}
+/>
+```
+
+### Highlighted Dates
+
+```tsx
+<Calendar
+  highlightedDates={[
+    new Date(2024, 0, 15),
+    new Date(2024, 0, 16),
+    new Date(2024, 0, 17),
+  ]}
+/>
+```
+
+### Different Week Start
+
+```tsx
+<Calendar
+  weekStartsOn={1} // Week starts on Monday
+/>
+```
+
+### Different Locale
+
+```tsx
+<Calendar locale="fr-FR" />
+```
+
+### With Form
+
+```tsx
+function CalendarForm() {
+  const form = useForm({
+    defaultValues: {
+      date: new Date(),
+    },
+  });
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="space-y-4">
+        <Label htmlFor="date">Select Date</Label>
+        <Controller
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <Calendar value={field.value} onChange={field.onChange} />
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </div>
+    </form>
+  );
+}
+```
+
+### Custom Styling
+
+```tsx
+<Calendar
+  className="border rounded-lg shadow-lg"
+  value={new Date()}
+  onChange={console.log}
+/>
+```
+
+### With Event Indicators
+
+```tsx
+function EventCalendar() {
+  const events = [
+    { date: new Date(2024, 0, 1), title: "New Year" },
+    { date: new Date(2024, 0, 15), title: "Meeting" },
+  ];
+
+  return (
+    <Calendar
+      highlightedDates={events.map((e) => e.date)}
+      renderDay={(date) => {
+        const event = events.find(
+          (e) => e.date.toDateString() === date.toDateString()
+        );
+        return (
+          <div className="relative">
+            {date.getDate()}
+            {event && (
+              <div className="absolute bottom-1 left-1/2 -translate-x-1/2">
+                <div className="h-1 w-1 rounded-full bg-primary" />
+              </div>
+            )}
+          </div>
+        );
+      }}
+    />
+  );
+}
+```
+
+## Accessibility
+
+- Full keyboard navigation
+- ARIA grid role
+- Proper labeling
+- Focus management
+- Screen reader support
+- Disabled state handling
+
+## Best Practices
+
+1. Date Selection
+
+   - Clear visual feedback
+   - Intuitive navigation
+   - Handle invalid dates
+   - Consider date ranges
+
+2. Localization
+
+   - Support different locales
+   - Handle different calendars
+   - Format dates appropriately
+   - Consider RTL languages
+
+3. Visual Design
+
+   - Clear current date
+   - Highlight selected date
+   - Show disabled states
+   - Maintain readability
+
+4. Keyboard Navigation
+
+   - Arrow key navigation
+   - Enter to select
+   - Escape to cancel
+   - Tab for focus
+
+5. Performance
+   - Optimize date calculations
+   - Handle date changes efficiently
+   - Memoize where appropriate
+   - Clean up event listeners
+
+## Examples in Context
+
+### Date Picker Field
+
+```tsx
+function DatePickerField() {
+  const [date, setDate] = React.useState<Date>();
+  const [isOpen, setIsOpen] = React.useState(false);
+
+  return (
+    <div className="relative">
+      <Label htmlFor="date">Date</Label>
+      <button
+        id="date"
+        type="button"
+        className={cn(
+          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2",
+          "text-sm ring-offset-background placeholder:text-muted-foreground",
+          "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        )}
+        onClick={() => setIsOpen(true)}
+      >
+        {date ? (
+          date.toLocaleDateString()
+        ) : (
+          <span className="text-muted-foreground">Pick a date</span>
+        )}
+      </button>
+
+      {isOpen && (
+        <div className="absolute top-full mt-2 z-50">
+          <Calendar
+            value={date}
+            onChange={(newDate) => {
+              setDate(newDate);
+              setIsOpen(false);
+            }}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+```

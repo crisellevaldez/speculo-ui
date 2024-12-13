@@ -1,0 +1,157 @@
+# Input
+
+Input is a form component that allows users to enter text data. It supports various features like error states, helper text, and icons.
+
+## Basic Usage
+
+```jsx
+import { Input } from "components/Input";
+
+// Basic input
+<Input placeholder="Enter your name" />
+
+// With helper text
+<Input
+  placeholder="Enter your email"
+  helperText="We'll never share your email."
+/>
+
+// With error state
+<Input
+  placeholder="Username"
+  error="Username is already taken"
+/>
+```
+
+## Form Integration
+
+The Input component is designed to work seamlessly with react-hook-form:
+
+```jsx
+import { Input } from "components/Input";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export function LoginForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
+    // Handle form submission
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <Input
+        {...register("email")}
+        placeholder="Email"
+        error={errors.email?.message}
+      />
+      <Input
+        {...register("password")}
+        type="password"
+        placeholder="Password"
+        error={errors.password?.message}
+      />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+## Icons
+
+The Input component supports both start and end icons:
+
+```jsx
+import { Input } from "components/Input";
+import { SearchIcon, EyeIcon } from "your-icon-library";
+
+// With start icon
+<Input
+  startIcon={<SearchIcon className="h-5 w-5 text-gray-400" />}
+  placeholder="Search..."
+/>
+
+// With end icon (e.g., password visibility toggle)
+<Input
+  type="password"
+  endIcon={<EyeIcon className="h-5 w-5 text-gray-400" />}
+  placeholder="Enter password"
+/>
+
+// With both icons
+<Input
+  startIcon={<SearchIcon className="h-5 w-5 text-gray-400" />}
+  endIcon={<EyeIcon className="h-5 w-5 text-gray-400" />}
+  placeholder="Search..."
+/>
+```
+
+## Error Handling
+
+The Input component provides built-in error handling with proper accessibility:
+
+```jsx
+<Input
+  id="username"
+  placeholder="Username"
+  error="This username is already taken"
+/>
+```
+
+When an error is present:
+
+- The input border and focus ring color changes to red
+- The error message is displayed below the input
+- Proper ARIA attributes are set for accessibility
+- Screen readers will announce the error message
+
+## Component API
+
+### Props
+
+| Prop       | Type            | Default   | Description                            |
+| ---------- | --------------- | --------- | -------------------------------------- |
+| error      | string          | undefined | Error message to display               |
+| helperText | string          | undefined | Helper text to display below the input |
+| startIcon  | React.ReactNode | undefined | Icon to display at the start of input  |
+| endIcon    | React.ReactNode | undefined | Icon to display at the end of input    |
+| disabled   | boolean         | false     | Whether the input is disabled          |
+| className  | string          | undefined | Additional CSS classes to apply        |
+
+Plus all standard HTML input attributes.
+
+## Accessibility
+
+The Input component follows accessibility best practices:
+
+- Uses semantic HTML with proper ARIA attributes
+- Error states are properly conveyed to assistive technology
+- Helper text and error messages are programmatically associated with the input
+- Icons are purely decorative and hidden from screen readers
+- Maintains proper color contrast ratios
+- Supports keyboard navigation
+- Clear focus indicators for keyboard users
+
+## Best Practices
+
+1. Always provide meaningful placeholder text
+2. Use helper text to provide additional context when needed
+3. Display clear error messages that explain how to resolve the issue
+4. Use icons sparingly and ensure they add value to the user experience
+5. Ensure form labels are present (either visible or aria-label)
+6. Group related inputs using fieldset and legend when appropriate
+7. Validate input in real-time when appropriate
+8. Provide clear feedback for validation errors

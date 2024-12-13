@@ -1,0 +1,248 @@
+# HoverCard
+
+A popup card that appears when hovering over a trigger element.
+
+## Usage
+
+```tsx
+import { HoverCard } from "@/components/HoverCard/HoverCard";
+
+export default function HoverCardDemo() {
+  return (
+    <HoverCard trigger={<Button>Hover me</Button>}>
+      <div className="space-y-2">
+        <h4 className="font-medium">Preview Content</h4>
+        <p className="text-sm text-muted-foreground">
+          Additional information that appears on hover.
+        </p>
+      </div>
+    </HoverCard>
+  );
+}
+```
+
+## Props
+
+- `trigger` - Element that triggers the hover card
+- `openDelay` - Delay before showing (default: 200ms)
+- `closeDelay` - Delay before hiding (default: 300ms)
+- `side` - Position relative to trigger
+  - `top`
+  - `right`
+  - `bottom` (default)
+  - `left`
+- `align` - Alignment along the chosen side
+  - `start`
+  - `center` (default)
+  - `end`
+- `arrow` - Show arrow pointer (default: true)
+- `className` - Additional CSS classes
+
+## Examples
+
+### Basic Usage
+
+```tsx
+<HoverCard trigger={<Button>User Profile</Button>}>
+  <div className="flex gap-4">
+    <Avatar src="user-avatar.jpg" />
+    <div>
+      <h4 className="font-medium">John Doe</h4>
+      <p className="text-sm text-muted-foreground">Software Engineer</p>
+    </div>
+  </div>
+</HoverCard>
+```
+
+### Different Positions
+
+```tsx
+<div className="flex gap-4">
+  <HoverCard trigger={<Button>Top</Button>} side="top">
+    Content above
+  </HoverCard>
+
+  <HoverCard trigger={<Button>Right</Button>} side="right">
+    Content to the right
+  </HoverCard>
+
+  <HoverCard trigger={<Button>Bottom</Button>} side="bottom">
+    Content below
+  </HoverCard>
+
+  <HoverCard trigger={<Button>Left</Button>} side="left">
+    Content to the left
+  </HoverCard>
+</div>
+```
+
+### Custom Alignment
+
+```tsx
+<HoverCard trigger={<Button>Aligned Start</Button>} side="bottom" align="start">
+  Aligned to start
+</HoverCard>
+```
+
+### Without Arrow
+
+```tsx
+<HoverCard trigger={<Button>No Arrow</Button>} arrow={false}>
+  Content without arrow pointer
+</HoverCard>
+```
+
+### Custom Delays
+
+```tsx
+<HoverCard
+  trigger={<Button>Quick Preview</Button>}
+  openDelay={100}
+  closeDelay={200}
+>
+  Quick to show, quick to hide
+</HoverCard>
+```
+
+### Rich Content
+
+```tsx
+<HoverCard
+  trigger={
+    <div className="flex items-center gap-2">
+      <Avatar src="project-icon.png" />
+      <span>Project Details</span>
+    </div>
+  }
+>
+  <div className="space-y-4">
+    <div className="flex items-center gap-2">
+      <Icon className="text-primary" />
+      <div>
+        <h4 className="font-medium">Project Name</h4>
+        <p className="text-sm text-muted-foreground">Last updated 2 days ago</p>
+      </div>
+    </div>
+
+    <div className="space-y-2">
+      <h5 className="text-sm font-medium">Team Members</h5>
+      <div className="flex -space-x-2">
+        <Avatar src="user1.jpg" />
+        <Avatar src="user2.jpg" />
+        <Avatar src="user3.jpg" />
+      </div>
+    </div>
+
+    <div className="space-y-2">
+      <h5 className="text-sm font-medium">Stats</h5>
+      <div className="grid grid-cols-2 gap-2 text-sm">
+        <div>
+          <div className="text-muted-foreground">Tasks</div>
+          <div className="font-medium">12/34</div>
+        </div>
+        <div>
+          <div className="text-muted-foreground">Progress</div>
+          <div className="font-medium">65%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</HoverCard>
+```
+
+## Accessibility
+
+- Uses proper ARIA attributes
+- Supports keyboard focus management
+- Handles mouse and touch interactions
+- Provides sufficient hover delay
+- Maintains proper contrast
+
+## Best Practices
+
+1. Content Guidelines
+
+   - Keep content concise
+   - Show relevant preview information
+   - Use consistent content structure
+   - Avoid complex interactions
+
+2. Timing
+
+   - Use appropriate delays
+   - Consider user reading time
+   - Balance responsiveness
+   - Handle rapid hover changes
+
+3. Positioning
+
+   - Consider viewport edges
+   - Maintain visibility
+   - Use consistent alignment
+   - Handle overflow properly
+
+4. Visual Design
+
+   - Clear visual hierarchy
+   - Sufficient contrast
+   - Smooth animations
+   - Proper spacing
+
+5. Performance
+   - Optimize content loading
+   - Minimize layout shifts
+   - Handle rapid interactions
+   - Clean up timeouts
+
+## Examples in Context
+
+### User Profile Card
+
+```tsx
+function UserProfileCard() {
+  return (
+    <HoverCard
+      trigger={
+        <button className="flex items-center gap-2 hover:text-primary">
+          <Avatar src="user.jpg" />
+          <span>John Doe</span>
+        </button>
+      }
+    >
+      <div className="w-[300px]">
+        <div className="flex gap-4">
+          <Avatar src="user.jpg" className="h-12 w-12" />
+          <div>
+            <h4 className="font-medium">John Doe</h4>
+            <p className="text-sm text-muted-foreground">Senior Developer</p>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <h5 className="text-sm font-medium mb-2">Bio</h5>
+          <p className="text-sm text-muted-foreground">
+            Full-stack developer with 5 years of experience...
+          </p>
+        </div>
+
+        <div className="mt-4 pt-4 border-t">
+          <div className="grid grid-cols-3 gap-4 text-center text-sm">
+            <div>
+              <div className="font-medium">234</div>
+              <div className="text-muted-foreground">Posts</div>
+            </div>
+            <div>
+              <div className="font-medium">12k</div>
+              <div className="text-muted-foreground">Followers</div>
+            </div>
+            <div>
+              <div className="font-medium">1.5k</div>
+              <div className="text-muted-foreground">Following</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </HoverCard>
+  );
+}
+```

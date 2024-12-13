@@ -1,0 +1,259 @@
+# Checkbox & Radio
+
+Form controls for selecting single or multiple options.
+
+## Checkbox
+
+### Basic Usage
+
+```jsx
+import { Checkbox, CheckboxGroup } from "components/Checkbox";
+
+// Single checkbox
+<Checkbox
+  label="Accept terms and conditions"
+  onChange={(e) => console.log(e.target.checked)}
+/>
+
+// With error state
+<Checkbox
+  label="Subscribe to newsletter"
+  error="This field is required"
+/>
+
+// Disabled state
+<Checkbox
+  label="Disabled option"
+  disabled
+/>
+
+// Indeterminate state
+<Checkbox
+  label="Select all"
+  indeterminate
+/>
+```
+
+### Checkbox Group
+
+```jsx
+<CheckboxGroup label="Select your interests" error="Please select at least one">
+  <Checkbox label="Programming" value="programming" />
+  <Checkbox label="Design" value="design" />
+  <Checkbox label="Business" value="business" />
+</CheckboxGroup>
+```
+
+## Radio
+
+### Basic Usage
+
+```jsx
+import { Radio, RadioGroup } from "components/Radio";
+
+// Single radio
+<Radio
+  label="Option 1"
+  name="options"
+  value="1"
+/>
+
+// With error state
+<Radio
+  label="Option 2"
+  name="options"
+  value="2"
+  error="Please select an option"
+/>
+
+// Disabled state
+<Radio
+  label="Option 3"
+  name="options"
+  value="3"
+  disabled
+/>
+```
+
+### Radio Group
+
+```jsx
+const [value, setValue] = useState("");
+
+<RadioGroup
+  label="Select your preferred contact method"
+  name="contact"
+  value={value}
+  onChange={setValue}
+  error={!value ? "Please select a contact method" : undefined}
+>
+  <Radio label="Email" value="email" />
+  <Radio label="Phone" value="phone" />
+  <Radio label="SMS" value="sms" />
+</RadioGroup>;
+```
+
+## Form Integration
+
+Both components work seamlessly with react-hook-form:
+
+```jsx
+import { Checkbox, CheckboxGroup } from "components/Checkbox";
+import { Radio, RadioGroup } from "components/Radio";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  terms: z.boolean().refine((val) => val === true, {
+    message: "You must accept the terms",
+  }),
+  interests: z.array(z.string()).min(1, "Select at least one interest"),
+  contactMethod: z.string().min(1, "Please select a contact method"),
+});
+
+export function PreferencesForm() {
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      {/* Single Checkbox */}
+      <Checkbox
+        {...register("terms")}
+        label="I accept the terms and conditions"
+        error={errors.terms?.message}
+      />
+
+      {/* Checkbox Group */}
+      <CheckboxGroup label="Interests" error={errors.interests?.message}>
+        <Checkbox {...register("interests")} value="tech" label="Technology" />
+        <Checkbox {...register("interests")} value="art" label="Art" />
+        <Checkbox {...register("interests")} value="sports" label="Sports" />
+      </CheckboxGroup>
+
+      {/* Radio Group */}
+      <Controller
+        name="contactMethod"
+        control={control}
+        render={({ field }) => (
+          <RadioGroup
+            label="Preferred Contact Method"
+            name={field.name}
+            value={field.value}
+            onChange={field.onChange}
+            error={errors.contactMethod?.message}
+          >
+            <Radio value="email" label="Email" />
+            <Radio value="phone" label="Phone" />
+            <Radio value="sms" label="SMS" />
+          </RadioGroup>
+        )}
+      />
+
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+```
+
+## Component APIs
+
+### Checkbox Props
+
+| Prop          | Type    | Default   | Description                                |
+| ------------- | ------- | --------- | ------------------------------------------ |
+| label         | string  | undefined | Label text for the checkbox                |
+| error         | string  | undefined | Error message to display                   |
+| indeterminate | boolean | false     | Whether checkbox is in indeterminate state |
+| disabled      | boolean | false     | Whether checkbox is disabled               |
+| className     | string  | undefined | Additional CSS classes                     |
+
+Plus all standard HTML input attributes (except 'type').
+
+### CheckboxGroup Props
+
+| Prop      | Type            | Default   | Description              |
+| --------- | --------------- | --------- | ------------------------ |
+| label     | string          | undefined | Label text for the group |
+| error     | string          | undefined | Error message to display |
+| className | string          | undefined | Additional CSS classes   |
+| children  | React.ReactNode | required  | Checkbox components      |
+
+### Radio Props
+
+| Prop      | Type    | Default   | Description                      |
+| --------- | ------- | --------- | -------------------------------- |
+| label     | string  | undefined | Label text for the radio button  |
+| error     | string  | undefined | Error message to display         |
+| disabled  | boolean | false     | Whether radio button is disabled |
+| className | string  | undefined | Additional CSS classes           |
+
+Plus all standard HTML input attributes (except 'type').
+
+### RadioGroup Props
+
+| Prop      | Type                    | Default   | Description                     |
+| --------- | ----------------------- | --------- | ------------------------------- |
+| label     | string                  | undefined | Label text for the group        |
+| error     | string                  | undefined | Error message to display        |
+| className | string                  | undefined | Additional CSS classes          |
+| name      | string                  | required  | Name attribute for radio inputs |
+| value     | string                  | undefined | Currently selected value        |
+| onChange  | (value: string) => void | undefined | Callback when selection changes |
+| children  | React.ReactNode         | required  | Radio components                |
+
+## Accessibility
+
+Both components follow accessibility best practices:
+
+- Uses semantic HTML elements
+- Proper label associations
+- ARIA attributes for states and errors
+- Keyboard navigation support
+- Focus management
+- Screen reader announcements for state changes
+- Proper grouping with fieldset and legend
+- Color contrast compliance
+
+## Best Practices
+
+1. Always provide clear, descriptive labels
+2. Group related options using CheckboxGroup or RadioGroup
+3. Use error messages to clearly explain validation issues
+4. Consider keyboard navigation in your layout
+5. Maintain proper spacing between options
+6. Use indeterminate state for parent checkboxes when appropriate
+7. Provide feedback for selection changes
+8. Consider mobile touch targets in your styling
+
+## Group Layouts
+
+For custom layouts within groups:
+
+```jsx
+// Custom grid layout
+<CheckboxGroup className="grid grid-cols-2 gap-4">
+  <Checkbox label="Option 1" />
+  <Checkbox label="Option 2" />
+  <Checkbox label="Option 3" />
+  <Checkbox label="Option 4" />
+</CheckboxGroup>
+
+// Inline layout
+<RadioGroup className="flex gap-6">
+  <Radio label="Option 1" />
+  <Radio label="Option 2" />
+  <Radio label="Option 3" />
+</RadioGroup>
+```

@@ -1,0 +1,135 @@
+# Switch
+
+A control that allows users to toggle between two states.
+
+## Usage
+
+```tsx
+import { Switch } from "@/components/Switch/Switch";
+
+export default function SwitchDemo() {
+  return <Switch label="Airplane Mode" />;
+}
+```
+
+## Props
+
+- `label` - Optional text label for the switch
+- `size` - Size of the switch
+  - `sm` - Small
+  - `md` - Medium (default)
+  - `lg` - Large
+- `checked` - Controlled checked state
+- `defaultChecked` - Default checked state for uncontrolled usage
+- `disabled` - Whether the switch is disabled
+- `onChange` - Callback when the switch state changes
+- `className` - Additional CSS classes
+- All HTML input attributes are also supported (except 'type' and 'size')
+
+## Examples
+
+### Basic Usage
+
+```tsx
+function BasicSwitch() {
+  const [checked, setChecked] = React.useState(false);
+
+  return (
+    <Switch checked={checked} onCheckedChange={setChecked} label="Wi-Fi" />
+  );
+}
+```
+
+### Sizes
+
+```tsx
+<div className="flex flex-col gap-4">
+  <Switch size="sm" label="Small switch" />
+  <Switch size="md" label="Medium switch" />
+  <Switch size="lg" label="Large switch" />
+</div>
+```
+
+### Disabled State
+
+```tsx
+<div className="flex flex-col gap-4">
+  <Switch disabled label="Disabled unchecked" />
+  <Switch disabled defaultChecked label="Disabled checked" />
+</div>
+```
+
+### Without Label
+
+```tsx
+<Switch aria-label="Toggle feature" />
+```
+
+### Custom Styles
+
+```tsx
+<Switch
+  label="Custom colors"
+  className="bg-purple-200 peer-checked:bg-purple-500"
+/>
+```
+
+### Form Integration
+
+```tsx
+import { useForm } from "react-hook-form";
+
+function SwitchForm() {
+  const { register } = useForm();
+
+  return (
+    <form>
+      <Switch {...register("notifications")} label="Enable notifications" />
+    </form>
+  );
+}
+```
+
+## Accessibility
+
+- Uses native checkbox input for optimal accessibility
+- Supports keyboard navigation (Tab to focus, Space to toggle)
+- Includes proper ARIA attributes
+- Label is properly associated with the input
+- Visual states have sufficient color contrast
+- Focus ring is visible for keyboard navigation
+
+## Best Practices
+
+1. Usage Guidelines
+
+   - Use for binary choices that take immediate effect
+   - Keep labels clear and concise
+   - Use when the option can be clearly expressed as on/off
+   - Consider using a checkbox for opt-in/opt-out choices in forms
+
+2. Labeling
+
+   - Always provide a label or aria-label
+   - Use action-oriented labels when possible
+   - Make it clear what will happen when the switch is toggled
+
+3. Behavior
+
+   - Changes should take effect immediately
+   - Provide visual feedback for state changes
+   - Consider adding loading state for async operations
+   - Disable the switch when the action is not available
+
+4. Layout
+
+   - Maintain consistent spacing around switches
+   - Align switches properly with other form elements
+   - Group related switches together
+   - Consider using dividers between switch groups
+
+5. Customization
+   - Maintain sufficient contrast in both states
+   - Keep animations smooth but not too slow
+   - Ensure custom styles don't hide state changes
+   - Consider dark mode when customizing colors

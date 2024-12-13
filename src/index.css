@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* Prose styles for MDX content */
+  .prose pre {
+    @apply bg-gray-50 p-4 rounded-lg overflow-x-auto;
+  }
+
+  .prose code {
+    @apply bg-gray-50 px-1 py-0.5 rounded text-sm;
+  }
+
+  .prose pre code {
+    @apply bg-transparent p-0 text-sm;
+  }
+
+  .prose table {
+    @apply w-full text-left border-collapse;
+  }
+
+  .prose th {
+    @apply p-2 border-b-2 border-gray-200 bg-gray-50 font-semibold text-sm;
+  }
+
+  .prose td {
+    @apply p-2 border-b border-gray-200 text-sm;
+  }
+
+  .prose td code {
+    @apply text-xs;
+  }
+
+  /* Remove prose styles for certain elements */
+  .not-prose {
+    @apply prose-p:m-0 prose-headings:m-0 prose-li:m-0 prose-ul:m-0 prose-ol:m-0;
+  }
+}

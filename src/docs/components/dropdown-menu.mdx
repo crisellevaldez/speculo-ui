@@ -1,0 +1,323 @@
+# Dropdown Menu
+
+A flexible dropdown menu component that supports nested menus, keyboard navigation, and custom rendering.
+
+## Implementation
+
+```jsx
+import { DropdownMenu, DropdownMenuItem } from "components/DropdownMenu";
+
+function BasicExample() {
+  return (
+    <DropdownMenu
+      trigger={
+        <button className="rounded-md bg-white px-4 py-2 shadow">
+          Options
+        </button>
+      }
+    >
+      <DropdownMenuItem onClick={() => console.log("Edit")}>
+        Edit
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={() => console.log("Duplicate")}>
+        Duplicate
+      </DropdownMenuItem>
+      <DropdownMenuItem onClick={() => console.log("Delete")}>
+        Delete
+      </DropdownMenuItem>
+    </DropdownMenu>
+  );
+}
+```
+
+## Nested Menus
+
+Example with nested submenus:
+
+```jsx
+function NestedExample() {
+  return (
+    <DropdownMenu
+      trigger={
+        <button className="rounded-md bg-white px-4 py-2 shadow">File</button>
+      }
+    >
+      <DropdownMenuItem onClick={() => console.log("New")}>
+        New
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        submenu={
+          <DropdownMenu>
+            <DropdownMenuItem onClick={() => console.log("Save")}>
+              Save
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => console.log("Save As")}>
+              Save As...
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              submenu={
+                <DropdownMenu>
+                  <DropdownMenuItem onClick={() => console.log("PDF")}>
+                    PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => console.log("Word")}>
+                    Word
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => console.log("Excel")}>
+                    Excel
+                  </DropdownMenuItem>
+                </DropdownMenu>
+              }
+            >
+              Export As
+            </DropdownMenuItem>
+          </DropdownMenu>
+        }
+      >
+        Save
+      </DropdownMenuItem>
+
+      <DropdownMenuSeparator />
+
+      <DropdownMenuItem onClick={() => console.log("Exit")}>
+        Exit
+      </DropdownMenuItem>
+    </DropdownMenu>
+  );
+}
+```
+
+## Custom Items
+
+Example with icons, shortcuts, and custom rendering:
+
+```jsx
+function CustomExample() {
+  return (
+    <DropdownMenu
+      trigger={
+        <button className="rounded-md bg-white px-4 py-2 shadow">
+          Actions
+        </button>
+      }
+    >
+      <DropdownMenuItem
+        icon={
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
+        }
+        shortcut="⌘E"
+        onClick={() => console.log("Edit")}
+      >
+        Edit
+      </DropdownMenuItem>
+
+      <DropdownMenuItem
+        icon={
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+            />
+          </svg>
+        }
+        shortcut="⌘D"
+        onClick={() => console.log("Duplicate")}
+      >
+        Duplicate
+      </DropdownMenuItem>
+
+      <DropdownMenuSeparator />
+
+      <DropdownMenuItem
+        icon={
+          <svg
+            className="h-4 w-4 text-red-500"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+            />
+          </svg>
+        }
+        className="text-red-600 hover:bg-red-50"
+        onClick={() => console.log("Delete")}
+      >
+        Delete
+      </DropdownMenuItem>
+    </DropdownMenu>
+  );
+}
+```
+
+## Keyboard Usage
+
+The DropdownMenu component supports full keyboard navigation:
+
+- `Space` or `Enter` - Open menu / Select item
+- `Arrow Down` - Move to next item
+- `Arrow Up` - Move to previous item
+- `Arrow Right` - Open submenu
+- `Arrow Left` - Close submenu
+- `Home` - Move to first item
+- `End` - Move to last item
+- `Escape` - Close menu
+- `Tab` - Move through items (when menu is open)
+
+```jsx
+function KeyboardExample() {
+  return (
+    <div className="space-y-2">
+      <p>Try using keyboard navigation:</p>
+      <DropdownMenu
+        trigger={
+          <button className="rounded-md bg-white px-4 py-2 shadow">
+            Press Space or Enter
+          </button>
+        }
+      >
+        <DropdownMenuItem>Item 1</DropdownMenuItem>
+        <DropdownMenuItem>Item 2</DropdownMenuItem>
+        <DropdownMenuItem
+          submenu={
+            <DropdownMenu>
+              <DropdownMenuItem>Submenu Item 1</DropdownMenuItem>
+              <DropdownMenuItem>Submenu Item 2</DropdownMenuItem>
+            </DropdownMenu>
+          }
+        >
+          Press Right Arrow
+        </DropdownMenuItem>
+      </DropdownMenu>
+    </div>
+  );
+}
+```
+
+## Position Guide
+
+Control the alignment of the dropdown menu:
+
+```jsx
+function PositionExample() {
+  return (
+    <div className="flex justify-between">
+      <DropdownMenu trigger={<button>Left Aligned</button>} align="start">
+        <DropdownMenuItem>Item 1</DropdownMenuItem>
+        <DropdownMenuItem>Item 2</DropdownMenuItem>
+      </DropdownMenu>
+
+      <DropdownMenu trigger={<button>Center Aligned</button>} align="center">
+        <DropdownMenuItem>Item 1</DropdownMenuItem>
+        <DropdownMenuItem>Item 2</DropdownMenuItem>
+      </DropdownMenu>
+
+      <DropdownMenu trigger={<button>Right Aligned</button>} align="end">
+        <DropdownMenuItem>Item 1</DropdownMenuItem>
+        <DropdownMenuItem>Item 2</DropdownMenuItem>
+      </DropdownMenu>
+    </div>
+  );
+}
+```
+
+## Component API
+
+### DropdownMenu Props
+
+| Prop      | Type                         | Default   | Description                        |
+| --------- | ---------------------------- | --------- | ---------------------------------- |
+| trigger   | React.ReactNode              | required  | Element that triggers the dropdown |
+| children  | React.ReactNode              | required  | Menu items                         |
+| align     | "start" \| "center" \| "end" | "start"   | Menu alignment relative to trigger |
+| className | string                       | undefined | Additional CSS classes             |
+| offset    | number                       | 4         | Offset from trigger                |
+
+### DropdownMenuItem Props
+
+| Prop      | Type            | Default   | Description                  |
+| --------- | --------------- | --------- | ---------------------------- |
+| children  | React.ReactNode | required  | Item content                 |
+| onClick   | () => void      | undefined | Click handler                |
+| disabled  | boolean         | false     | Whether the item is disabled |
+| className | string          | undefined | Additional CSS classes       |
+| icon      | React.ReactNode | undefined | Icon to display              |
+| shortcut  | string          | undefined | Keyboard shortcut to display |
+| submenu   | React.ReactNode | undefined | Nested menu content          |
+
+## Accessibility
+
+The DropdownMenu component follows accessibility best practices:
+
+- Proper ARIA roles and attributes
+- Keyboard navigation support
+- Focus management
+- Screen reader announcements
+- Proper menu semantics
+- Escape key handling
+- Click outside handling
+
+## Best Practices
+
+1. Menu Structure
+
+   - Keep menus organized and logical
+   - Group related items
+   - Use separators effectively
+   - Limit nesting depth
+   - Consider mobile usage
+
+2. Item Design
+
+   - Use clear, concise labels
+   - Include icons when helpful
+   - Show keyboard shortcuts
+   - Maintain consistent styling
+   - Handle disabled states
+
+3. Interaction
+
+   - Provide visual feedback
+   - Support keyboard navigation
+   - Handle focus properly
+   - Close on selection
+   - Consider touch devices
+
+4. Position
+
+   - Avoid overflow issues
+   - Adjust for screen edges
+   - Consider scroll containers
+   - Handle window resize
+   - Support different alignments
+
+5. Performance
+   - Use portals efficiently
+   - Clean up event listeners
+   - Handle animations smoothly
+   - Manage nested menus
+   - Optimize re-renders

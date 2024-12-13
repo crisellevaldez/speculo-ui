@@ -1,0 +1,159 @@
+# Label
+
+An accessible label component for form controls.
+
+## Usage
+
+```tsx
+import { Label, FormLabel } from "@/components/Label/Label";
+
+export default function LabelDemo() {
+  return (
+    <div className="grid gap-4">
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <input id="email" type="email" />
+      </div>
+      <div>
+        <FormLabel htmlFor="password" required>
+          Password
+        </FormLabel>
+        <input id="password" type="password" />
+      </div>
+    </div>
+  );
+}
+```
+
+## Props
+
+- `required` - Shows a required indicator (\*)
+- `optional` - Shows an optional indicator
+- `htmlFor` - Associates the label with a form control
+- `className` - Additional CSS classes
+- All HTML label attributes are also supported
+
+## Examples
+
+### Basic Label
+
+```tsx
+<Label htmlFor="name">Full Name</Label>
+```
+
+### Required Field
+
+```tsx
+<Label htmlFor="email" required>
+  Email Address
+</Label>
+```
+
+### Optional Field
+
+```tsx
+<Label htmlFor="bio" optional>
+  Biography
+</Label>
+```
+
+### Form Layout
+
+```tsx
+<div className="space-y-4">
+  <div>
+    <FormLabel htmlFor="username" required>
+      Username
+    </FormLabel>
+    <input id="username" className="mt-1 block w-full" required />
+  </div>
+  <div>
+    <FormLabel htmlFor="bio" optional>
+      Bio
+    </FormLabel>
+    <textarea id="bio" className="mt-1 block w-full" />
+  </div>
+</div>
+```
+
+### With Helper Text
+
+```tsx
+<div>
+  <FormLabel htmlFor="phone">Phone Number</FormLabel>
+  <input id="phone" type="tel" className="mt-1 block w-full" />
+  <span className="text-sm text-muted-foreground mt-1">
+    Format: +1 (123) 456-7890
+  </span>
+</div>
+```
+
+### Custom Styling
+
+```tsx
+<Label htmlFor="custom" className="text-blue-600 font-bold uppercase">
+  Custom Label
+</Label>
+```
+
+### With Icons
+
+```tsx
+import { Info } from "lucide-react";
+
+<FormLabel htmlFor="info" className="flex items-center gap-1">
+  Information
+  <Info className="h-4 w-4 text-muted-foreground" />
+</FormLabel>;
+```
+
+## Accessibility
+
+- Always use labels with form controls
+- Use the `htmlFor` attribute to associate labels with their controls
+- Required fields should be marked both visually and programmatically
+- Maintain sufficient color contrast for readability
+- Consider screen reader users when using icons or symbols
+
+## Best Practices
+
+1. Usage Guidelines
+
+   - Always use labels for form controls
+   - Keep label text concise and descriptive
+   - Use consistent styling across your forms
+   - Place labels above form controls for better readability
+
+2. Required Fields
+
+   - Clearly indicate required fields
+   - Be consistent with required field marking
+   - Consider using an asterisk (\*) for required fields
+   - Explain required field indicators in form instructions
+
+3. Optional Fields
+
+   - Only mark optional fields if most fields are required
+   - Use consistent optional field marking
+   - Consider using "(optional)" text instead of symbols
+   - Place optional indicator after the label text
+
+4. Layout
+
+   - Maintain consistent spacing between label and control
+   - Align labels consistently across the form
+   - Group related form fields together
+   - Use FormLabel for consistent form layouts
+
+5. Customization
+
+   - Maintain sufficient contrast when customizing colors
+   - Keep font sizes readable
+   - Consider mobile viewports when styling
+   - Ensure custom styles don't break accessibility
+
+6. Error States
+   - Use color and icons to indicate errors
+   - Maintain label visibility during error states
+   - Provide clear error messages
+   - Consider using aria-describedby for error messages

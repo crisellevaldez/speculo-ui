@@ -1,0 +1,295 @@
+# Sidebar
+
+A responsive navigation sidebar component with collapsible states and nested items.
+
+## Usage
+
+```tsx
+import { Sidebar } from "@/components/Sidebar/Sidebar";
+import { Home, Settings, Users } from "lucide-react";
+
+export default function SidebarDemo() {
+  return (
+    <Sidebar
+      items={[
+        {
+          icon: <Home className="h-4 w-4" />,
+          label: "Home",
+          href: "/",
+        },
+        {
+          icon: <Users className="h-4 w-4" />,
+          label: "Users",
+          items: [
+            {
+              label: "Overview",
+              href: "/users",
+            },
+            {
+              label: "Settings",
+              href: "/users/settings",
+            },
+          ],
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Props
+
+- `items` - Array of navigation items
+  - `icon` - Optional icon element
+  - `label` - Text or element for the item
+  - `href` - Optional URL for navigation
+  - `items` - Optional nested navigation items
+  - `disabled` - Whether the item is disabled
+- `collapsed` - Control collapsed state
+- `onCollapse` - Callback when collapse state changes
+- `defaultCollapsed` - Initial collapsed state
+- `className` - Additional CSS classes
+
+## Examples
+
+### Basic Navigation
+
+```tsx
+<Sidebar
+  items={[
+    {
+      icon: <HomeIcon />,
+      label: "Dashboard",
+      href: "/dashboard",
+    },
+    {
+      icon: <UserIcon />,
+      label: "Profile",
+      href: "/profile",
+    },
+    {
+      icon: <SettingsIcon />,
+      label: "Settings",
+      href: "/settings",
+    },
+  ]}
+/>
+```
+
+### With Nested Items
+
+```tsx
+<Sidebar
+  items={[
+    {
+      icon: <FolderIcon />,
+      label: "Projects",
+      items: [
+        {
+          label: "Active",
+          href: "/projects/active",
+        },
+        {
+          label: "Archived",
+          href: "/projects/archived",
+        },
+      ],
+    },
+    {
+      icon: <UsersIcon />,
+      label: "Team",
+      items: [
+        {
+          label: "Members",
+          href: "/team/members",
+        },
+        {
+          label: "Invites",
+          href: "/team/invites",
+        },
+      ],
+    },
+  ]}
+/>
+```
+
+### Controlled Collapse
+
+```tsx
+function ControlledSidebar() {
+  const [collapsed, setCollapsed] = React.useState(false);
+
+  return (
+    <Sidebar
+      collapsed={collapsed}
+      onCollapse={setCollapsed}
+      items={[
+        {
+          icon: <HomeIcon />,
+          label: "Home",
+          href: "/",
+        },
+      ]}
+    />
+  );
+}
+```
+
+### With Disabled Items
+
+```tsx
+<Sidebar
+  items={[
+    {
+      icon: <HomeIcon />,
+      label: "Home",
+      href: "/",
+    },
+    {
+      icon: <LockIcon />,
+      label: "Admin",
+      disabled: true,
+      href: "/admin",
+    },
+  ]}
+/>
+```
+
+### Custom Styling
+
+```tsx
+<Sidebar
+  className="border-primary bg-secondary"
+  items={[
+    {
+      icon: (
+        <div className="rounded-full bg-primary p-1">
+          <HomeIcon className="text-white" />
+        </div>
+      ),
+      label: "Custom Item",
+      href: "/",
+    },
+  ]}
+/>
+```
+
+### With Badges
+
+```tsx
+<Sidebar
+  items={[
+    {
+      icon: <InboxIcon />,
+      label: (
+        <div className="flex items-center justify-between w-full">
+          <span>Inbox</span>
+          <Badge>3</Badge>
+        </div>
+      ),
+      href: "/inbox",
+    },
+  ]}
+/>
+```
+
+## Accessibility
+
+- Proper keyboard navigation
+- ARIA attributes for expanded/collapsed states
+- Focus management
+- Screen reader support
+- Proper semantic HTML
+
+## Best Practices
+
+1. Navigation Structure
+
+   - Keep hierarchy clear and logical
+   - Limit nesting depth
+   - Group related items together
+   - Use consistent patterns
+
+2. Visual Design
+
+   - Clear visual hierarchy
+   - Consistent spacing
+   - Obvious active states
+   - Clear hover states
+
+3. Interaction
+
+   - Smooth transitions
+   - Clear feedback
+   - Easy collapse/expand
+   - Keyboard support
+
+4. Responsive Design
+
+   - Consider mobile viewports
+   - Handle overflow properly
+   - Maintain usability when collapsed
+   - Consider touch targets
+
+5. Performance
+   - Optimize icons
+   - Minimize re-renders
+   - Handle large item lists
+   - Efficient animations
+
+## Examples in Context
+
+### Application Layout
+
+```tsx
+function AppLayout() {
+  return (
+    <div className="flex h-screen">
+      <Sidebar
+        className="border-r"
+        items={[
+          {
+            icon: <DashboardIcon />,
+            label: "Dashboard",
+            href: "/dashboard",
+          },
+          {
+            icon: <FolderIcon />,
+            label: "Projects",
+            items: [
+              {
+                label: "All Projects",
+                href: "/projects",
+              },
+              {
+                label: "Create New",
+                href: "/projects/new",
+              },
+            ],
+          },
+          {
+            icon: <CalendarIcon />,
+            label: "Calendar",
+            href: "/calendar",
+          },
+          {
+            icon: <SettingsIcon />,
+            label: "Settings",
+            items: [
+              {
+                label: "Profile",
+                href: "/settings/profile",
+              },
+              {
+                label: "Preferences",
+                href: "/settings/preferences",
+              },
+            ],
+          },
+        ]}
+      />
+      <main className="flex-1 overflow-auto p-6">{/* Main content */}</main>
+    </div>
+  );
+}
+```

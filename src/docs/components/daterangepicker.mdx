@@ -1,0 +1,244 @@
+# DateRangePicker
+
+A component for selecting a range of dates.
+
+## Usage
+
+```tsx
+import { DateRangePicker } from "@/components/DateRangePicker/DateRangePicker";
+
+export default function DateRangePickerDemo() {
+  const [dateRange, setDateRange] = React.useState({
+    from: null,
+    to: null,
+  });
+
+  return <DateRangePicker value={dateRange} onChange={setDateRange} />;
+}
+```
+
+## Props
+
+- `value` - Selected date range
+  - `from` - Start date
+  - `to` - End date
+- `onChange` - Callback when range changes
+- `minDate` - Minimum selectable date
+- `maxDate` - Maximum selectable date
+- `disabled` - Disable the picker
+- `locale` - Locale for formatting (default: 'en-US')
+- `weekStartsOn` - First day of week (0-6, 0 = Sunday)
+- `disabledDates` - Array of dates to disable
+- `placeholder` - Custom placeholder text
+  - `from` - Start date placeholder
+  - `to` - End date placeholder
+- `className` - Additional CSS classes
+
+## Examples
+
+### Basic Usage
+
+```tsx
+function BasicDateRange() {
+  const [range, setRange] = React.useState({
+    from: null,
+    to: null,
+  });
+
+  return <DateRangePicker value={range} onChange={setRange} />;
+}
+```
+
+### With Min/Max Dates
+
+```tsx
+<DateRangePicker
+  minDate={new Date(2024, 0, 1)}
+  maxDate={new Date(2024, 11, 31)}
+  value={dateRange}
+  onChange={setDateRange}
+/>
+```
+
+### Custom Placeholders
+
+```tsx
+<DateRangePicker
+  placeholder={{
+    from: "Check-in",
+    to: "Check-out",
+  }}
+  value={dateRange}
+  onChange={setDateRange}
+/>
+```
+
+### Disabled State
+
+```tsx
+<DateRangePicker disabled value={dateRange} onChange={setDateRange} />
+```
+
+### With Form
+
+```tsx
+function DateRangeForm() {
+  const form = useForm({
+    defaultValues: {
+      dateRange: {
+        from: null,
+        to: null,
+      },
+    },
+  });
+
+  return (
+    <form onSubmit={form.handleSubmit(onSubmit)}>
+      <div className="space-y-4">
+        <Label htmlFor="dateRange">Select Dates</Label>
+        <Controller
+          control={form.control}
+          name="dateRange"
+          render={({ field }) => <DateRangePicker {...field} />}
+        />
+        <Button type="submit">Submit</Button>
+      </div>
+    </form>
+  );
+}
+```
+
+### With Disabled Dates
+
+```tsx
+<DateRangePicker
+  disabledDates={[
+    new Date(2024, 0, 1), // New Year's Day
+    new Date(2024, 11, 25), // Christmas
+  ]}
+  value={dateRange}
+  onChange={setDateRange}
+/>
+```
+
+### Different Locale
+
+```tsx
+<DateRangePicker locale="fr-FR" value={dateRange} onChange={setDateRange} />
+```
+
+## Accessibility
+
+- Full keyboard navigation
+- ARIA attributes
+- Focus management
+- Screen reader support
+- Clear date announcements
+- Proper labeling
+
+## Best Practices
+
+1. Date Selection
+
+   - Clear visual feedback
+   - Intuitive range selection
+   - Handle invalid ranges
+   - Show preview on hover
+
+2. Validation
+
+   - Enforce min/max dates
+   - Handle disabled dates
+   - Validate ranges
+   - Show error states
+
+3. Localization
+
+   - Support different locales
+   - Format dates appropriately
+   - Consider different calendars
+   - Handle RTL languages
+
+4. User Experience
+
+   - Clear placeholders
+   - Smooth transitions
+   - Responsive design
+   - Mobile friendly
+
+5. Performance
+   - Optimize date calculations
+   - Handle date changes efficiently
+   - Memoize where appropriate
+   - Clean up event listeners
+
+## Examples in Context
+
+### Booking Form
+
+```tsx
+function BookingForm() {
+  const [dates, setDates] = React.useState({
+    from: null,
+    to: null,
+  });
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-lg font-semibold mb-4">Book Your Stay</h2>
+
+        <div className="space-y-4">
+          <div>
+            <Label>Select Dates</Label>
+            <DateRangePicker
+              value={dates}
+              onChange={setDates}
+              minDate={new Date()}
+              placeholder={{
+                from: "Check-in",
+                to: "Check-out",
+              }}
+              disabledDates={[
+                // Block out unavailable dates
+                new Date(2024, 1, 14), // Valentine's Day
+                new Date(2024, 11, 24), // Christmas Eve
+                new Date(2024, 11, 25), // Christmas Day
+              ]}
+            />
+          </div>
+
+          {dates.from && dates.to && (
+            <div className="rounded-lg border p-4">
+              <h3 className="font-medium mb-2">Booking Summary</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span>Check-in</span>
+                  <span>{dates.from.toLocaleDateString()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Check-out</span>
+                  <span>{dates.to.toLocaleDateString()}</span>
+                </div>
+                <div className="flex justify-between font-medium border-t pt-2 mt-2">
+                  <span>Total nights</span>
+                  <span>
+                    {Math.round(
+                      (dates.to.getTime() - dates.from.getTime()) /
+                        (1000 * 60 * 60 * 24)
+                    )}
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <Button className="w-full" disabled={!dates.from || !dates.to}>
+            Continue Booking
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```

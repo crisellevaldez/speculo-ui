@@ -1,0 +1,355 @@
+# Table
+
+A flexible table component with sorting, filtering, pagination, and row selection capabilities.
+
+## Basic Implementation
+
+```jsx
+import { Table } from "components/Table";
+
+const columns = [
+  {
+    key: "id",
+    header: "ID",
+    sortable: true,
+  },
+  {
+    key: "name",
+    header: "Name",
+    sortable: true,
+  },
+  {
+    key: "email",
+    header: "Email",
+    sortable: true,
+  },
+  {
+    key: "status",
+    header: "Status",
+    cell: (user) => (
+      <span
+        className={cn(
+          "inline-flex rounded-full px-2 py-1 text-xs font-semibold",
+          user.status === "active"
+            ? "bg-green-100 text-green-800"
+            : "bg-red-100 text-red-800"
+        )}
+      >
+        {user.status}
+      </span>
+    ),
+  },
+];
+
+const data = [
+  { id: 1, name: "John Doe", email: "john@example.com", status: "active" },
+  { id: 2, name: "Jane Smith", email: "jane@example.com", status: "inactive" },
+  // ...more data
+];
+
+function BasicTable() {
+  return (
+    <Table columns={columns} data={data} keyExtractor={(item) => item.id} />
+  );
+}
+```
+
+## Sorting Examples
+
+Enable sorting with custom sort functions:
+
+```jsx
+const columns = [
+  {
+    key: "name",
+    header: "Name",
+    sortable: true,
+    // Custom sort function
+    sortFn: (a, b) => a.name.localeCompare(b.name),
+  },
+  {
+    key: "age",
+    header: "Age",
+    sortable: true,
+    // Custom sort function for numbers
+    sortFn: (a, b) => a.age - b.age,
+  },
+  {
+    key: "date",
+    header: "Date",
+    sortable: true,
+    // Custom sort function for dates
+    sortFn: (a, b) => new Date(a.date) - new Date(b.date),
+  },
+];
+
+function SortableTable() {
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      keyExtractor={(item) => item.id}
+      sortable
+    />
+  );
+}
+```
+
+## Filtering Guide
+
+Enable filtering with custom filter implementation:
+
+```jsx
+function FilterableTable() {
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      keyExtractor={(item) => item.id}
+      filterable
+    />
+  );
+}
+
+// With custom filter control
+function CustomFilterTable() {
+  const [filterText, setFilterText] = useState("");
+  const filteredData = data.filter((item) =>
+    Object.values(item).some((value) =>
+      String(value).toLowerCase().includes(filterText.toLowerCase())
+    )
+  );
+
+  return (
+    <div>
+      <Input
+        placeholder="Search..."
+        value={filterText}
+        onChange={(e) => setFilterText(e.target.value)}
+        className="mb-4"
+      />
+      <Table
+        columns={columns}
+        data={filteredData}
+        keyExtractor={(item) => item.id}
+      />
+    </div>
+  );
+}
+```
+
+## Pagination Setup
+
+Enable built-in pagination:
+
+```jsx
+function PaginatedTable() {
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      keyExtractor={(item) => item.id}
+      pagination
+      pageSize={10}
+    />
+  );
+}
+
+// With custom pagination control
+function CustomPaginationTable() {
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+  const start = (page - 1) * pageSize;
+  const paginatedData = data.slice(start, start + pageSize);
+
+  return (
+    <div>
+      <Table
+        columns={columns}
+        data={paginatedData}
+        keyExtractor={(item) => item.id}
+      />
+      <div className="mt-4 flex justify-center gap-2">
+        <button
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
+          disabled={page === 1}
+        >
+          Previous
+        </button>
+        <span>
+          Page {page} of {Math.ceil(data.length / pageSize)}
+        </span>
+        <button
+          onClick={() => setPage((p) => p + 1)}
+          disabled={start + pageSize >= data.length}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+## Custom Rendering
+
+Examples of custom cell rendering:
+
+```jsx
+const columns = [
+  {
+    key: "avatar",
+    header: "User",
+    cell: (user) => (
+      <div className="flex items-center gap-3">
+        <img src={user.avatar} alt="" className="h-8 w-8 rounded-full" />
+        <div>
+          <div className="font-medium">{user.name}</div>
+          <div className="text-sm text-gray-500">{user.email}</div>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "progress",
+    header: "Progress",
+    cell: (item) => (
+      <div className="w-full">
+        <div className="flex justify-between text-sm">
+          <span>{item.progress}%</span>
+          <span>
+            {item.completedTasks}/{item.totalTasks} tasks
+          </span>
+        </div>
+        <div className="h-2 w-full rounded-full bg-gray-200">
+          <div
+            className="h-full rounded-full bg-blue-600"
+            style={{ width: `${item.progress}%` }}
+          />
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "actions",
+    header: "",
+    cell: (item) => (
+      <div className="flex gap-2">
+        <button
+          onClick={() => handleEdit(item)}
+          className="rounded-md bg-blue-50 p-1 text-blue-600 hover:bg-blue-100"
+        >
+          Edit
+        </button>
+        <button
+          onClick={() => handleDelete(item)}
+          className="rounded-md bg-red-50 p-1 text-red-600 hover:bg-red-100"
+        >
+          Delete
+        </button>
+      </div>
+    ),
+  },
+];
+```
+
+## Row Selection
+
+Enable row selection with callbacks:
+
+```jsx
+function SelectableTable() {
+  const [selectedRows, setSelectedRows] = useState([]);
+
+  return (
+    <div>
+      <div className="mb-4">Selected rows: {selectedRows.length}</div>
+      <Table
+        columns={columns}
+        data={data}
+        keyExtractor={(item) => item.id}
+        selectable
+        selectedRows={selectedRows}
+        onSelectRows={setSelectedRows}
+      />
+    </div>
+  );
+}
+```
+
+## Component API
+
+### Props
+
+| Prop         | Type                     | Default   | Description                             |
+| ------------ | ------------------------ | --------- | --------------------------------------- |
+| columns      | Column[]                 | required  | Table column configurations             |
+| data         | T[]                      | required  | Data to display in the table            |
+| keyExtractor | (item: T) => string      | required  | Function to get unique key for each row |
+| selectable   | boolean                  | false     | Enable row selection                    |
+| selectedRows | string[]                 | []        | Array of selected row keys              |
+| onSelectRows | (rows: string[]) => void | undefined | Callback when selection changes         |
+| sortable     | boolean                  | false     | Enable column sorting                   |
+| filterable   | boolean                  | false     | Enable table filtering                  |
+| pagination   | boolean                  | false     | Enable pagination                       |
+| pageSize     | number                   | 10        | Number of rows per page                 |
+| className    | string                   | undefined | Additional CSS classes                  |
+
+### Column Interface
+
+```typescript
+interface Column<T> {
+  key: string;
+  header: React.ReactNode;
+  cell?: (item: T) => React.ReactNode;
+  sortable?: boolean;
+  sortFn?: (a: T, b: T) => number;
+}
+```
+
+## Accessibility
+
+The Table component follows accessibility best practices:
+
+- Uses semantic table elements
+- Proper ARIA labels for sortable columns
+- Keyboard navigation support
+- Screen reader announcements for sorting and filtering
+- Proper focus management
+- Clear visual indicators for interactive elements
+
+## Best Practices
+
+1. Data Structure
+
+   - Use consistent data structures
+   - Provide unique keys for rows
+   - Consider data types for sorting
+
+2. Performance
+
+   - Use pagination for large datasets
+   - Implement server-side sorting/filtering when needed
+   - Optimize custom cell renderers
+   - Memoize callbacks and computed values
+
+3. User Experience
+
+   - Show loading states
+   - Provide clear sorting indicators
+   - Maintain state during filtering
+   - Consider mobile responsiveness
+   - Show empty state messages
+
+4. Customization
+
+   - Use custom cell renderers for complex content
+   - Implement custom sorting logic when needed
+   - Style according to your design system
+   - Consider different viewport sizes
+
+5. Error Handling
+   - Handle empty data states
+   - Validate column configurations
+   - Provide fallbacks for missing values
+   - Handle loading and error states
