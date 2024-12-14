@@ -22,7 +22,7 @@ npm install @crisellevaldez/speculo-ui
 1. Import the CSS in your root layout/component:
 
 ```tsx
-import "@crisellevaldez/speculo-ui/dist/style.css";
+import "@crisellevaldez/speculo-ui/style.css";
 ```
 
 2. Configure your `tailwind.config.js` or `tailwind.config.ts` to include the component library:
@@ -124,7 +124,7 @@ git push origin v1.0.0
 1. Make sure you've imported the CSS file correctly:
 
 ```tsx
-import "@crisellevaldez/speculo-ui/dist/style.css";
+import "@crisellevaldez/speculo-ui/style.css";
 ```
 
 2. Verify your Tailwind configuration includes the package:

@@ -25,7 +25,9 @@
       "import": "./dist/speculo-ui.mjs",
       "require": "./dist/speculo-ui.cjs"
     },
-    "./dist/style.css": "./dist/style.css"
+    "./style.css": {
+      "default": "./dist/style.css"
+    }
   },
   "scripts": {
     "dev": "vite",
