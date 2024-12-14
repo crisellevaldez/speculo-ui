@@ -17,11 +17,41 @@ A modern React component library built with TypeScript and Tailwind CSS.
 npm install @crisellevaldez/speculo-ui
 ```
 
+## Setup
+
+1. Import the CSS in your root layout/component:
+
+```tsx
+import "@crisellevaldez/speculo-ui/dist/style.css";
+```
+
+2. Configure your `tailwind.config.js` or `tailwind.config.ts` to include the component library:
+
+```js
+export default {
+  content: [
+    // ... your other content paths
+    "./node_modules/@crisellevaldez/speculo-ui/dist/**/*.{js,ts,jsx,tsx}",
+  ],
+  // ... rest of your config
+};
+```
+
+3. For Next.js projects, update your `next.config.js`:
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  transpilePackages: ["@crisellevaldez/speculo-ui"],
+};
+
+module.exports = nextConfig;
+```
+
 ## Usage
 
 ```tsx
 import { Button, Input } from "@crisellevaldez/speculo-ui";
-import "@crisellevaldez/speculo-ui/styles.css";
 
 function App() {
   return (
@@ -86,6 +116,37 @@ git push origin v1.0.0
 ```
 
 3. Create a new release on GitHub using the tag
+
+## Troubleshooting
+
+### Styles not showing up?
+
+1. Make sure you've imported the CSS file correctly:
+
+```tsx
+import "@crisellevaldez/speculo-ui/dist/style.css";
+```
+
+2. Verify your Tailwind configuration includes the package:
+
+```js
+content: [
+  "./node_modules/@crisellevaldez/speculo-ui/dist/**/*.{js,ts,jsx,tsx}",
+];
+```
+
+3. For Next.js, confirm you have the transpilePackages configuration:
+
+```js
+transpilePackages: ["@crisellevaldez/speculo-ui"];
+```
+
+4. Clear your Next.js cache and rebuild:
+
+```bash
+rm -rf .next
+npm run dev
+```
 
 ## License
 

@@ -31,6 +31,7 @@ const variantStyles: Record<TypographyVariant, string> = {
   p: "leading-7 [&:not(:first-child)]:mt-6",
   blockquote:
     "mt-6 border-l-2 border-slate-300 pl-6 italic text-slate-800 dark:border-slate-600 dark:text-slate-200",
+  lead: "text-xl text-slate-700 dark:text-slate-300",
   large: "text-lg font-semibold text-slate-900 dark:text-slate-50",
   small: "text-sm font-medium leading-none",
   muted: "text-sm text-slate-500 dark:text-slate-500",
