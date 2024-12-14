@@ -29,7 +29,6 @@ export function NewComponentsExamples() {
           <Typography variant="h2">Heading 2</Typography>
           <Typography variant="h3">Heading 3</Typography>
           <Typography variant="p">Regular paragraph text</Typography>
-          <Typography variant="lead">Lead paragraph text</Typography>
           <Typography variant="blockquote">
             "This is a blockquote example with proper styling"
           </Typography>
@@ -130,7 +129,7 @@ export function NewComponentsExamples() {
               <Typography variant="h4" className="mb-2">
                 Product Features
               </Typography>
-              <ul className="list-disc list-inside">
+              <ul className="list-inside list-disc">
                 <li>Feature 1</li>
                 <li>Feature 2</li>
                 <li>Feature 3</li>

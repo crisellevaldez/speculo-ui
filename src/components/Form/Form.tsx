@@ -46,7 +46,10 @@ export const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
     return (
       <label
         ref={ref}
-        className={cn("block text-sm font-medium text-gray-700", className)}
+        className={cn(
+          "mb-2 block text-sm font-medium text-gray-700",
+          className,
+        )}
         {...props}
       >
         {children}
@@ -57,7 +60,7 @@ export const FormLabel = React.forwardRef<HTMLLabelElement, FormLabelProps>(
         )}
       </label>
     );
-  }
+  },
 );
 
 FormLabel.displayName = "FormLabel";

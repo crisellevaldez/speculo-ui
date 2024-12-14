@@ -23,7 +23,7 @@ export const HoverCard = React.forwardRef<HTMLDivElement, HoverCardProps>(
       arrow = true,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [isOpen, setIsOpen] = React.useState(false);
     const triggerRef = React.useRef<HTMLDivElement>(null);
@@ -101,10 +101,9 @@ export const HoverCard = React.forwardRef<HTMLDivElement, HoverCardProps>(
         {isOpen && (
           <div
             className={cn(
-              "absolute z-50 min-w-[220px] rounded-md bg-popover text-popover-foreground shadow-md outline-none",
-              "border border-border",
+              "absolute z-50 min-w-[220px] rounded-md bg-white text-popover-foreground shadow-md outline-none",
               "animate-in fade-in-0 zoom-in-95",
-              className
+              className,
             )}
             style={getPosition()}
             role="tooltip"
@@ -112,14 +111,14 @@ export const HoverCard = React.forwardRef<HTMLDivElement, HoverCardProps>(
             {arrow && (
               <div
                 className={cn(
-                  "absolute h-2 w-2 rotate-45 bg-popover border",
+                  "absolute h-2 w-2 rotate-45 border bg-popover",
                   side === "top" && "bottom-[-5px] border-b border-r",
                   side === "right" && "left-[-5px] border-l border-t",
                   side === "bottom" && "top-[-5px] border-l border-t",
-                  side === "left" && "right-[-5px] border-t border-r",
+                  side === "left" && "right-[-5px] border-r border-t",
                   align === "start" && "left-4",
                   align === "center" && "left-1/2 -translate-x-1/2",
-                  align === "end" && "right-4"
+                  align === "end" && "right-4",
                 )}
               />
             )}
@@ -128,7 +127,7 @@ export const HoverCard = React.forwardRef<HTMLDivElement, HoverCardProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 HoverCard.displayName = "HoverCard";

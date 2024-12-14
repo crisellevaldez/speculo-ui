@@ -10,33 +10,31 @@ export interface RadioProps
 export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
   ({ className, label, error, disabled, ...props }, ref) => {
     const baseStyles =
-      "h-4 w-4 border focus:outline-none focus:ring-2 focus:ring-offset-2";
+      "h-4 w-4 border focus:outline-none focus:ring-0 focus:ring-offset-2";
     const stateStyles = cn(
       disabled && "cursor-not-allowed opacity-50",
       error
-        ? "border-red-500 text-red-600 focus:border-red-500 focus:ring-red-500"
-        : "border-gray-300 text-blue-600 focus:border-blue-500 focus:ring-blue-500"
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
+        : "border-gray-300",
     );
 
     return (
-      <div className="relative flex items-start">
-        <div className="flex h-5 items-center">
-          <input
-            type="radio"
-            ref={ref}
-            disabled={disabled}
-            className={cn(baseStyles, stateStyles, className)}
-            aria-invalid={error ? "true" : "false"}
-            {...props}
-          />
-        </div>
+      <div className="relative flex items-center">
+        <input
+          type="radio"
+          ref={ref}
+          disabled={disabled}
+          className={cn(baseStyles, stateStyles, className)}
+          aria-invalid={error ? "true" : "false"}
+          {...props}
+        />
         {label && (
           <div className="ml-2">
             <label
               htmlFor={props.id}
               className={cn(
                 "text-sm font-medium text-gray-700",
-                disabled && "cursor-not-allowed opacity-50"
+                disabled && "cursor-not-allowed opacity-50",
               )}
             >
               {label}
@@ -50,7 +48,7 @@ export const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Radio.displayName = "Radio";

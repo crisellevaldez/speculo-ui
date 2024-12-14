@@ -12,35 +12,34 @@ export interface InputProps
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     { className, error, helperText, startIcon, endIcon, disabled, ...props },
-    ref
+    ref,
   ) => {
     const baseStyles =
-      "block w-full rounded-md border border-gray-300 px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500";
+      "shadow-sm block w-full border rounded-md border-gray-300 px-3 py-2 text-gray-900 text-sm " +
+      "placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500";
 
     const errorStyles = error
-      ? "border-red-500 focus:border-red-500 focus:ring-red-500"
+      ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
       : "";
 
-    const iconStyles = {
-      base: "absolute top-1/2 -translate-y-1/2",
-      start: "left-3",
-      end: "right-3",
-    };
+    const iconWrapperStyles =
+      "absolute inset-y-0 flex items-center pointer-events-none";
+    const iconSpacing = "px-3"; // Consistent padding for icon containers
 
     const inputStyles = cn(
       baseStyles,
       errorStyles,
-      startIcon && "pl-10",
-      endIcon && "pr-10",
-      className
+      startIcon && "pl-9",
+      endIcon && "pr-9",
+      className,
     );
 
     return (
       <div className="relative">
         {startIcon && (
-          <span className={cn(iconStyles.base, iconStyles.start)}>
+          <div className={cn(iconWrapperStyles, "left-0", iconSpacing)}>
             {startIcon}
-          </span>
+          </div>
         )}
 
         <input
@@ -59,7 +58,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         />
 
         {endIcon && (
-          <span className={cn(iconStyles.base, iconStyles.end)}>{endIcon}</span>
+          <div className={cn(iconWrapperStyles, "right-0", iconSpacing)}>
+            {endIcon}
+          </div>
         )}
 
         {(error || helperText) && (
@@ -77,7 +78,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";

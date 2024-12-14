@@ -82,9 +82,9 @@ export const DropdownMenuItem: React.FC<DropdownMenuItemProps> = ({
         className={cn(
           "flex w-full items-center px-3 py-2 text-sm",
           "focus:bg-gray-100 focus:outline-none",
-          disabled && "opacity-50 cursor-not-allowed",
+          disabled && "cursor-not-allowed opacity-50",
           !disabled && "hover:bg-gray-100",
-          className
+          className,
         )}
         onClick={handleClick}
         onKeyDown={handleKeyDown}
@@ -184,7 +184,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
     if (!menuItems?.length) return;
 
     const currentIndex = Array.from(menuItems).findIndex(
-      (item) => item === document.activeElement
+      (item) => item === document.activeElement,
     );
 
     let nextIndex: number;
@@ -238,7 +238,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
               className={cn(
                 "absolute z-50 mt-2 min-w-[12rem] rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none",
                 alignClasses[align],
-                className
+                className,
               )}
               style={{
                 top: `${
@@ -253,7 +253,7 @@ export const DropdownMenu: React.FC<DropdownMenuProps> = ({
             >
               {children}
             </div>,
-            document.body
+            document.body,
           )}
       </div>
     </DropdownContext.Provider>

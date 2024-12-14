@@ -24,7 +24,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       disabled,
       ...props
     },
-    forwardedRef
+    forwardedRef,
   ) => {
     const internalRef = useRef<HTMLTextAreaElement>(null);
 
@@ -66,12 +66,12 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     };
 
     const baseStyles =
-      "block w-full rounded-md border px-4 py-2 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-1";
+      "block w-full rounded-md border px-4 py-2 text-gray-900 border-gray-300 text-sm shadow-sm placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400";
     const stateStyles = cn(
       disabled && "cursor-not-allowed bg-gray-50 text-gray-500",
       error
-        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
+        : "border-gray-300",
     );
 
     const currentLength = typeof value === "string" ? value.length : 0;
@@ -98,7 +98,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
         {/* Character count */}
         {showCount && (
-          <div className="mt-1 text-sm text-gray-500 text-right">
+          <div className="mt-1 text-right text-sm text-gray-500">
             {currentLength}
             {maxLength && ` / ${maxLength}`}
           </div>
@@ -120,7 +120,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Textarea.displayName = "Textarea";

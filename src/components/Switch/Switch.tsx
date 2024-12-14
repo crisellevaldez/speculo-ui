@@ -10,17 +10,17 @@ export interface SwitchProps
 const sizeStyles = {
   sm: {
     switch: "h-[20px] w-[36px]",
-    thumb: "h-[16px] w-[16px] translate-x-0.5",
+    thumb: "h-[14px] w-[14px] translate-x-[3px]",
     thumbChecked: "translate-x-[17px]",
   },
   md: {
     switch: "h-[24px] w-[44px]",
-    thumb: "h-[20px] w-[20px] translate-x-0.5",
+    thumb: "h-[18px] w-[18px] translate-x-[3px]",
     thumbChecked: "translate-x-[21px]",
   },
   lg: {
     switch: "h-[28px] w-[52px]",
-    thumb: "h-[24px] w-[24px] translate-x-0.5",
+    thumb: "h-[22px] w-[22px] translate-x-[3px]",
     thumbChecked: "translate-x-[25px]",
   },
 };
@@ -38,7 +38,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
       disabled,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [isChecked, setIsChecked] = React.useState(defaultChecked || false);
     const switchId = id || React.useId();
@@ -82,10 +82,10 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
               "block cursor-pointer rounded-full transition-colors duration-200",
               "peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2",
               "peer-disabled:cursor-not-allowed peer-disabled:opacity-50",
-              isOn ? "bg-primary" : "bg-gray-200 dark:bg-gray-700",
+              isOn ? "bg-primary" : "bg-gray-400 dark:bg-gray-800",
               switchSize,
               "flex items-center",
-              className
+              className,
             )}
           >
             <div
@@ -94,23 +94,16 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
                 "flex items-center justify-center",
                 "bg-white shadow-sm",
                 thumbSize,
-                isOn && thumbChecked
+                isOn && thumbChecked,
               )}
-            >
-              <div
-                className={cn(
-                  "h-1/2 w-1/2 rounded-full transition-colors duration-200",
-                  isOn ? "bg-primary/30" : "bg-gray-400/30"
-                )}
-              />
-            </div>
+            ></div>
           </label>
         </div>
         {label && (
           <label
             htmlFor={switchId}
             className={cn(
-              "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
             )}
           >
             {label}
@@ -118,7 +111,7 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Switch.displayName = "Switch";

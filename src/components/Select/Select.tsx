@@ -35,7 +35,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       className,
       renderOption,
     },
-    ref
+    ref,
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
@@ -44,12 +44,12 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
 
     const selectedOptions = multiple
       ? options.filter(
-          (opt) => Array.isArray(value) && value.includes(opt.value)
+          (opt) => Array.isArray(value) && value.includes(opt.value),
         )
       : options.filter((opt) => opt.value === value);
 
     const filteredOptions = options.filter((option) =>
-      option.label.toLowerCase().includes(searchQuery.toLowerCase())
+      option.label.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
     const handleOptionClick = (option: SelectOption) => {
@@ -69,6 +69,17 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       setSearchQuery("");
     };
 
+    const handleRemoveOption = (
+      e: React.MouseEvent,
+      optionToRemove: SelectOption,
+    ) => {
+      e.stopPropagation(); // Prevent dropdown from opening
+      if (multiple && Array.isArray(value)) {
+        const newValue = value.filter((v) => v !== optionToRemove.value);
+        onChange?.(newValue);
+      }
+    };
+
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
         if (
@@ -85,17 +96,18 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-    const baseStyles = "relative w-full";
+    const baseStyles =
+      "relative w-full placeholder-gray-500 placeholder:text-sm";
     const triggerStyles = cn(
-      "flex min-h-[40px] w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm",
+      "flex min-h-[40px] w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm border-gray-300 shadow-sm",
       disabled && "cursor-not-allowed bg-gray-50",
       error
-        ? "border-red-500 focus:border-red-500 focus:ring-red-500"
-        : "border-gray-300 focus:border-blue-500 focus:ring-blue-500",
-      className
+        ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
+        : "focus:outline-none focus:ring-1 focus:ring-gray-400",
+      className,
     );
     const optionStyles = "px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer";
-    const selectedOptionStyles = "bg-blue-50";
+    const selectedOptionStyles = "bg-gray-100";
 
     return (
       <div ref={containerRef} className={baseStyles}>
@@ -114,9 +126,28 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
               selectedOptions.map((option) => (
                 <span
                   key={option.value}
-                  className="bg-blue-100 px-2 py-1 rounded-md text-sm"
+                  className="inline-flex items-center gap-1 rounded-md bg-gray-200 px-2 py-1 text-sm"
                 >
                   {option.label}
+                  {multiple && (
+                    <button
+                      onClick={(e) => handleRemoveOption(e, option)}
+                      className="ml-1 rounded-full p-0.5 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                      aria-label={`Remove ${option.label}`}
+                    >
+                      <svg
+                        className="h-3 w-3 text-gray-500"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
                 </span>
               ))
             ) : (
@@ -127,7 +158,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             <svg
               className={cn(
                 "h-4 w-4 transition-transform",
-                isOpen && "rotate-180"
+                isOpen && "rotate-180",
               )}
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -169,7 +200,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
                   key={option.value}
                   className={cn(
                     optionStyles,
-                    selectedOptions.includes(option) && selectedOptionStyles
+                    selectedOptions.includes(option) && selectedOptionStyles,
                   )}
                   role="option"
                   aria-selected={selectedOptions.includes(option)}
@@ -200,7 +231,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Select.displayName = "Select";

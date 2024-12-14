@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Typography } from "../../../components/Typography/Typography";
 import { Button } from "../../../components/Button/Button";
 import { Input } from "../../../components/Input/Input";
@@ -11,8 +12,47 @@ import {
   SectionContainer,
   ContentContainer,
 } from "../../../components/Container/Container";
+import { Search, Mail, Lock, Check } from "lucide-react";
+
+// Icon wrapper for consistent sizing
+const IconWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="h-4 w-4 text-gray-400">{children}</div>
+);
 
 export function FormExamples() {
+  // Add state for select fields
+  const [role, setRole] = useState("");
+  const [subject, setSubject] = useState("");
+  const [demoSelect1, setDemoSelect1] = useState("");
+  const [demoSelect2, setDemoSelect2] = useState("");
+  const [demoSelect3, setDemoSelect3] = useState("");
+  const [skills, setSkills] = useState<string[]>([]);
+
+  // Create onChange handlers that handle both string and string[] types
+  const handleRoleChange = (value: string | string[]) => {
+    setRole(value as string);
+  };
+
+  const handleSubjectChange = (value: string | string[]) => {
+    setSubject(value as string);
+  };
+
+  const handleDemoSelect1Change = (value: string | string[]) => {
+    setDemoSelect1(value as string);
+  };
+
+  const handleDemoSelect2Change = (value: string | string[]) => {
+    setDemoSelect2(value as string);
+  };
+
+  const handleDemoSelect3Change = (value: string | string[]) => {
+    setDemoSelect3(value as string);
+  };
+
+  const handleSkillsChange = (value: string | string[]) => {
+    setSkills(value as string[]);
+  };
+
   return (
     <PageContainer className="space-y-12">
       <div className="prose max-w-none">
@@ -23,6 +63,71 @@ export function FormExamples() {
           react-hook-form and include built-in validation support.
         </p>
       </div>
+
+      {/* Input Examples with Icons */}
+      <SectionContainer className="space-y-8">
+        <Typography variant="h2">Input with Icons</Typography>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Form.Control>
+            <Form.Label>Search Input</Form.Label>
+            <Input
+              placeholder="Search..."
+              startIcon={
+                <IconWrapper>
+                  <Search size={16} />
+                </IconWrapper>
+              }
+            />
+            <Form.HelperText>With start icon only</Form.HelperText>
+          </Form.Control>
+
+          <Form.Control>
+            <Form.Label>Email Input</Form.Label>
+            <Input
+              type="email"
+              placeholder="Enter your email"
+              startIcon={
+                <IconWrapper>
+                  <Mail size={16} />
+                </IconWrapper>
+              }
+              endIcon={
+                <IconWrapper>
+                  <Check size={16} className="text-green-500" />
+                </IconWrapper>
+              }
+            />
+            <Form.HelperText>With both start and end icons</Form.HelperText>
+          </Form.Control>
+
+          <Form.Control>
+            <Form.Label>Password Input</Form.Label>
+            <Input
+              type="password"
+              placeholder="Enter password"
+              startIcon={
+                <IconWrapper>
+                  <Lock size={16} />
+                </IconWrapper>
+              }
+            />
+            <Form.HelperText>Password field with lock icon</Form.HelperText>
+          </Form.Control>
+
+          <Form.Control>
+            <Form.Label>Validated Input</Form.Label>
+            <Input
+              placeholder="Validated field"
+              endIcon={
+                <IconWrapper>
+                  <Check size={16} className="text-green-500" />
+                </IconWrapper>
+              }
+            />
+            <Form.HelperText>With success indicator</Form.HelperText>
+          </Form.Control>
+        </div>
+      </SectionContainer>
 
       {/* Registration Form */}
       <SectionContainer className="space-y-8">
@@ -47,17 +152,6 @@ export function FormExamples() {
             </div>
 
             <Form.Control>
-              <Form.Label htmlFor="email" required>
-                Email
-              </Form.Label>
-              <Input
-                type="email"
-                placeholder="john@example.com"
-                helperText="We'll never share your email."
-              />
-            </Form.Control>
-
-            <Form.Control>
               <Form.Label htmlFor="role" required>
                 Role
               </Form.Label>
@@ -67,7 +161,30 @@ export function FormExamples() {
                   { value: "designer", label: "Designer" },
                   { value: "manager", label: "Manager" },
                 ]}
+                value={role}
+                onChange={handleRoleChange}
               />
+            </Form.Control>
+
+            <Form.Control>
+              <Form.Label htmlFor="skills" required>
+                Skills
+              </Form.Label>
+              <Select
+                options={[
+                  { value: "react", label: "React" },
+                  { value: "typescript", label: "TypeScript" },
+                  { value: "nodejs", label: "Node.js" },
+                  { value: "python", label: "Python" },
+                  { value: "java", label: "Java" },
+                  { value: "csharp", label: "C#" },
+                ]}
+                value={skills}
+                onChange={handleSkillsChange}
+                multiple
+                placeholder="Select multiple skills"
+              />
+              <Form.HelperText>You can select multiple skills</Form.HelperText>
             </Form.Control>
 
             <Form.Control>
@@ -137,7 +254,15 @@ export function FormExamples() {
                 <Form.Label htmlFor="email" required>
                   Email
                 </Form.Label>
-                <Input type="email" placeholder="your@email.com" />
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  startIcon={
+                    <IconWrapper>
+                      <Mail size={16} />
+                    </IconWrapper>
+                  }
+                />
               </Form.Control>
 
               <Form.Control>
@@ -150,6 +275,8 @@ export function FormExamples() {
                     { value: "sales", label: "Sales Inquiry" },
                     { value: "other", label: "Other" },
                   ]}
+                  value={subject}
+                  onChange={handleSubjectChange}
                 />
               </Form.Control>
 
@@ -200,6 +327,8 @@ export function FormExamples() {
                   { value: "3", label: "Option 3" },
                 ]}
                 placeholder="Default select"
+                value={demoSelect1}
+                onChange={handleDemoSelect1Change}
               />
               <Select
                 options={[
@@ -208,6 +337,8 @@ export function FormExamples() {
                 ]}
                 placeholder="Disabled"
                 disabled
+                value={demoSelect2}
+                onChange={handleDemoSelect2Change}
               />
               <Select
                 options={[
@@ -216,6 +347,8 @@ export function FormExamples() {
                 ]}
                 placeholder="With error"
                 error="Please select an option"
+                value={demoSelect3}
+                onChange={handleDemoSelect3Change}
               />
             </div>
           </div>

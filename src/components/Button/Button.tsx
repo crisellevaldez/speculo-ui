@@ -19,21 +19,21 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       disabled,
       ...props
     },
-    ref
+    ref,
   ) => {
     const baseStyles =
       "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 relative";
 
     const variants = {
-      primary: "bg-blue-600 text-white hover:bg-blue-700",
+      primary: "bg-primary text-white hover:bg-primary/80",
       secondary: "bg-gray-200 text-gray-900 hover:bg-gray-300",
       outline: "border border-gray-300 bg-transparent hover:bg-gray-100",
     };
 
     const sizes = {
-      sm: "h-8 px-3 text-sm",
-      md: "h-10 px-4 text-base",
-      lg: "h-12 px-6 text-lg",
+      sm: "h-8 px-3 text-xs",
+      md: "h-10 px-4 text-sm",
+      lg: "h-12 px-6 text-base",
     };
 
     return (
@@ -48,7 +48,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             <span className="opacity-0">{children}</span>
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <svg
-                className="animate-spin h-5 w-5"
+                className="h-5 w-5 animate-spin"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -74,7 +74,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";
