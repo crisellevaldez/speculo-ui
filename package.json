@@ -6,7 +6,7 @@
   "main": "./dist/speculo-ui.cjs",
   "module": "./dist/speculo-ui.mjs",
   "types": "./dist/index.d.ts",
-  "style": "./dist/style.css",
+  "style": "./dist/styles.css",
   "sideEffects": false,
   "files": [
     "dist"
@@ -25,8 +25,8 @@
       "import": "./dist/speculo-ui.mjs",
       "require": "./dist/speculo-ui.cjs"
     },
-    "./style.css": {
-      "default": "./dist/style.css"
+    "./styles.css": {
+      "default": "./dist/styles.css"
     }
   },
   "scripts": {

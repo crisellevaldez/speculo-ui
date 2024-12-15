@@ -32,7 +32,7 @@ export default {
 4. **Important**: Import the required styles in your main CSS file (e.g., app.css or globals.css):
 
 ```css
-@import "@crisellevaldez/speculo-ui/dist/styles.css";
+@import "@crisellevaldez/speculo-ui/styles.css";
 ```
 
 This step is crucial as it provides the necessary CSS variables and base styles for components to work correctly.
