@@ -10,7 +10,6 @@ import { ComboBox } from "./components/ComboBox/ComboBox";
 import { Container } from "./components/Container/Container";
 import { DateRangePicker } from "./components/DateRangePicker/DateRangePicker";
 import { Drawer } from "./components/Drawer/Drawer";
-import { DropdownMenu } from "./components/DropdownMenu/DropdownMenu";
 import { Form } from "./components/Form/Form";
 import { HoverCard } from "./components/HoverCard/HoverCard";
 import { Input } from "./components/Input/Input";
@@ -40,7 +39,6 @@ export {
   Container,
   DateRangePicker,
   Drawer,
-  DropdownMenu,
   Form,
   HoverCard,
   Input,

@@ -7,11 +7,7 @@ import { Checkbox } from "../../../components/Checkbox/Checkbox";
 import { Radio } from "../../../components/Radio/Radio";
 import { Textarea } from "../../../components/Textarea/Textarea";
 import { Form } from "../../../components/Form/Form";
-import {
-  PageContainer,
-  SectionContainer,
-  ContentContainer,
-} from "../../../components/Container/Container";
+import { PageContainer } from "../../../components/Container/Container";
 import { Search, Mail, Lock, Check } from "lucide-react";
 
 // Icon wrapper for consistent sizing

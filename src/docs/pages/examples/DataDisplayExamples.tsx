@@ -5,10 +5,7 @@ import { Table } from "../../../components/Table/Table";
 import { Modal } from "../../../components/Modal/Modal";
 import { useToast } from "../../../components/Toast/Toast";
 import { Input } from "../../../components/Input/Input";
-import {
-  PageContainer,
-  SectionContainer,
-} from "../../../components/Container/Container";
+import { PageContainer } from "../../../components/Container/Container";
 
 interface User {
   id: number;
@@ -156,8 +153,6 @@ export function DataDisplayExamples() {
             data={mockUsers}
             keyExtractor={(row) => row.id}
             sortable
-            filterable
-            pagination
           />
         </div>
       </div>

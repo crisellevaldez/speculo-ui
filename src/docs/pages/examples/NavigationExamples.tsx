@@ -5,10 +5,7 @@ import { Tabs, Tab } from "../../../components/Tabs/Tabs";
 import { Sidebar } from "../../../components/Sidebar/Sidebar";
 import { Drawer } from "../../../components/Drawer/Drawer";
 import { Pagination } from "../../../components/Pagination/Pagination";
-import {
-  PageContainer,
-  SectionContainer,
-} from "../../../components/Container/Container";
+import { PageContainer } from "../../../components/Container/Container";
 
 export function NavigationExamples() {
   const [activeTab, setActiveTab] = useState("overview");
