@@ -29,7 +29,15 @@ export default {
 };
 ```
 
-4. For Next.js projects, add to `next.config.js`:
+4. **Important**: Import the required styles in your main CSS file (e.g., app.css or globals.css):
+
+```css
+@import "@crisellevaldez/speculo-ui/dist/styles.css";
+```
+
+This step is crucial as it provides the necessary CSS variables and base styles for components to work correctly.
+
+5. For Next.js projects, add to `next.config.js`:
 
 ```js
 /** @type {import('next').NextConfig} */
