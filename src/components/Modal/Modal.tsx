@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 import { cn } from "../../utils/cn";
 
 export interface ModalProps {
@@ -16,6 +17,7 @@ export interface ModalProps {
 export interface ModalHeaderProps {
   children: React.ReactNode;
   className?: string;
+  onClose?: () => void;
 }
 
 export interface ModalBodyProps {
@@ -36,10 +38,54 @@ const sizes = {
   full: "max-w-full mx-4",
 };
 
+const ModalHeader: React.FC<ModalHeaderProps> = ({
+  children,
+  className,
+  onClose,
+}) => {
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between border-b border-gray-200 px-6 py-4",
+        className,
+      )}
+    >
+      <div className="text-lg font-semibold">{children}</div>
+      {onClose && (
+        <button
+          type="button"
+          className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+          onClick={onClose}
+        >
+          <span className="sr-only">Close</span>
+          <X className="h-5 w-5" />
+        </button>
+      )}
+    </div>
+  );
+};
+
+const ModalBody: React.FC<ModalBodyProps> = ({ children, className }) => {
+  return <div className={cn("px-6 py-4", className)}>{children}</div>;
+};
+
+const ModalFooter: React.FC<ModalFooterProps> = ({ children, className }) => {
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-end gap-2 border-t border-gray-200 px-6 py-4",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+};
+
 export const Modal: React.FC<ModalProps> & {
-  Header: React.FC<ModalHeaderProps>;
-  Body: React.FC<ModalBodyProps>;
-  Footer: React.FC<ModalFooterProps>;
+  Header: typeof ModalHeader;
+  Body: typeof ModalBody;
+  Footer: typeof ModalFooter;
 } = ({
   isOpen,
   onClose,
@@ -90,10 +136,19 @@ export const Modal: React.FC<ModalProps> & {
 
   if (!isOpen) return null;
 
+  const childrenWithProps = React.Children.map(children, (child) => {
+    if (React.isValidElement(child) && child.type === Modal.Header) {
+      return React.cloneElement(child as React.ReactElement<ModalHeaderProps>, {
+        onClose,
+      });
+    }
+    return child;
+  });
+
   return createPortal(
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
       onClick={handleOverlayClick}
     >
       <div
@@ -101,74 +156,22 @@ export const Modal: React.FC<ModalProps> & {
         className={cn(
           "relative w-full rounded-lg bg-white shadow-xl outline-none",
           sizes[size],
-          className
+          className,
         )}
         role="dialog"
         aria-modal="true"
         tabIndex={-1}
       >
-        {children}
+        {childrenWithProps}
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
 
-Modal.Header = function ModalHeader({ children, className }) {
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-between border-b border-gray-200 px-6 py-4",
-        className
-      )}
-    >
-      <div className="text-lg font-semibold">{children}</div>
-      <button
-        type="button"
-        className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-        onClick={() => {
-          // Find the closest Modal and call its onClose
-          const modalElement = document.querySelector('[role="dialog"]');
-          const closeEvent = new CustomEvent("modal-close");
-          modalElement?.dispatchEvent(closeEvent);
-        }}
-      >
-        <span className="sr-only">Close</span>
-        <svg
-          className="h-5 w-5"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
-        </svg>
-      </button>
-    </div>
-  );
-};
-
-Modal.Body = function ModalBody({ children, className }) {
-  return <div className={cn("px-6 py-4", className)}>{children}</div>;
-};
-
-Modal.Footer = function ModalFooter({ children, className }) {
-  return (
-    <div
-      className={cn(
-        "flex items-center justify-end gap-2 border-t border-gray-200 px-6 py-4",
-        className
-      )}
-    >
-      {children}
-    </div>
-  );
-};
+Modal.Header = ModalHeader;
+Modal.Body = ModalBody;
+Modal.Footer = ModalFooter;
 
 // For nested modals, we need a provider to manage the stack
 export interface ModalProviderProps {

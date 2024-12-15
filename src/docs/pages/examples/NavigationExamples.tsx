@@ -2,10 +2,6 @@ import { useState } from "react";
 import { Typography } from "../../../components/Typography/Typography";
 import { Button } from "../../../components/Button/Button";
 import { Tabs, Tab } from "../../../components/Tabs/Tabs";
-import {
-  DropdownMenu,
-  DropdownMenuItem,
-} from "../../../components/DropdownMenu/DropdownMenu";
 import { Sidebar } from "../../../components/Sidebar/Sidebar";
 import { Drawer } from "../../../components/Drawer/Drawer";
 import { Pagination } from "../../../components/Pagination/Pagination";
@@ -20,9 +16,9 @@ export function NavigationExamples() {
   const [page, setPage] = useState(1);
 
   return (
-    <PageContainer className="space-y-12">
+    <PageContainer className="space-y-12 py-10">
       <div className="prose max-w-none">
-        <h1>Navigation Examples</h1>
+        <Typography variant="h2">Navigation</Typography>
         <p>
           Explore examples of navigation components and patterns. These
           components help users move through your application efficiently.
@@ -30,7 +26,7 @@ export function NavigationExamples() {
       </div>
 
       {/* Tabs Example */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Tabs</Typography>
 
         <div className="rounded-lg border">
@@ -85,44 +81,13 @@ export function NavigationExamples() {
             </div>
           </Tabs>
         </div>
-      </SectionContainer>
-
-      {/* Dropdown Menu Example */}
-      <SectionContainer className="space-y-8">
-        <Typography variant="h2">Dropdown Menu</Typography>
-
-        <div className="flex gap-4">
-          <DropdownMenu trigger={<Button variant="outline">Options</Button>}>
-            <DropdownMenuItem onClick={() => console.log("Edit")}>
-              Edit
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Duplicate")}>
-              Duplicate
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Delete")}>
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenu>
-
-          <DropdownMenu trigger={<Button>User Menu</Button>}>
-            <DropdownMenuItem onClick={() => console.log("Profile")}>
-              Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Settings")}>
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => console.log("Logout")}>
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenu>
-        </div>
-      </SectionContainer>
+      </div>
 
       {/* Sidebar Example */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Sidebar</Typography>
 
-        <div className="h-[400px] border rounded-lg overflow-hidden">
+        <div className="h-[400px] overflow-hidden rounded-lg border">
           <Sidebar
             items={[
               {
@@ -161,10 +126,10 @@ export function NavigationExamples() {
             ]}
           />
         </div>
-      </SectionContainer>
+      </div>
 
       {/* Drawer Example */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Drawer</Typography>
 
         <div className="flex gap-4">
@@ -177,28 +142,28 @@ export function NavigationExamples() {
               Navigation Drawer
             </Typography>
             <nav className="space-y-2">
-              <a href="#" className="block p-2 hover:bg-accent rounded-md">
+              <a href="#" className="block rounded-md p-2 hover:bg-accent">
                 Home
               </a>
-              <a href="#" className="block p-2 hover:bg-accent rounded-md">
+              <a href="#" className="block rounded-md p-2 hover:bg-accent">
                 Products
               </a>
-              <a href="#" className="block p-2 hover:bg-accent rounded-md">
+              <a href="#" className="block rounded-md p-2 hover:bg-accent">
                 Services
               </a>
-              <a href="#" className="block p-2 hover:bg-accent rounded-md">
+              <a href="#" className="block rounded-md p-2 hover:bg-accent">
                 About
               </a>
-              <a href="#" className="block p-2 hover:bg-accent rounded-md">
+              <a href="#" className="block rounded-md p-2 hover:bg-accent">
                 Contact
               </a>
             </nav>
           </div>
         </Drawer>
-      </SectionContainer>
+      </div>
 
       {/* Pagination Example */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Pagination</Typography>
 
         <div className="space-y-4">
@@ -214,7 +179,7 @@ export function NavigationExamples() {
             Page {page} of 10
           </Typography>
         </div>
-      </SectionContainer>
+      </div>
     </PageContainer>
   );
 }

@@ -3,54 +3,40 @@ export function GettingStarted() {
     <div className="prose max-w-none">
       <h1>Getting Started</h1>
 
-      <h2>Installation</h2>
-      <p>Install the package using your preferred package manager:</p>
-      <pre>
-        <code>npm install @speculo/ui</code>
-      </pre>
-      <p>Or with yarn:</p>
-      <pre>
-        <code>yarn add @speculo/ui</code>
-      </pre>
-
-      <h2>Setup</h2>
-      <p>First, import the CSS file in your app's entry point:</p>
-      <pre>
-        <code>import "@speculo/ui/dist/styles.css";</code>
-      </pre>
-
-      <h2>TypeScript Setup</h2>
+      <h2>Basic Usage</h2>
       <p>
-        The library includes TypeScript types out of the box. Make sure your
-        tsconfig.json includes the following compiler options:
+        After installation, you can import and use components in your React
+        application:
       </p>
       <pre>
         <code>
-          {`{
-  "compilerOptions": {
-    "jsx": "react",
-    "esModuleInterop": true,
-    "skipLibCheck": true
-  }
-}`}
-        </code>
-      </pre>
-
-      <h2>Basic Usage</h2>
-      <p>Import and use components in your React application:</p>
-      <pre>
-        <code>
-          {`import { Button } from "@speculo/ui";
+          {`import { Button } from "@crisellevaldez/speculo-ui";
 
 function App() {
   return (
-    <Button variant="primary" onClick={() => alert("Hello!")}>
+    <Button onClick={() => alert("Hello!")}>
       Click me
     </Button>
   );
 }`}
         </code>
       </pre>
+
+      <h2>Available Components</h2>
+      <p>Speculo UI includes a wide range of components:</p>
+      <ul>
+        <li>Button</li>
+        <li>Input</li>
+        <li>Select</li>
+        <li>Checkbox</li>
+        <li>Radio</li>
+        <li>Switch</li>
+        <li>Modal</li>
+        <li>Drawer</li>
+        <li>Toast</li>
+        <li>Typography</li>
+        <li>And more...</li>
+      </ul>
 
       <h2>Form Integration</h2>
       <p>
@@ -60,7 +46,7 @@ function App() {
       <pre>
         <code>
           {`import { useForm } from "react-hook-form";
-import { Input, Button } from "@speculo/ui";
+import { Input, Button } from "@crisellevaldez/speculo-ui";
 
 function LoginForm() {
   const { register, handleSubmit } = useForm();
@@ -90,14 +76,14 @@ function LoginForm() {
         </code>
       </pre>
 
-      <h2>Validation</h2>
+      <h2>Form Validation</h2>
       <p>The library works great with zod for form validation:</p>
       <pre>
         <code>
           {`import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Input, Button } from "@speculo/ui";
+import { Input, Button } from "@crisellevaldez/speculo-ui";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -134,18 +120,17 @@ function LoginForm() {
         </code>
       </pre>
 
-      <h2>Next Steps</h2>
-      <ul>
-        <li>
-          Check out the Core Concepts guide to understand the design principles
-        </li>
-        <li>
-          Browse the Components section for detailed documentation of each
-          component
-        </li>
-        <li>Learn about customization options in the Customization guide</li>
-        <li>See real-world usage patterns in the Examples section</li>
-      </ul>
+      <h2>Documentation</h2>
+      <p>
+        View the full documentation and examples at{" "}
+        <a
+          href="https://speculo-ui.web.app"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          https://speculo-ui.web.app
+        </a>
+      </p>
     </div>
   );
 }

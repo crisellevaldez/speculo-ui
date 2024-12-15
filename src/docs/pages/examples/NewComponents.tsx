@@ -20,10 +20,10 @@ export function NewComponentsExamples() {
   const [switchValue, setSwitchValue] = useState(false);
 
   return (
-    <PageContainer className="space-y-12">
+    <PageContainer className="space-y-12 py-10">
+      <Typography variant="h2">New Components</Typography>
       {/* Typography Examples */}
       <section className="space-y-8">
-        <Typography variant="h2">Typography</Typography>
         <div className="space-y-4">
           <Typography variant="h1">Heading 1</Typography>
           <Typography variant="h2">Heading 2</Typography>

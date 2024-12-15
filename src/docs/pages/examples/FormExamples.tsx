@@ -54,9 +54,9 @@ export function FormExamples() {
   };
 
   return (
-    <PageContainer className="space-y-12">
+    <PageContainer className="space-y-12 py-10">
       <div className="prose max-w-none">
-        <h1>Form Examples</h1>
+        <Typography variant="h2">Form Examples</Typography>
         <p>
           Explore examples of form layouts and patterns using our form
           components. All components are designed to work seamlessly with
@@ -65,7 +65,7 @@ export function FormExamples() {
       </div>
 
       {/* Input Examples with Icons */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Input with Icons</Typography>
         <div className="grid gap-6 md:grid-cols-2">
           <Form.Control>
@@ -127,10 +127,10 @@ export function FormExamples() {
             <Form.HelperText>With success indicator</Form.HelperText>
           </Form.Control>
         </div>
-      </SectionContainer>
+      </div>
 
       {/* Registration Form */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Registration Form</Typography>
 
         <div className="rounded-lg border border-gray-200 p-6">
@@ -234,13 +234,13 @@ export function FormExamples() {
             </div>
           </form>
         </div>
-      </SectionContainer>
+      </div>
 
       {/* Contact Form */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Contact Form</Typography>
 
-        <ContentContainer>
+        <div>
           <div className="rounded-lg border border-gray-200 p-6">
             <form className="space-y-6">
               <Form.Control>
@@ -296,11 +296,11 @@ export function FormExamples() {
               </Button>
             </form>
           </div>
-        </ContentContainer>
-      </SectionContainer>
+        </div>
+      </div>
 
       {/* Form Components */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Individual Components</Typography>
 
         <div className="grid gap-8 md:grid-cols-2">
@@ -387,7 +387,7 @@ export function FormExamples() {
             </div>
           </div>
         </div>
-      </SectionContainer>
+      </div>
     </PageContainer>
   );
 }

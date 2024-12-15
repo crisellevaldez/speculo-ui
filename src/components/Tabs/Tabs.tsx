@@ -49,7 +49,7 @@ export const Tabs: React.FC<TabsProps> & {
   className,
 }) => {
   const [selectedTab, setSelectedTab] = useState(
-    value || defaultValue || (children[0]?.props.value ?? "")
+    value || defaultValue || (children[0]?.props.value ?? ""),
   );
 
   // Handle controlled mode
@@ -79,7 +79,7 @@ export const Tabs: React.FC<TabsProps> & {
         className={cn(
           "w-full",
           orientation === "horizontal" ? "space-y-2" : "flex gap-4",
-          className
+          className,
         )}
       >
         {children}
@@ -105,7 +105,7 @@ const TabsList: React.FC<TabsListProps> = ({ children, className }) => {
       className={cn(
         "flex",
         orientation === "horizontal" ? variants[variant] : "flex-col space-y-1",
-        className
+        className,
       )}
       role="tablist"
     >
@@ -125,20 +125,20 @@ const Tab: React.FC<TabProps> = ({ value, label, disabled }) => {
     line: cn(
       "px-4 py-2 text-sm font-medium border-b-2 -mb-px",
       isSelected
-        ? "border-blue-500 text-blue-600"
-        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+        ? "border-primary text-primary"
+        : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300",
     ),
     enclosed: cn(
       "px-4 py-2 text-sm font-medium rounded-t-lg border-t border-l border-r",
       isSelected
         ? "bg-white border-gray-200 text-blue-600"
-        : "bg-transparent border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+        : "bg-transparent border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50",
     ),
     soft: cn(
       "px-4 py-2 text-sm font-medium rounded-md",
       isSelected
         ? "bg-white text-blue-600 shadow"
-        : "text-gray-500 hover:text-gray-700"
+        : "text-gray-500 hover:text-gray-700",
     ),
   };
 
@@ -148,7 +148,7 @@ const Tab: React.FC<TabProps> = ({ value, label, disabled }) => {
       "border-l-2 -ml-px",
       isSelected
         ? "border-blue-500"
-        : "border-transparent hover:border-gray-300"
+        : "border-transparent hover:border-gray-300",
     ),
   };
 
@@ -160,10 +160,10 @@ const Tab: React.FC<TabProps> = ({ value, label, disabled }) => {
       tabIndex={isSelected ? 0 : -1}
       disabled={disabled}
       className={cn(
-        "focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500",
-        disabled && "opacity-50 cursor-not-allowed",
+        "focus:outline-none focus:ring-0 focus:ring-offset-2",
+        disabled && "cursor-not-allowed opacity-50",
         variants[variant],
-        orientation === "vertical" && orientationStyles.vertical
+        orientation === "vertical" && orientationStyles.vertical,
       )}
       onClick={() => !disabled && setSelectedTab(value)}
     >

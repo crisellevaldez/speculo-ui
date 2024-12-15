@@ -26,6 +26,50 @@ export default {
     // ... your other content paths
     "./node_modules/@crisellevaldez/speculo-ui/dist/**/*.{js,ts,jsx,tsx}",
   ],
+  theme: {
+    extend: {
+      colors: {
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+    },
+  },
 };
 ```
 
@@ -35,7 +79,11 @@ export default {
 @import "@crisellevaldez/speculo-ui/styles.css";
 ```
 
-This step is crucial as it provides the necessary CSS variables and base styles for components to work correctly.
+This import provides:
+
+- CSS variables for theming (colors, border radius)
+- Dark mode support through CSS variables
+- Base component styles
 
 5. For Next.js projects, add to `next.config.js`:
 
@@ -57,6 +105,15 @@ function App() {
   return <Button>Click me</Button>;
 }
 ```
+
+## Theming
+
+The library uses CSS variables for theming, providing:
+
+- Consistent color palette across components
+- Built-in dark mode support
+- Easy customization through CSS variables
+- HSL color format for flexible color manipulation
 
 ## Components
 

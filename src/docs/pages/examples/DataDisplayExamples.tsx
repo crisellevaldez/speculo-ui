@@ -136,9 +136,9 @@ export function DataDisplayExamples() {
   ];
 
   return (
-    <PageContainer className="space-y-12">
+    <PageContainer className="space-y-12 py-10">
       <div className="prose max-w-none">
-        <h1>Data Display Examples</h1>
+        <Typography variant="h2">Data Display</Typography>
         <p>
           Explore examples of components used for displaying and managing data.
           These components work together to create interactive data-driven
@@ -147,7 +147,7 @@ export function DataDisplayExamples() {
       </div>
 
       {/* Table Example */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">User Management Table</Typography>
 
         <div className="rounded-lg border">
@@ -160,10 +160,10 @@ export function DataDisplayExamples() {
             pagination
           />
         </div>
-      </SectionContainer>
+      </div>
 
       {/* Modal Examples */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Modal Examples</Typography>
 
         <div className="flex gap-4">
@@ -205,14 +205,14 @@ export function DataDisplayExamples() {
           <Modal.Body>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Name</label>
+                <label className="mb-1 block text-sm font-medium">Name</label>
                 <Input
                   defaultValue={selectedUser?.name}
                   placeholder="Enter name"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Email</label>
+                <label className="mb-1 block text-sm font-medium">Email</label>
                 <Input
                   type="email"
                   defaultValue={selectedUser?.email}
@@ -220,7 +220,7 @@ export function DataDisplayExamples() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Role</label>
+                <label className="mb-1 block text-sm font-medium">Role</label>
                 <Input
                   defaultValue={selectedUser?.role}
                   placeholder="Enter role"
@@ -254,13 +254,13 @@ export function DataDisplayExamples() {
             </Button>
           </Modal.Footer>
         </Modal>
-      </SectionContainer>
+      </div>
 
       {/* Toast Variants */}
-      <SectionContainer className="space-y-8">
+      <div className="space-y-8">
         <Typography variant="h2">Toast Variants</Typography>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <Button
             variant="outline"
             onClick={() => {
@@ -306,7 +306,7 @@ export function DataDisplayExamples() {
             Info
           </Button>
         </div>
-      </SectionContainer>
+      </div>
     </PageContainer>
   );
 }
