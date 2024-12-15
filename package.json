@@ -6,8 +6,10 @@
   "main": "./dist/speculo-ui.cjs",
   "module": "./dist/speculo-ui.mjs",
   "types": "./dist/index.d.ts",
-  "style": "./dist/styles.css",
-  "sideEffects": false,
+  "style": "./dist/style.css",
+  "sideEffects": [
+    "**/*.css"
+  ],
   "files": [
     "dist"
   ],
@@ -25,7 +27,7 @@
       "import": "./dist/speculo-ui.mjs",
       "require": "./dist/speculo-ui.cjs"
     },
-    "./dist/styles.css": "./dist/styles.css"
+    "./style.css": "./dist/style.css"
   },
   "scripts": {
     "dev": "vite",

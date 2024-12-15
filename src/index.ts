@@ -1,3 +1,5 @@
+import "./index.css";
+
 // Import components
 import { Accordion } from "./components/Accordion/Accordion";
 import { Badge } from "./components/Badge/Badge";
