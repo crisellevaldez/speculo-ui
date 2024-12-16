@@ -1,7 +1,7 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { cn } from "../../utils/cn";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Container, Menu, X } from "lucide-react";
 
 export function DocsLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -141,9 +141,9 @@ export function DocsLayout() {
       )}
 
       {/* Main content */}
-      <div className="relative flex-1 lg:pl-64">
+      <div className="flex-1">
         <main className="min-h-screen bg-white">
-          <div className="mx-auto w-full max-w-5xl overflow-x-hidden px-4 py-16 sm:px-6 lg:px-8 lg:py-12">
+          <div className="mx-auto w-full px-2 py-16 sm:px-4 lg:px-6 lg:py-12">
             <Outlet />
           </div>
         </main>

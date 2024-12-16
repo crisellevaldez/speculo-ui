@@ -5,7 +5,6 @@ import { Table } from "../../../components/Table/Table";
 import { Modal } from "../../../components/Modal/Modal";
 import { useToast } from "../../../components/Toast/Toast";
 import { Input } from "../../../components/Input/Input";
-import { PageContainer } from "../../../components/Container/Container";
 
 interface User {
   id: number;
@@ -59,7 +58,7 @@ const mockUsers: User[] = [
   },
 ];
 
-export function DataDisplayExamples() {
+function DataDisplayExamples() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const { showToast } = useToast();
@@ -69,15 +68,18 @@ export function DataDisplayExamples() {
       key: "name",
       header: "Name",
       sortable: true,
+      minWidth: "120px",
     },
     {
       key: "email",
       header: "Email",
       sortable: true,
+      minWidth: "180px",
     },
     {
       key: "status",
       header: "Status",
+      minWidth: "100px",
       cell: (row: User) => (
         <span
           className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
@@ -94,17 +96,20 @@ export function DataDisplayExamples() {
       key: "role",
       header: "Role",
       sortable: true,
+      minWidth: "100px",
     },
     {
       key: "lastLogin",
       header: "Last Login",
       sortable: true,
+      minWidth: "120px",
     },
     {
       key: "actions",
       header: "",
+      minWidth: "140px",
       cell: (row: User) => (
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button
             size="sm"
             variant="outline"
@@ -133,7 +138,7 @@ export function DataDisplayExamples() {
   ];
 
   return (
-    <PageContainer className="space-y-12 py-10">
+    <div className="space-y-12">
       <div className="prose max-w-none">
         <Typography variant="h2">Data Display</Typography>
         <p>
@@ -144,16 +149,18 @@ export function DataDisplayExamples() {
       </div>
 
       {/* Table Example */}
-      <div className="space-y-8">
+      <div className="max-w-[350px] space-y-8 sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] 2xl:max-w-[1320px]">
         <Typography variant="h2">User Management Table</Typography>
 
-        <div className="rounded-lg border">
-          <Table
-            columns={tableColumns}
-            data={mockUsers}
-            keyExtractor={(row) => row.id}
-            sortable
-          />
+        <div className="relative w-full overflow-hidden">
+          <div className="overflow-x-auto">
+            <Table
+              columns={tableColumns}
+              data={mockUsers}
+              keyExtractor={(row) => row.id}
+              sortable
+            />
+          </div>
         </div>
       </div>
 
@@ -161,7 +168,7 @@ export function DataDisplayExamples() {
       <div className="space-y-8">
         <Typography variant="h2">Modal Examples</Typography>
 
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-4">
           <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
           <Button
             variant="outline"
@@ -302,6 +309,8 @@ export function DataDisplayExamples() {
           </Button>
         </div>
       </div>
-    </PageContainer>
+    </div>
   );
 }
+
+export default DataDisplayExamples;

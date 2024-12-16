@@ -6,6 +6,7 @@ export interface Column<T> {
   header: React.ReactNode;
   cell?: (item: T) => React.ReactNode;
   sortable?: boolean;
+  minWidth?: string; // Optional minimum width for the column
 }
 
 export interface TableProps<T> {
@@ -75,7 +76,7 @@ export function Table<T>({
   };
 
   return (
-    <div className="overflow-x-auto rounded-lg">
+    <div className="w-full overflow-x-auto rounded-lg">
       <table
         className={cn(
           "min-w-full divide-y divide-gray-200 border shadow-md",
@@ -85,7 +86,7 @@ export function Table<T>({
         <thead className="bg-gray-50">
           <tr>
             {selectable && (
-              <th className="px-6 py-3 text-left">
+              <th scope="col" className="w-14 px-3 py-3 text-left">
                 <input
                   type="checkbox"
                   checked={
@@ -99,8 +100,10 @@ export function Table<T>({
             {columns.map((column) => (
               <th
                 key={column.key}
+                scope="col"
+                style={{ minWidth: column.minWidth }}
                 className={cn(
-                  "px-6 py-3 text-left text-sm font-semibold text-gray-900",
+                  "px-3 py-3 text-left text-sm font-semibold text-gray-900",
                   sortable &&
                     column.sortable &&
                     "cursor-pointer hover:bg-gray-100",
@@ -108,11 +111,13 @@ export function Table<T>({
                 onClick={() => sortable && handleSort(column.key)}
               >
                 <div className="flex items-center gap-2">
-                  {column.header}
+                  <span className="truncate">{column.header}</span>
                   {sortable &&
                     column.sortable &&
                     sortConfig?.key === column.key && (
-                      <span>{sortConfig.direction === "asc" ? "↑" : "↓"}</span>
+                      <span className="shrink-0">
+                        {sortConfig.direction === "asc" ? "↑" : "↓"}
+                      </span>
                     )}
                 </div>
               </th>
@@ -123,7 +128,7 @@ export function Table<T>({
           {data.map((item) => (
             <tr key={keyExtractor(item)} className="hover:bg-gray-50">
               {selectable && (
-                <td className="px-6 py-4">
+                <td className="w-14 px-3 py-4">
                   <input
                     type="checkbox"
                     checked={selectedRows.includes(String(keyExtractor(item)))}
@@ -135,9 +140,20 @@ export function Table<T>({
               {columns.map((column) => (
                 <td
                   key={column.key}
-                  className="whitespace-nowrap px-6 py-4 text-sm text-gray-900"
+                  style={{ minWidth: column.minWidth }}
+                  className={cn(
+                    "whitespace-normal px-3 py-4 text-sm text-gray-900",
+                    // Add min-width for specific columns that need it
+                    column.key === "actions" && "min-w-[120px]",
+                  )}
                 >
-                  {column.cell ? column.cell(item) : (item as any)[column.key]}
+                  {column.cell ? (
+                    column.cell(item)
+                  ) : (
+                    <span className="line-clamp-2">
+                      {(item as any)[column.key]}
+                    </span>
+                  )}
                 </td>
               ))}
             </tr>

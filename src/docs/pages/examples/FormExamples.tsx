@@ -7,7 +7,6 @@ import { Checkbox } from "../../../components/Checkbox/Checkbox";
 import { Radio } from "../../../components/Radio/Radio";
 import { Textarea } from "../../../components/Textarea/Textarea";
 import { Form } from "../../../components/Form/Form";
-import { PageContainer } from "../../../components/Container/Container";
 import { Search, Mail, Lock, Check } from "lucide-react";
 
 // Icon wrapper for consistent sizing
@@ -50,7 +49,7 @@ export function FormExamples() {
   };
 
   return (
-    <PageContainer className="space-y-12 py-10">
+    <div className="space-y-12">
       <div className="prose max-w-none">
         <Typography variant="h2">Form Examples</Typography>
         <p>
@@ -384,6 +383,6 @@ export function FormExamples() {
           </div>
         </div>
       </div>
-    </PageContainer>
+    </div>
   );
 }

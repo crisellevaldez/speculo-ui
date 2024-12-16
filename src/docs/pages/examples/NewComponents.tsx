@@ -1,13 +1,7 @@
 import { useState } from "react";
 import { Typography } from "../../../components/Typography/Typography";
 import { Button } from "../../../components/Button/Button";
-import {
-  PageContainer,
-  SectionContainer,
-  ContentContainer,
-  NarrowContainer,
-  FullWidthContainer,
-} from "../../../components/Container/Container";
+import { Container } from "../../../components/Container/Container";
 import { Accordion } from "../../../components/Accordion/Accordion";
 import { Switch } from "../../../components/Switch/Switch";
 import { HoverCard } from "../../../components/HoverCard/HoverCard";
@@ -20,7 +14,7 @@ export function NewComponentsExamples() {
   const [switchValue, setSwitchValue] = useState(false);
 
   return (
-    <PageContainer className="space-y-12 py-10">
+    <div className="space-y-12 py-10">
       <Typography variant="h2">New Components</Typography>
       {/* Typography Examples */}
       <section className="space-y-8">
@@ -197,45 +191,26 @@ export function NewComponentsExamples() {
 
       {/* Container Examples */}
       <section className="space-y-8">
-        <Typography variant="h2">Container System</Typography>
+        <Typography variant="h2">Responsive Container</Typography>
 
         <div className="space-y-4">
-          <NarrowContainer className="bg-muted p-4">
-            <Typography variant="h4">Narrow Container (sm: 640px)</Typography>
+          <Container className="bg-muted p-4">
+            <Typography variant="h4">Responsive Container</Typography>
             <Typography variant="muted">
-              Perfect for forms and focused content
+              This container automatically adjusts its width based on screen
+              size:
             </Typography>
-          </NarrowContainer>
-
-          <ContentContainer className="bg-muted p-4">
-            <Typography variant="h4">Content Container (md: 768px)</Typography>
-            <Typography variant="muted">
-              Ideal for article content and text-heavy sections
-            </Typography>
-          </ContentContainer>
-
-          <SectionContainer className="bg-muted p-4">
-            <Typography variant="h4">Section Container (lg: 1024px)</Typography>
-            <Typography variant="muted">
-              Great for page sections and feature areas
-            </Typography>
-          </SectionContainer>
-
-          <PageContainer className="bg-muted p-4">
-            <Typography variant="h4">Page Container (xl: 1280px)</Typography>
-            <Typography variant="muted">
-              Main container for page layouts
-            </Typography>
-          </PageContainer>
-
-          <FullWidthContainer className="bg-muted p-4">
-            <Typography variant="h4">Full Width Container</Typography>
-            <Typography variant="muted">
-              Edge-to-edge container with padding
-            </Typography>
-          </FullWidthContainer>
+            <ul className="mt-2 list-inside list-disc">
+              <li>Mobile: Full width</li>
+              <li>sm (640px+): max-width 540px</li>
+              <li>md (768px+): max-width 720px</li>
+              <li>lg (1024px+): max-width 960px</li>
+              <li>xl (1280px+): max-width 1140px</li>
+              <li>2xl (1536px+): max-width 1320px</li>
+            </ul>
+          </Container>
         </div>
       </section>
-    </PageContainer>
+    </div>
   );
 }

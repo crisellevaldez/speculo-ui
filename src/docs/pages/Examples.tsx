@@ -1,11 +1,8 @@
 import { useState } from "react";
-import {
-  PageContainer,
-  SectionContainer,
-} from "../../components/Container/Container";
+import { Container } from "../../components/Container/Container";
 import { Tabs, Tab } from "../../components/Tabs/Tabs";
 import { FormExamples } from "./examples/FormExamples";
-import { DataDisplayExamples } from "./examples/DataDisplayExamples";
+import DataDisplayExamples from "./examples/DataDisplayExamples";
 import { NavigationExamples } from "./examples/NavigationExamples";
 import { NewComponentsExamples } from "./examples/NewComponents";
 
@@ -13,41 +10,42 @@ export function Examples() {
   const [activeTab, setActiveTab] = useState("form");
 
   return (
-    <PageContainer className="space-y-12">
-      <div className="prose max-w-none">
-        <h1>Examples</h1>
-        <p>
-          Explore practical examples of our components in action. These examples
-          demonstrate common use cases and patterns for building interfaces.
-        </p>
-      </div>
-
-      <Tabs value={activeTab} onChange={setActiveTab}>
-        <Tabs.List>
-          <Tab value="form" label="Form Examples">
-            Form Examples
-          </Tab>
-          <Tab value="data" label="Data Display">
-            Data Display
-          </Tab>
-          <Tab value="navigation" label="Navigation">
-            Navigation
-          </Tab>
-          <Tab value="new" label="New Components">
-            New Components
-          </Tab>
-        </Tabs.List>
-
-        <div className="mt-6">
-          {activeTab === "form" && <FormExamples />}
-          {activeTab === "data" && <DataDisplayExamples />}
-          {activeTab === "navigation" && <NavigationExamples />}
-          {activeTab === "new" && <NewComponentsExamples />}
-        </div>
-      </Tabs>
-
-      <SectionContainer>
+    <Container className="py-12">
+      <div className="space-y-12">
         <div className="prose max-w-none">
+          <h1>Examples</h1>
+          <p>
+            Explore practical examples of our components in action. These
+            examples demonstrate common use cases and patterns for building
+            interfaces.
+          </p>
+        </div>
+
+        <Tabs value={activeTab} onChange={setActiveTab}>
+          <Tabs.List>
+            <Tab value="form" label="Form Examples">
+              Form Examples
+            </Tab>
+            <Tab value="data" label="Data Display">
+              Data Display
+            </Tab>
+            <Tab value="navigation" label="Navigation">
+              Navigation
+            </Tab>
+            <Tab value="new" label="New Components">
+              New Components
+            </Tab>
+          </Tabs.List>
+
+          <div className="relative mt-6 w-full">
+            {activeTab === "form" && <FormExamples />}
+            {activeTab === "data" && <DataDisplayExamples />}
+            {activeTab === "navigation" && <NavigationExamples />}
+            {activeTab === "new" && <NewComponentsExamples />}
+          </div>
+        </Tabs>
+
+        <section className="prose max-w-none">
           <h2>Implementation Notes</h2>
           <ul>
             <li>
@@ -77,8 +75,8 @@ export function Examples() {
             <li>Layout components provide consistent spacing and alignment</li>
             <li>All components follow a consistent API design</li>
           </ul>
-        </div>
-      </SectionContainer>
-    </PageContainer>
+        </section>
+      </div>
+    </Container>
   );
 }

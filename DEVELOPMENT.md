@@ -8,6 +8,7 @@ Speculo UI provides a comprehensive set of React components designed for buildin
 
 - Type safety with TypeScript
 - Consistent styling with Tailwind CSS
+- Responsive design
 - Accessibility (ARIA) compliance
 - Form handling with react-hook-form integration
 - Comprehensive documentation with MDX

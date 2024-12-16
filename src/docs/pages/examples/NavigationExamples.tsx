@@ -5,7 +5,6 @@ import { Tabs, Tab } from "../../../components/Tabs/Tabs";
 import { Sidebar } from "../../../components/Sidebar/Sidebar";
 import { Drawer } from "../../../components/Drawer/Drawer";
 import { Pagination } from "../../../components/Pagination/Pagination";
-import { PageContainer } from "../../../components/Container/Container";
 
 export function NavigationExamples() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -13,7 +12,7 @@ export function NavigationExamples() {
   const [page, setPage] = useState(1);
 
   return (
-    <PageContainer className="space-y-12 py-10">
+    <div className="space-y-12 py-10">
       <div className="prose max-w-none">
         <Typography variant="h2">Navigation</Typography>
         <p>
@@ -177,6 +176,6 @@ export function NavigationExamples() {
           </Typography>
         </div>
       </div>
-    </PageContainer>
+    </div>
   );
 }
