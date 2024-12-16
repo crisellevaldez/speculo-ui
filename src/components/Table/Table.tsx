@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { cn } from "../../utils/cn";
 
 export interface Column<T> {
@@ -7,6 +7,7 @@ export interface Column<T> {
   cell?: (item: T) => React.ReactNode;
   sortable?: boolean;
   minWidth?: string;
+  width?: string;
 }
 
 export interface TableProps<T extends Record<string, unknown>> {
@@ -22,7 +23,7 @@ export interface TableProps<T extends Record<string, unknown>> {
 }
 
 export function Table<T extends Record<string, unknown>>({
-  columns,
+  columns: initialColumns,
   data,
   keyExtractor,
   selectable = false,
@@ -32,9 +33,15 @@ export function Table<T extends Record<string, unknown>>({
   onSort,
   className,
 }: TableProps<T>) {
+  const [columns, setColumns] = useState(initialColumns);
   const [sortConfig, setSortConfig] = useState<{
     key: string;
     direction: "asc" | "desc";
+  } | null>(null);
+  const [resizing, setResizing] = useState<{
+    index: number;
+    startX: number;
+    startWidth: number;
   } | null>(null);
 
   // Handle row selection
@@ -75,6 +82,53 @@ export function Table<T extends Record<string, unknown>>({
     });
   };
 
+  // Column resizing handlers
+  const handleResizeStart = (index: number, e: React.MouseEvent) => {
+    const startWidth = columns[index].width
+      ? parseInt(columns[index].width!)
+      : 100;
+    setResizing({
+      index,
+      startX: e.pageX,
+      startWidth,
+    });
+  };
+
+  const handleResizeMove = useCallback(
+    (e: MouseEvent) => {
+      if (!resizing) return;
+
+      const diff = e.pageX - resizing.startX;
+      const newWidth = Math.max(100, resizing.startWidth + diff);
+
+      setColumns((prevColumns) => {
+        const newColumns = [...prevColumns];
+        newColumns[resizing.index] = {
+          ...newColumns[resizing.index],
+          width: `${newWidth}px`,
+        };
+        return newColumns;
+      });
+    },
+    [resizing],
+  );
+
+  const handleResizeEnd = useCallback(() => {
+    setResizing(null);
+  }, []);
+
+  // Add/remove event listeners for resizing
+  React.useEffect(() => {
+    if (resizing) {
+      window.addEventListener("mousemove", handleResizeMove);
+      window.addEventListener("mouseup", handleResizeEnd);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleResizeMove);
+      window.removeEventListener("mouseup", handleResizeEnd);
+    };
+  }, [resizing, handleResizeMove, handleResizeEnd]);
+
   return (
     <div className="w-full overflow-x-auto rounded-lg">
       <table
@@ -97,13 +151,17 @@ export function Table<T extends Record<string, unknown>>({
                 />
               </th>
             )}
-            {columns.map((column) => (
+            {columns.map((column, index) => (
               <th
                 key={String(column.key)}
                 scope="col"
-                style={{ minWidth: column.minWidth }}
+                style={{
+                  minWidth: column.minWidth,
+                  width: column.width,
+                  position: "relative",
+                }}
                 className={cn(
-                  "px-3 py-3 text-left text-sm font-semibold text-gray-900",
+                  "group px-3 py-3 text-left text-sm font-semibold text-gray-900",
                   sortable &&
                     column.sortable &&
                     "cursor-pointer hover:bg-gray-100",
@@ -120,6 +178,14 @@ export function Table<T extends Record<string, unknown>>({
                       </span>
                     )}
                 </div>
+                {/* Resizer handle */}
+                <div
+                  className={cn(
+                    "absolute right-0 top-0 h-full w-1 cursor-col-resize bg-transparent hover:bg-gray-300 group-hover:bg-gray-300",
+                    resizing?.index === index && "bg-blue-500",
+                  )}
+                  onMouseDown={(e) => handleResizeStart(index, e)}
+                />
               </th>
             ))}
           </tr>
@@ -140,19 +206,26 @@ export function Table<T extends Record<string, unknown>>({
               {columns.map((column) => (
                 <td
                   key={String(column.key)}
-                  style={{ minWidth: column.minWidth }}
+                  style={{
+                    minWidth: column.minWidth,
+                    width: column.width,
+                    maxWidth: column.width,
+                  }}
                   className={cn(
                     "whitespace-normal px-3 py-4 text-sm text-gray-900",
+                    "overflow-x-auto",
                     column.key === "actions" && "min-w-[120px]",
                   )}
                 >
-                  {column.cell ? (
-                    column.cell(item)
-                  ) : (
-                    <span className="line-clamp-2">
-                      {String(item[column.key as keyof T])}
-                    </span>
-                  )}
+                  <div className="overflow-x-auto">
+                    {column.cell ? (
+                      column.cell(item)
+                    ) : (
+                      <span className="block">
+                        {String(item[column.key as keyof T])}
+                      </span>
+                    )}
+                  </div>
                 </td>
               ))}
             </tr>

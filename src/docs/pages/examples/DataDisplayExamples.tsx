@@ -1,316 +1,157 @@
-import { useState } from "react";
-import { Typography } from "../../../components/Typography/Typography";
-import { Button } from "../../../components/Button/Button";
+import { Container } from "../../../components/Container/Container";
 import { Table } from "../../../components/Table/Table";
-import { Modal } from "../../../components/Modal/Modal";
-import { useToast } from "../../../components/Toast/Toast";
-import { Input } from "../../../components/Input/Input";
+import { cn } from "../../../utils/cn";
 
-interface User extends Record<string, unknown> {
+interface Product extends Record<string, unknown> {
   id: number;
   name: string;
-  email: string;
-  status: "active" | "inactive";
-  role: string;
-  lastLogin: string;
+  description: string;
+  category: string;
+  price: string;
+  stock: "In Stock" | "Low Stock" | "Out of Stock";
+  lastUpdated: string;
+  specifications: string;
 }
 
-const mockUsers: User[] = [
+const longDescription = `
+This is a very long description that will demonstrate horizontal scrolling within the cell. 
+It contains detailed information that would typically exceed the column width and need to scroll.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+`;
+
+const sampleData: Product[] = [
   {
     id: 1,
-    name: "John Doe",
-    email: "john@example.com",
-    status: "active",
-    role: "Admin",
-    lastLogin: "2024-01-15",
+    name: "Product XYZ-123-456",
+    description: longDescription,
+    category: "Electronics & Computers",
+    price: "$1,299.99",
+    stock: "In Stock",
+    lastUpdated: "2024-01-15T10:30:00",
+    specifications:
+      "CPU: Intel i9-13900K, RAM: 64GB DDR5, Storage: 2TB NVMe SSD",
   },
   {
     id: 2,
-    name: "Jane Smith",
-    email: "jane@example.com",
-    status: "inactive",
-    role: "User",
-    lastLogin: "2024-01-10",
+    name: "Super Ultra HD Monitor Pro",
+    description: longDescription,
+    category: "Displays & Accessories",
+    price: "$899.99",
+    stock: "Low Stock",
+    lastUpdated: "2024-01-14T15:45:00",
+    specifications:
+      "32-inch 4K HDR, 144Hz Refresh Rate, 1ms Response Time, G-Sync Compatible",
   },
   {
     id: 3,
-    name: "Bob Johnson",
-    email: "bob@example.com",
-    status: "active",
-    role: "Editor",
-    lastLogin: "2024-01-14",
-  },
-  {
-    id: 4,
-    name: "Alice Brown",
-    email: "alice@example.com",
-    status: "active",
-    role: "User",
-    lastLogin: "2024-01-13",
-  },
-  {
-    id: 5,
-    name: "Charlie Wilson",
-    email: "charlie@example.com",
-    status: "inactive",
-    role: "User",
-    lastLogin: "2024-01-08",
+    name: "Professional Camera Kit",
+    description: longDescription,
+    category: "Photography",
+    price: "$2,499.99",
+    stock: "Out of Stock",
+    lastUpdated: "2024-01-13T09:15:00",
+    specifications:
+      "50MP Sensor, 8K Video, 5-Axis Stabilization, Weather Sealed Body",
   },
 ];
 
-function DataDisplayExamples() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const { showToast } = useToast();
+const columns = [
+  {
+    key: "id",
+    header: "ID",
+    minWidth: "80px",
+    width: "100px",
+    sortable: true,
+  },
+  {
+    key: "name",
+    header: "Product Name",
+    minWidth: "200px",
+    width: "250px",
+    sortable: true,
+  },
+  {
+    key: "description",
+    header: "Description",
+    minWidth: "300px",
+    width: "400px",
+  },
+  {
+    key: "category",
+    header: "Category",
+    minWidth: "150px",
+    width: "200px",
+    sortable: true,
+  },
+  {
+    key: "price",
+    header: "Price",
+    minWidth: "100px",
+    width: "150px",
+    sortable: true,
+  },
+  {
+    key: "stock",
+    header: "Stock Status",
+    minWidth: "120px",
+    width: "150px",
+    cell: (item: Product) => (
+      <span
+        className={cn(
+          "inline-flex rounded-full px-2 py-1 text-xs font-semibold",
+          item.stock === "In Stock"
+            ? "bg-green-100 text-green-800"
+            : item.stock === "Low Stock"
+              ? "bg-yellow-100 text-yellow-800"
+              : "bg-red-100 text-red-800",
+        )}
+      >
+        {item.stock}
+      </span>
+    ),
+  },
+  {
+    key: "lastUpdated",
+    header: "Last Updated",
+    minWidth: "150px",
+    width: "200px",
+    cell: (item: Product) => new Date(item.lastUpdated).toLocaleString(),
+    sortable: true,
+  },
+  {
+    key: "specifications",
+    header: "Specifications",
+    minWidth: "300px",
+    width: "400px",
+  },
+];
 
-  const tableColumns = [
-    {
-      key: "name" as keyof User,
-      header: "Name",
-      sortable: true,
-      minWidth: "120px",
-    },
-    {
-      key: "email" as keyof User,
-      header: "Email",
-      sortable: true,
-      minWidth: "180px",
-    },
-    {
-      key: "status" as keyof User,
-      header: "Status",
-      minWidth: "100px",
-      cell: (row: User) => (
-        <span
-          className={`inline-flex rounded-full px-2 py-1 text-xs font-semibold ${
-            row.status === "active"
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {row.status}
-        </span>
-      ),
-    },
-    {
-      key: "role" as keyof User,
-      header: "Role",
-      sortable: true,
-      minWidth: "100px",
-    },
-    {
-      key: "lastLogin" as keyof User,
-      header: "Last Login",
-      sortable: true,
-      minWidth: "120px",
-    },
-    {
-      key: "actions",
-      header: "",
-      minWidth: "140px",
-      cell: (row: User) => (
-        <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              setSelectedUser(row);
-              setIsModalOpen(true);
-            }}
-          >
-            Edit
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => {
-              showToast({
-                message: `Deleted user ${row.name}`,
-                variant: "success",
-              });
-            }}
-          >
-            Delete
-          </Button>
-        </div>
-      ),
-    },
-  ];
-
+export default function DataDisplayExamples() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       <div className="prose max-w-none">
-        <Typography variant="h2">Data Display</Typography>
+        <h2>Responsive Table with Scrollable Cells</h2>
         <p>
-          Explore examples of components used for displaying and managing data.
-          These components work together to create interactive data-driven
-          interfaces.
+          This example demonstrates:
+          <ul>
+            <li>
+              Horizontal scrolling within cells when content exceeds width
+            </li>
+            <li>Resizable columns (drag the column edges)</li>
+            <li>Minimum column widths</li>
+            <li>Container responsiveness across different screen sizes</li>
+          </ul>
         </p>
       </div>
 
-      {/* Table Example */}
-      <div className="max-w-[350px] space-y-8 sm:max-w-[540px] md:max-w-[720px] lg:max-w-[960px] xl:max-w-[1140px] 2xl:max-w-[1320px]">
-        <Typography variant="h2">User Management Table</Typography>
-
-        <div className="relative w-full overflow-hidden">
-          <div className="overflow-x-auto">
-            <Table<User>
-              columns={tableColumns}
-              data={mockUsers}
-              keyExtractor={(row) => row.id}
-              sortable
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Modal Examples */}
-      <div className="space-y-8">
-        <Typography variant="h2">Modal Examples</Typography>
-
-        <div className="flex flex-wrap gap-4">
-          <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              showToast({
-                message: "This is a success message",
-                variant: "success",
-              });
-            }}
-          >
-            Show Success Toast
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              showToast({
-                message: "This is an error message",
-                variant: "error",
-              });
-            }}
-          >
-            Show Error Toast
-          </Button>
-        </div>
-
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedUser(null);
-          }}
-        >
-          <Modal.Header>
-            {selectedUser ? "Edit User" : "Create User"}
-          </Modal.Header>
-          <Modal.Body>
-            <div className="space-y-4">
-              <div>
-                <label className="mb-1 block text-sm font-medium">Name</label>
-                <Input
-                  defaultValue={selectedUser?.name}
-                  placeholder="Enter name"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Email</label>
-                <Input
-                  type="email"
-                  defaultValue={selectedUser?.email}
-                  placeholder="Enter email"
-                />
-              </div>
-              <div>
-                <label className="mb-1 block text-sm font-medium">Role</label>
-                <Input
-                  defaultValue={selectedUser?.role}
-                  placeholder="Enter role"
-                />
-              </div>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsModalOpen(false);
-                setSelectedUser(null);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                showToast({
-                  message: selectedUser
-                    ? `Updated user ${selectedUser.name}`
-                    : "Created new user",
-                  variant: "success",
-                });
-                setIsModalOpen(false);
-                setSelectedUser(null);
-              }}
-            >
-              {selectedUser ? "Update" : "Create"}
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
-
-      {/* Toast Variants */}
-      <div className="space-y-8">
-        <Typography variant="h2">Toast Variants</Typography>
-
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-          <Button
-            variant="outline"
-            onClick={() => {
-              showToast({
-                message: "Success message",
-                variant: "success",
-              });
-            }}
-          >
-            Success
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              showToast({
-                message: "Error message",
-                variant: "error",
-              });
-            }}
-          >
-            Error
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              showToast({
-                message: "Warning message",
-                variant: "warning",
-              });
-            }}
-          >
-            Warning
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              showToast({
-                message: "Info message",
-                variant: "info",
-              });
-            }}
-          >
-            Info
-          </Button>
-        </div>
-      </div>
+      <Container>
+        <Table<Product>
+          columns={columns}
+          data={sampleData}
+          keyExtractor={(item) => item.id}
+          sortable
+        />
+      </Container>
     </div>
   );
 }
-
-export default DataDisplayExamples;
