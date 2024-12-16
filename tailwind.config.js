@@ -4,10 +4,7 @@ export default {
   theme: {
     extend: {
       screens: {
-        "3xl": "1920px",
-        "4xl": "2240px",
-        "5xl": "2560px",
-        "6xl": "3000px",
+        "3xl": "2000px",
       },
       colors: {
         border: "hsl(var(--border))",

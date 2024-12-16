@@ -23,7 +23,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
       <Component
         ref={ref}
         className={cn(
-          "3xl:max-w-[1920px] 4xl:max-w-[2240px] 5xl:max-w-[2560px] 6xl:max-w-[3000px] w-full sm:max-w-[640px] md:max-w-[768px] lg:max-w-[1024px] xl:max-w-[1280px] 2xl:max-w-[1536px]",
+          "3xl:w-[2000px] w-full 2xl:w-[1500px]",
           padding && "px-4 sm:px-6 lg:px-8",
           centered && "mx-auto",
           className,
