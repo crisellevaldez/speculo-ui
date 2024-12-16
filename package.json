@@ -1,7 +1,7 @@
 {
   "name": "@crisellevaldez/speculo-ui",
   "private": false,
-  "version": "0.3.18",
+  "version": "0.3.19",
   "type": "module",
   "main": "./dist/speculo-ui.cjs",
   "module": "./dist/speculo-ui.mjs",
@@ -45,6 +45,7 @@
     "clsx": "^2.1.0",
     "firebase": "^11.1.0",
     "lucide-react": "^0.468.0",
+    "react-phone-number-input": "^3.4.10",
     "react-router-dom": "^7.0.2",
     "tailwind-merge": "^2.2.1"
   },

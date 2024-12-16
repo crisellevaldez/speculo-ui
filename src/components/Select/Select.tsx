@@ -14,6 +14,7 @@ export interface SelectProps {
   error?: string;
   helperText?: string;
   disabled?: boolean;
+  isLoading?: boolean;
   multiple?: boolean;
   searchable?: boolean;
   className?: string;
@@ -30,6 +31,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       error,
       helperText,
       disabled,
+      isLoading,
       multiple = false,
       searchable = false,
       className,
@@ -100,7 +102,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       "relative w-full placeholder-gray-500 placeholder:text-sm";
     const triggerStyles = cn(
       "flex min-h-[40px] w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm border-gray-300 shadow-sm",
-      disabled && "cursor-not-allowed bg-gray-50",
+      (disabled || isLoading) && "cursor-not-allowed bg-gray-50",
       error
         ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
         : "focus:outline-none focus:ring-1 focus:ring-gray-400",
@@ -114,14 +116,14 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         <div
           ref={ref}
           className={triggerStyles}
-          onClick={() => !disabled && setIsOpen(!isOpen)}
+          onClick={() => !disabled && !isLoading && setIsOpen(!isOpen)}
           role="combobox"
           aria-expanded={isOpen}
           aria-haspopup="listbox"
-          aria-disabled={disabled}
-          tabIndex={disabled ? -1 : 0}
+          aria-disabled={disabled || isLoading}
+          tabIndex={disabled || isLoading ? -1 : 0}
         >
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-1 flex-wrap gap-1">
             {selectedOptions.length > 0 ? (
               selectedOptions.map((option) => (
                 <span
@@ -129,7 +131,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
                   className="inline-flex items-center gap-1 rounded-md bg-gray-200 px-2 py-1 text-sm"
                 >
                   {option.label}
-                  {multiple && (
+                  {multiple && !isLoading && (
                     <button
                       onClick={(e) => handleRemoveOption(e, option)}
                       className="ml-1 rounded-full p-0.5 hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -154,28 +156,52 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
               <span className="text-gray-500">{placeholder}</span>
             )}
           </div>
-          <span className="ml-2">
-            <svg
-              className={cn(
-                "h-4 w-4 transition-transform",
-                isOpen && "rotate-180",
-              )}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M19 9l-7 7-7-7"
-              />
-            </svg>
-          </span>
+
+          <div className="ml-2 flex items-center">
+            {isLoading ? (
+              <svg
+                className="h-4 w-4 animate-spin text-gray-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            ) : (
+              <svg
+                className={cn(
+                  "h-4 w-4 transition-transform",
+                  isOpen && "rotate-180",
+                )}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            )}
+          </div>
         </div>
 
-        {isOpen && (
+        {isOpen && !isLoading && (
           <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
             {searchable && (
               <div className="p-2">

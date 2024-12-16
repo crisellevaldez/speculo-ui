@@ -1,6 +1,6 @@
 # Select
 
-Select is a form component that allows users to choose one or multiple options from a dropdown list. It supports searching, custom rendering, and integration with form libraries.
+Select is a form component that allows users to choose one or multiple options from a dropdown list. It supports searching, custom rendering, loading states, and integration with form libraries.
 
 ## Basic Usage
 
@@ -21,6 +21,20 @@ const options = [
   placeholder="Choose a fruit"
 />
 
+// Loading state
+<Select
+  options={options}
+  isLoading
+  placeholder="Loading..."
+/>
+
+// Disabled state
+<Select
+  options={options}
+  disabled
+  placeholder="Disabled"
+/>
+
 // With error state
 <Select
   options={options}
@@ -35,6 +49,55 @@ const options = [
   placeholder="Choose a fruit"
 />
 ```
+
+## Loading State
+
+The Select component includes a loading state for asynchronous operations:
+
+```jsx
+// Basic loading state
+<Select options={[]} isLoading placeholder="Loading options..." />;
+
+// Async data fetching example
+function CountrySelect() {
+  const [options, setOptions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchCountries() {
+      try {
+        const response = await fetch("https://api.example.com/countries");
+        const data = await response.json();
+        setOptions(
+          data.map((country) => ({
+            value: country.code,
+            label: country.name,
+          })),
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchCountries();
+  }, []);
+
+  return (
+    <Select
+      options={options}
+      isLoading={isLoading}
+      placeholder={isLoading ? "Loading countries..." : "Select a country"}
+    />
+  );
+}
+```
+
+When in loading state:
+
+- A spinner replaces the dropdown arrow
+- The select is automatically disabled
+- The dropdown cannot be opened
+- The background changes to a light gray
+- The cursor changes to not-allowed
 
 ## Multi-select
 
@@ -114,13 +177,13 @@ export function FruitForm() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    // Handle form submission
   };
 
   return (
@@ -136,6 +199,7 @@ export function FruitForm() {
             onChange={field.onChange}
             error={errors.fruit?.message}
             placeholder="Choose a fruit"
+            isLoading={isSubmitting}
           />
         )}
       />
@@ -152,6 +216,7 @@ export function FruitForm() {
             error={errors.fruits?.message}
             multiple
             placeholder="Choose fruits"
+            isLoading={isSubmitting}
           />
         )}
       />
@@ -175,6 +240,7 @@ export function FruitForm() {
 | error        | string                                    | undefined          | Error message to display           |
 | helperText   | string                                    | undefined          | Helper text to display             |
 | disabled     | boolean                                   | false              | Whether the select is disabled     |
+| isLoading    | boolean                                   | false              | Whether the select is loading      |
 | multiple     | boolean                                   | false              | Enable multiple selection          |
 | searchable   | boolean                                   | false              | Enable search functionality        |
 | className    | string                                    | undefined          | Additional CSS classes             |
@@ -200,6 +266,7 @@ The Select component follows accessibility best practices:
 - Maintains proper focus management
 - Search input is properly labeled
 - Options are announced as they are filtered
+- Loading state is properly announced to screen readers
 
 ## Best Practices
 
@@ -211,3 +278,5 @@ The Select component follows accessibility best practices:
 6. Provide clear error messages
 7. Consider mobile users when customizing option rendering
 8. Use helper text to provide additional context when needed
+9. Use loading states for asynchronous data fetching
+10. Consider using skeleton loaders for long loading states

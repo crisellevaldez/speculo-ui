@@ -1,6 +1,6 @@
 # Input
 
-Input is a form component that allows users to enter text data. It supports various features like error states, helper text, and icons.
+Input is a form component that allows users to enter text data. It supports various features like error states, helper text, icons, and loading states.
 
 ## Basic Usage
 
@@ -20,6 +20,18 @@ import { Input } from "components/Input";
 <Input
   placeholder="Username"
   error="Username is already taken"
+/>
+
+// Loading state
+<Input
+  placeholder="Loading..."
+  isLoading
+/>
+
+// Disabled state
+<Input
+  placeholder="Disabled"
+  disabled
 />
 ```
 
@@ -42,7 +54,7 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
   });
@@ -57,12 +69,14 @@ export function LoginForm() {
         {...register("email")}
         placeholder="Email"
         error={errors.email?.message}
+        isLoading={isSubmitting}
       />
       <Input
         {...register("password")}
         type="password"
         placeholder="Password"
         error={errors.password?.message}
+        isLoading={isSubmitting}
       />
       <button type="submit">Submit</button>
     </form>
@@ -97,7 +111,54 @@ import { SearchIcon, EyeIcon } from "your-icon-library";
   endIcon={<EyeIcon className="h-5 w-5 text-gray-400" />}
   placeholder="Search..."
 />
+
+// Loading state with icon
+<Input
+  startIcon={<SearchIcon className="h-5 w-5 text-gray-400" />}
+  placeholder="Loading..."
+  isLoading
+/>
 ```
+
+## Loading State
+
+The Input component includes a loading state that shows a spinner and disables the input:
+
+```jsx
+// Basic loading state
+<Input
+  placeholder="Loading..."
+  isLoading
+/>
+
+// Loading state with icon
+<Input
+  startIcon={<SearchIcon />}
+  placeholder="Loading..."
+  isLoading
+/>
+
+// Loading state in a form
+function SearchForm() {
+  const [isSearching, setIsSearching] = useState(false);
+
+  return (
+    <Input
+      placeholder="Search..."
+      startIcon={<SearchIcon />}
+      isLoading={isSearching}
+    />
+  );
+}
+```
+
+When in loading state:
+
+- A spinner appears on the right side
+- The input is automatically disabled
+- The background changes to a light gray
+- The cursor changes to not-allowed
+- If there's an end icon, it's replaced by the spinner
 
 ## Error Handling
 
@@ -129,6 +190,7 @@ When an error is present:
 | startIcon  | React.ReactNode | undefined | Icon to display at the start of input  |
 | endIcon    | React.ReactNode | undefined | Icon to display at the end of input    |
 | disabled   | boolean         | false     | Whether the input is disabled          |
+| isLoading  | boolean         | false     | Whether the input is in loading state  |
 | className  | string          | undefined | Additional CSS classes to apply        |
 
 Plus all standard HTML input attributes.
@@ -144,6 +206,7 @@ The Input component follows accessibility best practices:
 - Maintains proper color contrast ratios
 - Supports keyboard navigation
 - Clear focus indicators for keyboard users
+- Loading state is properly announced to screen readers
 
 ## Best Practices
 
@@ -155,3 +218,5 @@ The Input component follows accessibility best practices:
 6. Group related inputs using fieldset and legend when appropriate
 7. Validate input in real-time when appropriate
 8. Provide clear feedback for validation errors
+9. Use loading states to indicate asynchronous operations
+10. Avoid long loading states - consider optimistic updates when possible

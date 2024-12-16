@@ -8,6 +8,7 @@ export interface TextareaProps
   autoResize?: boolean;
   maxLength?: number;
   showCount?: boolean;
+  isLoading?: boolean;
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
@@ -22,6 +23,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
       value,
       onChange,
       disabled,
+      isLoading,
       ...props
     },
     forwardedRef,
@@ -68,7 +70,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     const baseStyles =
       "block w-full rounded-md border px-4 py-2 text-gray-900 border-gray-300 text-sm shadow-sm placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400";
     const stateStyles = cn(
-      disabled && "cursor-not-allowed bg-gray-50 text-gray-500",
+      (disabled || isLoading) && "cursor-not-allowed bg-gray-50 text-gray-500",
       error
         ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
         : "border-gray-300",
@@ -78,23 +80,50 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
     return (
       <div className="relative">
-        <textarea
-          ref={internalRef}
-          value={value}
-          onChange={handleChange}
-          disabled={disabled}
-          maxLength={maxLength}
-          className={cn(baseStyles, stateStyles, className)}
-          aria-invalid={error ? "true" : "false"}
-          aria-describedby={
-            error
-              ? `${props.id}-error`
-              : helperText
-                ? `${props.id}-helper`
-                : undefined
-          }
-          {...props}
-        />
+        <div className="relative">
+          <textarea
+            ref={internalRef}
+            value={value}
+            onChange={handleChange}
+            disabled={disabled || isLoading}
+            maxLength={maxLength}
+            className={cn(baseStyles, stateStyles, className)}
+            aria-invalid={error ? "true" : "false"}
+            aria-describedby={
+              error
+                ? `${props.id}-error`
+                : helperText
+                  ? `${props.id}-helper`
+                  : undefined
+            }
+            {...props}
+          />
+
+          {isLoading && (
+            <div className="absolute right-3 top-3">
+              <svg
+                className="h-4 w-4 animate-spin text-gray-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                />
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                />
+              </svg>
+            </div>
+          )}
+        </div>
 
         {/* Character count */}
         {showCount && (

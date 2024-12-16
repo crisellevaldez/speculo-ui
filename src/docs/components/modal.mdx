@@ -42,16 +42,24 @@ function BasicExample() {
 
 ## Size Variants
 
-The Modal component supports different sizes:
+The Modal component supports different sizes to accommodate various types of content:
 
 ```jsx
 function SizeExample() {
   const [isOpen, setIsOpen] = useState(false);
-  const [size, setSize] = useState("md");
+  const [size, setSize] = useState("base");
 
   return (
     <>
       <div className="space-x-4">
+        <button
+          onClick={() => {
+            setSize("xs");
+            setIsOpen(true);
+          }}
+        >
+          Extra Small Modal
+        </button>
         <button
           onClick={() => {
             setSize("sm");
@@ -62,11 +70,11 @@ function SizeExample() {
         </button>
         <button
           onClick={() => {
-            setSize("md");
+            setSize("base");
             setIsOpen(true);
           }}
         >
-          Medium Modal
+          Base Modal
         </button>
         <button
           onClick={() => {
@@ -83,6 +91,14 @@ function SizeExample() {
           }}
         >
           Extra Large Modal
+        </button>
+        <button
+          onClick={() => {
+            setSize("2xl");
+            setIsOpen(true);
+          }}
+        >
+          2XL Modal
         </button>
         <button
           onClick={() => {
@@ -133,7 +149,7 @@ function NestedModals() {
                   <Modal.Footer>
                     <button onClick={closeModal}>Close</button>
                   </Modal.Footer>
-                </Modal>
+                </Modal>,
               )
             }
           >
@@ -143,7 +159,7 @@ function NestedModals() {
         <Modal.Footer>
           <button onClick={closeModal}>Close</button>
         </Modal.Footer>
-      </Modal>
+      </Modal>,
     );
   };
 
@@ -253,16 +269,16 @@ function FormModal() {
 
 ### Modal Props
 
-| Prop                | Type                                   | Default   | Description                       |
-| ------------------- | -------------------------------------- | --------- | --------------------------------- |
-| isOpen              | boolean                                | required  | Controls modal visibility         |
-| onClose             | () => void                             | required  | Callback when modal should close  |
-| size                | "sm" \| "md" \| "lg" \| "xl" \| "full" | "md"      | Modal size variant                |
-| closeOnOverlayClick | boolean                                | true      | Close modal when clicking overlay |
-| closeOnEsc          | boolean                                | true      | Close modal when pressing ESC     |
-| initialFocus        | RefObject<HTMLElement>                 | undefined | Element to focus when modal opens |
-| className           | string                                 | undefined | Additional CSS classes            |
-| children            | React.ReactNode                        | required  | Modal content                     |
+| Prop                | Type                                                      | Default   | Description                       |
+| ------------------- | --------------------------------------------------------- | --------- | --------------------------------- |
+| isOpen              | boolean                                                   | required  | Controls modal visibility         |
+| onClose             | () => void                                                | required  | Callback when modal should close  |
+| size                | "xs" \| "sm" \| "base" \| "lg" \| "xl" \| "2xl" \| "full" | "base"    | Modal size variant                |
+| closeOnOverlayClick | boolean                                                   | true      | Close modal when clicking overlay |
+| closeOnEsc          | boolean                                                   | true      | Close modal when pressing ESC     |
+| initialFocus        | RefObject<HTMLElement>                                    | undefined | Element to focus when modal opens |
+| className           | string                                                    | undefined | Additional CSS classes            |
+| children            | React.ReactNode                                           | required  | Modal content                     |
 
 ### Modal.Header Props
 
@@ -284,6 +300,16 @@ function FormModal() {
 | --------- | --------------- | --------- | ---------------------- |
 | children  | React.ReactNode | required  | Footer content         |
 | className | string          | undefined | Additional CSS classes |
+
+## Size Guide
+
+- **Extra Small (xs)**: Perfect for simple confirmations, alerts, or quick actions
+- **Small (sm)**: Suitable for simple forms and basic content
+- **Base (base)**: Default size, good for standard forms and content
+- **Large (lg)**: For data visualization or complex content
+- **Extra Large (xl)**: Larger dashboard layouts and data-rich interfaces
+- **2XL (2xl)**: Complex enterprise dashboards and analytics
+- **Full Screen (full)**: Immersive experiences with maximum screen usage
 
 ## Accessibility
 

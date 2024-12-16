@@ -7,7 +7,7 @@ export interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "full";
+  size?: "xs" | "sm" | "base" | "lg" | "xl" | "2xl" | "full";
   closeOnOverlayClick?: boolean;
   closeOnEsc?: boolean;
   initialFocus?: React.RefObject<HTMLElement>;
@@ -31,10 +31,12 @@ export interface ModalFooterProps {
 }
 
 const sizes = {
-  sm: "max-w-sm",
-  md: "max-w-md",
-  lg: "max-w-lg",
-  xl: "max-w-xl",
+  xs: "max-w-sm",
+  sm: "max-w-xl",
+  base: "max-w-2xl",
+  lg: "max-w-3xl",
+  xl: "max-w-4xl",
+  "2xl": "max-w-5xl",
   full: "max-w-full mx-4",
 };
 
@@ -66,7 +68,9 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
 };
 
 const ModalBody: React.FC<ModalBodyProps> = ({ children, className }) => {
-  return <div className={cn("px-6 py-4", className)}>{children}</div>;
+  return (
+    <div className={cn("overflow-y-auto px-6 py-4", className)}>{children}</div>
+  );
 };
 
 const ModalFooter: React.FC<ModalFooterProps> = ({ children, className }) => {
@@ -90,7 +94,7 @@ export const Modal: React.FC<ModalProps> & {
   isOpen,
   onClose,
   children,
-  size = "md",
+  size = "base",
   closeOnOverlayClick = true,
   closeOnEsc = true,
   initialFocus,
@@ -148,13 +152,13 @@ export const Modal: React.FC<ModalProps> & {
   return createPortal(
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/80 p-4"
       onClick={handleOverlayClick}
     >
       <div
         ref={modalRef}
         className={cn(
-          "relative w-full rounded-lg bg-white shadow-xl outline-none",
+          "relative flex max-h-[calc(100vh-2rem)] w-full flex-col rounded-lg bg-white shadow-xl outline-none",
           sizes[size],
           className,
         )}

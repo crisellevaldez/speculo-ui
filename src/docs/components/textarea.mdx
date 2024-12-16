@@ -1,6 +1,6 @@
 # Textarea
 
-A flexible textarea component with auto-resize capability and character counting.
+A flexible textarea component with auto-resize capability, character counting, and loading states.
 
 ## Basic Usage
 
@@ -23,7 +23,67 @@ import { Textarea } from "components/Textarea";
   placeholder="Enter description"
   error="Description is required"
 />
+
+// Loading state
+<Textarea
+  placeholder="Loading..."
+  isLoading
+/>
+
+// Disabled state
+<Textarea
+  placeholder="Disabled"
+  disabled
+/>
 ```
+
+## Loading State
+
+The textarea supports a loading state for asynchronous operations:
+
+```jsx
+// Basic loading state
+<Textarea
+  placeholder="Loading..."
+  isLoading
+/>
+
+// Loading state with auto-resize
+<Textarea
+  placeholder="Loading..."
+  isLoading
+  autoResize
+/>
+
+// Example with async operation
+function CommentForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      await submitComment();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <Textarea
+      placeholder="Write a comment..."
+      isLoading={isSubmitting}
+      autoResize
+    />
+  );
+}
+```
+
+When in loading state:
+
+- A spinner appears in the top-right corner
+- The textarea is automatically disabled
+- The background changes to a light gray
+- The cursor changes to not-allowed
 
 ## Auto-resize
 
@@ -80,13 +140,13 @@ export function ProfileForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    console.log(data);
+  const onSubmit = async (data) => {
+    // Handle form submission
   };
 
   return (
@@ -98,6 +158,7 @@ export function ProfileForm() {
         autoResize
         maxLength={500}
         showCount
+        isLoading={isSubmitting}
       />
 
       <Textarea
@@ -106,49 +167,11 @@ export function ProfileForm() {
         error={errors.feedback?.message}
         helperText="Please provide detailed feedback"
         autoResize
+        isLoading={isSubmitting}
       />
 
       <button type="submit">Submit</button>
     </form>
-  );
-}
-```
-
-## Validation
-
-Example with real-time validation:
-
-```jsx
-import { useState } from "react";
-import { Textarea } from "components/Textarea";
-
-export function ValidatedTextarea() {
-  const [value, setValue] = useState("");
-  const [error, setError] = useState("");
-
-  const handleChange = (e) => {
-    const newValue = e.target.value;
-    setValue(newValue);
-
-    if (newValue.length < 10) {
-      setError("Text must be at least 10 characters");
-    } else if (newValue.length > 1000) {
-      setError("Text cannot exceed 1000 characters");
-    } else {
-      setError("");
-    }
-  };
-
-  return (
-    <Textarea
-      value={value}
-      onChange={handleChange}
-      error={error}
-      autoResize
-      showCount
-      maxLength={1000}
-      placeholder="Enter at least 10 characters"
-    />
   );
 }
 ```
@@ -165,6 +188,7 @@ export function ValidatedTextarea() {
 | maxLength  | number  | undefined | Maximum number of characters |
 | showCount  | boolean | false     | Show character count         |
 | disabled   | boolean | false     | Whether textarea is disabled |
+| isLoading  | boolean | false     | Whether textarea is loading  |
 | className  | string  | undefined | Additional CSS classes       |
 
 Plus all standard HTML textarea attributes.
@@ -179,6 +203,7 @@ The Textarea component follows accessibility best practices:
 - Maintains proper color contrast
 - Supports keyboard navigation
 - Helper text and error messages are programmatically associated
+- Loading state is properly announced to screen readers
 
 ## Best Practices
 
@@ -190,6 +215,8 @@ The Textarea component follows accessibility best practices:
 6. Consider mobile responsiveness
 7. Validate input in real-time when appropriate
 8. Maintain proper spacing around the component
+9. Use loading states to indicate async operations
+10. Avoid long loading states - consider optimistic updates
 
 ## Styling Examples
 

@@ -5,6 +5,7 @@ import { FormExamples } from "./examples/FormExamples";
 import DataDisplayExamples from "./examples/DataDisplayExamples";
 import { NavigationExamples } from "./examples/NavigationExamples";
 import { NewComponentsExamples } from "./examples/NewComponents";
+import ModalExamples from "./examples/ModalExamples";
 
 export function Examples() {
   const [activeTab, setActiveTab] = useState("form");
@@ -32,6 +33,9 @@ export function Examples() {
             <Tab value="navigation" label="Navigation">
               Navigation
             </Tab>
+            <Tab value="modals" label="Modals">
+              Modals
+            </Tab>
             <Tab value="new" label="New Components">
               New Components
             </Tab>
@@ -41,6 +45,7 @@ export function Examples() {
             {activeTab === "form" && <FormExamples />}
             {activeTab === "data" && <DataDisplayExamples />}
             {activeTab === "navigation" && <NavigationExamples />}
+            {activeTab === "modals" && <ModalExamples />}
             {activeTab === "new" && <NewComponentsExamples />}
           </div>
         </Tabs>
