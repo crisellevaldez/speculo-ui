@@ -41,7 +41,8 @@ export const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
     ref,
   ) => {
     const [isChecked, setIsChecked] = React.useState(defaultChecked || false);
-    const switchId = id || React.useId();
+    const generatedId = React.useId();
+    const switchId = id || generatedId;
     const {
       switch: switchSize,
       thumb: thumbSize,

@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { cn } from "../../utils/cn";
 
 export interface Column<T> {
-  key: string;
+  key: keyof T | string;
   header: React.ReactNode;
   cell?: (item: T) => React.ReactNode;
   sortable?: boolean;
-  minWidth?: string; // Optional minimum width for the column
+  minWidth?: string;
 }
 
-export interface TableProps<T> {
+export interface TableProps<T extends Record<string, unknown>> {
   columns: Column<T>[];
   data: T[];
   keyExtractor: (item: T) => string | number;
@@ -21,7 +21,7 @@ export interface TableProps<T> {
   className?: string;
 }
 
-export function Table<T>({
+export function Table<T extends Record<string, unknown>>({
   columns,
   data,
   keyExtractor,
@@ -99,7 +99,7 @@ export function Table<T>({
             )}
             {columns.map((column) => (
               <th
-                key={column.key}
+                key={String(column.key)}
                 scope="col"
                 style={{ minWidth: column.minWidth }}
                 className={cn(
@@ -108,7 +108,7 @@ export function Table<T>({
                     column.sortable &&
                     "cursor-pointer hover:bg-gray-100",
                 )}
-                onClick={() => sortable && handleSort(column.key)}
+                onClick={() => sortable && handleSort(String(column.key))}
               >
                 <div className="flex items-center gap-2">
                   <span className="truncate">{column.header}</span>
@@ -139,11 +139,10 @@ export function Table<T>({
               )}
               {columns.map((column) => (
                 <td
-                  key={column.key}
+                  key={String(column.key)}
                   style={{ minWidth: column.minWidth }}
                   className={cn(
                     "whitespace-normal px-3 py-4 text-sm text-gray-900",
-                    // Add min-width for specific columns that need it
                     column.key === "actions" && "min-w-[120px]",
                   )}
                 >
@@ -151,7 +150,7 @@ export function Table<T>({
                     column.cell(item)
                   ) : (
                     <span className="line-clamp-2">
-                      {(item as any)[column.key]}
+                      {String(item[column.key as keyof T])}
                     </span>
                   )}
                 </td>

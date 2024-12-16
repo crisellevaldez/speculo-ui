@@ -6,7 +6,7 @@ import { Modal } from "../../../components/Modal/Modal";
 import { useToast } from "../../../components/Toast/Toast";
 import { Input } from "../../../components/Input/Input";
 
-interface User {
+interface User extends Record<string, unknown> {
   id: number;
   name: string;
   email: string;
@@ -65,19 +65,19 @@ function DataDisplayExamples() {
 
   const tableColumns = [
     {
-      key: "name",
+      key: "name" as keyof User,
       header: "Name",
       sortable: true,
       minWidth: "120px",
     },
     {
-      key: "email",
+      key: "email" as keyof User,
       header: "Email",
       sortable: true,
       minWidth: "180px",
     },
     {
-      key: "status",
+      key: "status" as keyof User,
       header: "Status",
       minWidth: "100px",
       cell: (row: User) => (
@@ -93,13 +93,13 @@ function DataDisplayExamples() {
       ),
     },
     {
-      key: "role",
+      key: "role" as keyof User,
       header: "Role",
       sortable: true,
       minWidth: "100px",
     },
     {
-      key: "lastLogin",
+      key: "lastLogin" as keyof User,
       header: "Last Login",
       sortable: true,
       minWidth: "120px",
@@ -154,7 +154,7 @@ function DataDisplayExamples() {
 
         <div className="relative w-full overflow-hidden">
           <div className="overflow-x-auto">
-            <Table
+            <Table<User>
               columns={tableColumns}
               data={mockUsers}
               keyExtractor={(row) => row.id}

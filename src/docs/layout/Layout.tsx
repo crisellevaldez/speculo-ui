@@ -1,7 +1,7 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { cn } from "../../utils/cn";
 import { useState } from "react";
-import { Container, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 export function DocsLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);

@@ -46,15 +46,15 @@ const SidebarItem = React.forwardRef<
         "hover:bg-accent hover:text-accent-foreground",
         disabled && "pointer-events-none opacity-50",
         depth > 0 && "ml-4",
-        isLink && "cursor-pointer"
+        isLink && "cursor-pointer",
       )}
       role={isLink ? "link" : "button"}
       tabIndex={disabled ? -1 : 0}
       onClick={handleClick}
-      onKeyDown={(e) => {
+      onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          handleClick(e as any);
+          handleClick(e as unknown as React.MouseEvent);
         }
       }}
     >
@@ -62,7 +62,7 @@ const SidebarItem = React.forwardRef<
         <span
           className={cn(
             "flex h-4 w-4 items-center justify-center",
-            collapsed && "mx-auto"
+            collapsed && "mx-auto",
           )}
         >
           {icon}
@@ -84,7 +84,7 @@ const SidebarItem = React.forwardRef<
               strokeLinejoin="round"
               className={cn(
                 "h-4 w-4 transition-transform",
-                expanded && "rotate-180"
+                expanded && "rotate-180",
               )}
             >
               <polyline points="6 9 12 15 18 9" />
@@ -132,7 +132,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       defaultCollapsed = false,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [uncontrolledCollapsed, setUncontrolledCollapsed] =
       React.useState(defaultCollapsed);
@@ -154,7 +154,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         className={cn(
           "flex h-full flex-col gap-4 border-r bg-background p-4 transition-all duration-300",
           collapsed ? "w-16" : "w-64",
-          className
+          className,
         )}
         {...props}
       >
@@ -175,7 +175,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
             strokeLinejoin="round"
             className={cn(
               "h-4 w-4 transition-transform",
-              collapsed && "rotate-180"
+              collapsed && "rotate-180",
             )}
           >
             <path d="m15 18-6-6 6-6" />
@@ -189,7 +189,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
         </nav>
       </div>
     );
-  }
+  },
 );
 
 Sidebar.displayName = "Sidebar";
