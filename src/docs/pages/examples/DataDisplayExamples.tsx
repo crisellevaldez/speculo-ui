@@ -128,30 +128,56 @@ const columns = [
 
 export default function DataDisplayExamples() {
   return (
-    <div className="space-y-8">
-      <div className="prose max-w-none">
-        <h2>Responsive Table with Scrollable Cells</h2>
-        <p>
-          This example demonstrates:
-          <ul>
-            <li>
-              Horizontal scrolling within cells when content exceeds width
-            </li>
-            <li>Resizable columns (drag the column edges)</li>
-            <li>Minimum column widths</li>
-            <li>Container responsiveness across different screen sizes</li>
-          </ul>
-        </p>
-      </div>
+    <div className="space-y-12">
+      <section className="space-y-8">
+        <div className="prose max-w-none">
+          <h2>Responsive Table (Default)</h2>
+          <p>
+            This table demonstrates the default responsive behavior where
+            content wraps within cells:
+            <ul>
+              <li>Content wraps naturally within cells</li>
+              <li>Resizable columns</li>
+              <li>Minimum column widths</li>
+              <li>Container responsiveness across different screen sizes</li>
+            </ul>
+          </p>
+        </div>
 
-      <Container>
-        <Table<Product>
-          columns={columns}
-          data={sampleData}
-          keyExtractor={(item) => item.id}
-          sortable
-        />
-      </Container>
+        <Container>
+          <Table<Product>
+            columns={columns}
+            data={sampleData}
+            keyExtractor={(item) => item.id}
+            sortable
+          />
+        </Container>
+      </section>
+
+      <section className="space-y-8">
+        <div className="prose max-w-none">
+          <h2>Scrollable Table</h2>
+          <p>
+            This table demonstrates horizontal scrolling within cells:
+            <ul>
+              <li>Content scrolls horizontally when it exceeds cell width</li>
+              <li>Resizable columns</li>
+              <li>Minimum column widths</li>
+              <li>Container responsiveness across different screen sizes</li>
+            </ul>
+          </p>
+        </div>
+
+        <Container>
+          <Table<Product>
+            columns={columns}
+            data={sampleData}
+            keyExtractor={(item) => item.id}
+            sortable
+            scrollable
+          />
+        </Container>
+      </section>
     </div>
   );
 }

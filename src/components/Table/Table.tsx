@@ -20,6 +20,7 @@ export interface TableProps<T extends Record<string, unknown>> {
   sortable?: boolean;
   onSort?: (key: string, direction: "asc" | "desc") => void;
   className?: string;
+  scrollable?: boolean; // New prop to control cell scrolling behavior
 }
 
 export function Table<T extends Record<string, unknown>>({
@@ -32,6 +33,7 @@ export function Table<T extends Record<string, unknown>>({
   sortable = false,
   onSort,
   className,
+  scrollable = false, // Default to responsive behavior
 }: TableProps<T>) {
   const [columns, setColumns] = useState(initialColumns);
   const [sortConfig, setSortConfig] = useState<{
@@ -134,6 +136,7 @@ export function Table<T extends Record<string, unknown>>({
       <table
         className={cn(
           "min-w-full divide-y divide-gray-200 border shadow-md",
+          scrollable && "table-fixed", // Only use table-fixed when scrollable
           className,
         )}
       >
@@ -209,22 +212,35 @@ export function Table<T extends Record<string, unknown>>({
                   style={{
                     minWidth: column.minWidth,
                     width: column.width,
-                    maxWidth: column.width,
+                    maxWidth: scrollable ? column.width : undefined, // Only set maxWidth when scrollable
                   }}
                   className={cn(
-                    "whitespace-normal px-3 py-4 text-sm text-gray-900",
-                    "overflow-x-auto",
+                    "px-3 py-4 text-sm text-gray-900",
+                    scrollable && "max-w-0", // Only add max-w-0 when scrollable
                     column.key === "actions" && "min-w-[120px]",
                   )}
                 >
-                  <div className="overflow-x-auto">
-                    {column.cell ? (
-                      column.cell(item)
-                    ) : (
-                      <span className="block">
-                        {String(item[column.key as keyof T])}
-                      </span>
-                    )}
+                  <div
+                    className={cn(scrollable ? "overflow-hidden" : undefined)}
+                  >
+                    <div
+                      className={cn(scrollable ? "overflow-x-auto" : undefined)}
+                    >
+                      {column.cell ? (
+                        column.cell(item)
+                      ) : (
+                        <span
+                          className={cn(
+                            "block",
+                            scrollable
+                              ? "whitespace-nowrap"
+                              : "whitespace-normal break-words",
+                          )}
+                        >
+                          {String(item[column.key as keyof T])}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </td>
               ))}
