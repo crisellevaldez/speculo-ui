@@ -16,6 +16,114 @@ export function NewComponentsExamples() {
   return (
     <div className="space-y-12 py-10">
       <Typography variant="h2">New Components</Typography>
+
+      {/* Button Examples */}
+      <section className="space-y-8">
+        <Typography variant="h2">Button Variants</Typography>
+        <div className="flex flex-wrap gap-4">
+          <Button variant="primary">Primary Button</Button>
+          <Button variant="secondary">Secondary Button</Button>
+          <Button variant="outline">Outline Button</Button>
+        </div>
+
+        <Typography variant="h3">Button Sizes</Typography>
+        <div className="flex flex-wrap gap-4">
+          <Button size="sm">Small Button</Button>
+          <Button size="md">Medium Button</Button>
+          <Button size="lg">Large Button</Button>
+        </div>
+
+        <Typography variant="h3">Loading State</Typography>
+        <div className="flex flex-wrap gap-4">
+          <Button isLoading>Loading Primary</Button>
+          <Button variant="secondary" isLoading>
+            Loading Secondary
+          </Button>
+          <Button variant="outline" isLoading>
+            Loading Outline
+          </Button>
+        </div>
+      </section>
+
+      {/* Progress Examples */}
+      <section className="space-y-8">
+        <Typography variant="h2">Progress Indicators</Typography>
+
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <Typography variant="h3">Progress Bar Sizes</Typography>
+            <div className="space-y-6">
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Small
+                </Typography>
+                <Progress value={60} size="sm" />
+              </div>
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Medium
+                </Typography>
+                <Progress value={60} size="md" />
+              </div>
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Large
+                </Typography>
+                <Progress value={60} size="lg" />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <Typography variant="h3">Circle Progress Sizes</Typography>
+            <div className="flex items-center gap-8">
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Small
+                </Typography>
+                <Progress variant="circle" value={75} size="sm" showValue />
+              </div>
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Medium
+                </Typography>
+                <Progress variant="circle" value={75} size="md" showValue />
+              </div>
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Large
+                </Typography>
+                <Progress variant="circle" value={75} size="lg" showValue />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <Typography variant="h3">Loading Progress States</Typography>
+            <div className="space-y-6">
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Small Loading Bar
+                </Typography>
+                <Progress variant="loading" indeterminate size="sm" />
+              </div>
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Medium Loading Bar
+                </Typography>
+                <Progress variant="loading" indeterminate size="md" />
+              </div>
+              <div>
+                <Typography variant="muted" className="mb-2">
+                  Large Loading Bar
+                </Typography>
+                <Progress variant="loading" indeterminate size="lg" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Typography Examples */}
       <section className="space-y-8">
         <div className="space-y-4">
@@ -48,32 +156,6 @@ export function NewComponentsExamples() {
           <Badge size="sm">Small</Badge>
           <Badge size="md">Medium</Badge>
           <Badge size="lg">Large</Badge>
-        </div>
-      </section>
-
-      {/* Progress Examples */}
-      <section className="space-y-8">
-        <Typography variant="h2">Progress Indicators</Typography>
-
-        <div className="space-y-8">
-          <div className="space-y-4">
-            <Typography variant="h3">Default Progress Bar</Typography>
-            <Progress value={60} />
-          </div>
-
-          <div className="space-y-4">
-            <Typography variant="h3">Loading Progress Bar</Typography>
-            <Progress variant="loading" indeterminate />
-          </div>
-
-          <div className="space-y-4">
-            <Typography variant="h3">Circle Progress</Typography>
-            <div className="flex gap-8">
-              <Progress variant="circle" value={75} showValue />
-              <Progress variant="circle" value={30} showValue />
-              <Progress variant="circle" value={100} showValue />
-            </div>
-          </div>
         </div>
       </section>
 

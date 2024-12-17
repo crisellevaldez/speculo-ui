@@ -1,4 +1,3 @@
-import { Container } from "../../../components/Container/Container";
 import { Table } from "../../../components/Table/Table";
 import { cn } from "../../../utils/cn";
 
@@ -19,41 +18,32 @@ It contains detailed information that would typically exceed the column width an
 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 `;
 
-const sampleData: Product[] = [
-  {
-    id: 1,
-    name: "Product XYZ-123-456",
-    description: longDescription,
-    category: "Electronics & Computers",
-    price: "$1,299.99",
-    stock: "In Stock",
-    lastUpdated: "2024-01-15T10:30:00",
-    specifications:
-      "CPU: Intel i9-13900K, RAM: 64GB DDR5, Storage: 2TB NVMe SSD",
-  },
-  {
-    id: 2,
-    name: "Super Ultra HD Monitor Pro",
-    description: longDescription,
-    category: "Displays & Accessories",
-    price: "$899.99",
-    stock: "Low Stock",
-    lastUpdated: "2024-01-14T15:45:00",
-    specifications:
-      "32-inch 4K HDR, 144Hz Refresh Rate, 1ms Response Time, G-Sync Compatible",
-  },
-  {
-    id: 3,
-    name: "Professional Camera Kit",
-    description: longDescription,
-    category: "Photography",
-    price: "$2,499.99",
-    stock: "Out of Stock",
-    lastUpdated: "2024-01-13T09:15:00",
-    specifications:
-      "50MP Sensor, 8K Video, 5-Axis Stabilization, Weather Sealed Body",
-  },
-];
+// Generate 20 sample products
+const sampleData: Product[] = Array.from({ length: 20 }, (_, index) => ({
+  id: index + 1,
+  name: `Product XYZ-${(123 + index).toString().padStart(3, "0")}`,
+  description: longDescription,
+  category: [
+    "Electronics & Computers",
+    "Displays & Accessories",
+    "Photography",
+    "Smart Home",
+    "Gaming",
+  ][index % 5],
+  price: `$${(899 + index * 100).toLocaleString()}.99`,
+  stock: ["In Stock", "Low Stock", "Out of Stock"][index % 3] as
+    | "In Stock"
+    | "Low Stock"
+    | "Out of Stock",
+  lastUpdated: new Date(2024, 0, 15 - index).toISOString(),
+  specifications: [
+    "CPU: Intel i9-13900K, RAM: 64GB DDR5, Storage: 2TB NVMe SSD",
+    "32-inch 4K HDR, 144Hz Refresh Rate, 1ms Response Time, G-Sync Compatible",
+    "50MP Sensor, 8K Video, 5-Axis Stabilization, Weather Sealed Body",
+    "Smart Hub Compatible, Voice Control, Energy Efficient",
+    "RTX 4090, 32GB RAM, RGB Lighting, Liquid Cooling",
+  ][index % 5],
+}));
 
 const columns = [
   {
@@ -62,6 +52,8 @@ const columns = [
     minWidth: "80px",
     width: "100px",
     sortable: true,
+    isPinned: true,
+    pinPosition: "left" as const,
   },
   {
     key: "name",
@@ -69,6 +61,8 @@ const columns = [
     minWidth: "200px",
     width: "250px",
     sortable: true,
+    isPinned: true,
+    pinPosition: "left" as const,
   },
   {
     key: "description",
@@ -129,54 +123,59 @@ const columns = [
 export default function DataDisplayExamples() {
   return (
     <div className="space-y-12">
-      <section className="space-y-8">
+      <section className="space-y-4">
         <div className="prose max-w-none">
-          <h2>Responsive Table (Default)</h2>
+          <h2>Responsive Table with Sticky Header and Pinned Columns</h2>
           <p>
-            This table demonstrates the default responsive behavior where
-            content wraps within cells:
+            This table demonstrates the sticky header behavior with vertical and
+            horizontal scrolling:
             <ul>
+              <li>Header remains fixed while scrolling vertically</li>
+              <li>
+                ID and Product Name columns are pinned to the left while
+                scrolling horizontally
+              </li>
               <li>Content wraps naturally within cells</li>
               <li>Resizable columns</li>
-              <li>Minimum column widths</li>
-              <li>Container responsiveness across different screen sizes</li>
+              <li>Sortable columns with Lucide icons</li>
             </ul>
           </p>
         </div>
 
-        <Container>
+        <div className="h-[600px]">
           <Table<Product>
             columns={columns}
             data={sampleData}
             keyExtractor={(item) => item.id}
             sortable
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="space-y-8">
+      <section className="space-y-4">
         <div className="prose max-w-none">
-          <h2>Scrollable Table</h2>
+          <h2>Scrollable Table with Sticky Header</h2>
           <p>
-            This table demonstrates horizontal scrolling within cells:
+            This table demonstrates both sticky header and horizontal scrolling
+            within cells:
             <ul>
+              <li>Header remains fixed while scrolling</li>
               <li>Content scrolls horizontally when it exceeds cell width</li>
               <li>Resizable columns</li>
-              <li>Minimum column widths</li>
-              <li>Container responsiveness across different screen sizes</li>
+              <li>Sortable columns with Lucide icons</li>
             </ul>
           </p>
         </div>
 
-        <Container>
+        <div className="h-[600px]">
           <Table<Product>
-            columns={columns}
+            columns={columns.map((col) => ({ ...col, isPinned: false }))}
             data={sampleData}
             keyExtractor={(item) => item.id}
             sortable
             scrollable
           />
-        </Container>
+        </div>
       </section>
     </div>
   );
