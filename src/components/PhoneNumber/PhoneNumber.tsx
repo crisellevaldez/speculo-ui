@@ -42,7 +42,7 @@ export const PhoneNumber = React.forwardRef<HTMLInputElement, PhoneNumberProps>(
           )}
         >
           <PhoneInput
-            // @ts-ignore - PhoneInput's ref type is incompatible with HTMLInputElement
+            // @ts-expect-error - PhoneInput's ref type is incompatible with HTMLInputElement but works at runtime
             ref={ref}
             defaultCountry={defaultCountry}
             disabled={disabled || isLoading}
