@@ -50,10 +50,9 @@ export function Table<T extends Record<string, unknown>>({
   } | null>(null);
 
   // Calculate total width of all columns
-  const totalWidth = columns.reduce(
-    (acc, col) => acc + parseInt(col.width || "100"),
-    0,
-  );
+  const totalWidth =
+    columns.reduce((acc, col) => acc + parseInt(col.width || "100"), 0) +
+    (selectable ? 56 : 0); // Add width of checkbox column if selectable
 
   // Get the last pinned column index
   const lastPinnedIndex = columns.reduce(
@@ -149,10 +148,17 @@ export function Table<T extends Record<string, unknown>>({
 
   // Calculate left position for pinned columns
   const getLeftPosition = (index: number) => {
-    return columns
-      .slice(0, index)
-      .filter((col) => col.isPinned && col.pinPosition === "left")
-      .reduce((acc, col) => acc + parseInt(col.width || "100"), 0);
+    let position = 0;
+    if (selectable) {
+      position += 56; // Width of checkbox column (w-14 = 3.5rem = 56px)
+    }
+    if (index > 0) {
+      position += columns
+        .slice(0, index)
+        .filter((col) => col.isPinned && col.pinPosition === "left")
+        .reduce((acc, col) => acc + parseInt(col.width || "100"), 0);
+    }
+    return position;
   };
 
   return (
@@ -166,14 +172,17 @@ export function Table<T extends Record<string, unknown>>({
           <thead className="sticky top-0 z-[3]">
             <tr className="border-b border-gray-200">
               {selectable && (
-                <th scope="col" className="w-14 px-3 py-3 text-left">
+                <th
+                  scope="col"
+                  className="sticky left-0 z-[3] w-14 bg-gray-200 px-3 py-3 text-left"
+                >
                   <input
                     type="checkbox"
                     checked={
                       data.length > 0 && selectedRows.length === data.length
                     }
                     onChange={handleSelectAll}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
                   />
                 </th>
               )}
@@ -181,6 +190,7 @@ export function Table<T extends Record<string, unknown>>({
                 const isPinnedLeft =
                   column.isPinned && column.pinPosition === "left";
                 const isLastPinned = index === lastPinnedIndex;
+                const left = isPinnedLeft ? getLeftPosition(index) : undefined;
                 return (
                   <th
                     key={String(column.key)}
@@ -189,9 +199,7 @@ export function Table<T extends Record<string, unknown>>({
                       minWidth: column.minWidth,
                       width: column.width,
                       position: isPinnedLeft ? "sticky" : undefined,
-                      left: isPinnedLeft
-                        ? `${getLeftPosition(index)}px`
-                        : undefined,
+                      left,
                       boxShadow: isLastPinned
                         ? "2px 0 5px -2px rgba(0,0,0,0.1)"
                         : undefined,
@@ -237,7 +245,7 @@ export function Table<T extends Record<string, unknown>>({
             {data.map((item) => (
               <tr key={keyExtractor(item)} className="group hover:bg-gray-100">
                 {selectable && (
-                  <td className="w-14 px-3 py-4">
+                  <td className="sticky left-0 z-[1] w-14 bg-white px-3 py-4 group-hover:bg-gray-100">
                     <input
                       type="checkbox"
                       checked={selectedRows.includes(
@@ -246,7 +254,7 @@ export function Table<T extends Record<string, unknown>>({
                       onChange={() =>
                         handleSelectRow(String(keyExtractor(item)))
                       }
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
                     />
                   </td>
                 )}
@@ -254,6 +262,9 @@ export function Table<T extends Record<string, unknown>>({
                   const isPinnedLeft =
                     column.isPinned && column.pinPosition === "left";
                   const isLastPinned = index === lastPinnedIndex;
+                  const left = isPinnedLeft
+                    ? getLeftPosition(index)
+                    : undefined;
                   return (
                     <td
                       key={String(column.key)}
@@ -262,9 +273,7 @@ export function Table<T extends Record<string, unknown>>({
                         width: column.width,
                         maxWidth: scrollable ? column.width : undefined,
                         position: isPinnedLeft ? "sticky" : undefined,
-                        left: isPinnedLeft
-                          ? `${getLeftPosition(index)}px`
-                          : undefined,
+                        left,
                         boxShadow: isLastPinned
                           ? "2px 0 5px -2px rgba(0,0,0,0.1)"
                           : undefined,

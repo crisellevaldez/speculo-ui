@@ -1,5 +1,6 @@
 import { Table } from "../../../components/Table/Table";
 import { cn } from "../../../utils/cn";
+import { useState } from "react";
 
 interface Product extends Record<string, unknown> {
   id: number;
@@ -121,8 +122,36 @@ const columns = [
 ];
 
 export default function DataDisplayExamples() {
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
   return (
     <div className="space-y-12">
+      <section className="space-y-4">
+        <div className="prose max-w-none">
+          <h2>Multiple Selection Table</h2>
+          <p>
+            This table demonstrates multiple row selection capabilities:
+            <ul>
+              <li>Checkbox in header to select/deselect all rows</li>
+              <li>Individual row selection with checkboxes</li>
+              <li>Maintains selection while sorting</li>
+            </ul>
+          </p>
+        </div>
+
+        <div className="h-[600px]">
+          <Table<Product>
+            columns={columns}
+            data={sampleData}
+            keyExtractor={(item) => item.id}
+            sortable
+            selectable
+            selectedRows={selectedRows}
+            onSelectRows={setSelectedRows}
+          />
+        </div>
+      </section>
+
       <section className="space-y-4">
         <div className="prose max-w-none">
           <h2>Responsive Table with Sticky Header and Pinned Columns</h2>

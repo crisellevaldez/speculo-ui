@@ -19,7 +19,7 @@ const variantStyles = {
   outline:
     "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
   destructive:
-    "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+    "bg-destructive text-destructive-foreground hover:bg-destructive/80",
   success:
     "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 hover:bg-green-200 dark:hover:bg-green-800",
   warning:
@@ -42,12 +42,12 @@ export const Badge = React.forwardRef<HTMLDivElement, BadgeProps>(
           "inline-flex items-center rounded-full font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
           variantStyles[variant],
           sizeStyles[size],
-          className
+          className,
         )}
         {...props}
       />
     );
-  }
+  },
 );
 
 Badge.displayName = "Badge";
