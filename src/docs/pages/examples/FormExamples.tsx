@@ -6,9 +6,13 @@ import { Checkbox } from "../../../components/Checkbox/Checkbox";
 import { Radio } from "../../../components/Radio/Radio";
 import { Textarea } from "../../../components/Textarea/Textarea";
 import { Form } from "../../../components/Form/Form";
+import { PhoneNumber } from "../../../components/PhoneNumber/PhoneNumber";
 import { Mail } from "lucide-react";
+import { useState } from "react";
 
 export function FormExamples() {
+  const [phoneValue, setPhoneValue] = useState<string>();
+
   return (
     <div className="space-y-12">
       <div className="prose max-w-none">
@@ -49,6 +53,46 @@ export function FormExamples() {
                     <Mail size={16} />
                   </div>
                 }
+              />
+            </Form.Control>
+          </div>
+
+          {/* Phone Number States */}
+          <div className="space-y-4">
+            <Typography variant="h3">Phone Number States</Typography>
+            <Form.Control>
+              <Form.Label>Default Phone Number</Form.Label>
+              <PhoneNumber
+                value={phoneValue}
+                onChange={setPhoneValue}
+                placeholder="Enter phone number"
+              />
+            </Form.Control>
+            <Form.Control>
+              <Form.Label>Loading Phone Number</Form.Label>
+              <PhoneNumber
+                value={phoneValue}
+                onChange={setPhoneValue}
+                placeholder="Loading..."
+                isLoading
+              />
+            </Form.Control>
+            <Form.Control>
+              <Form.Label>Disabled Phone Number</Form.Label>
+              <PhoneNumber
+                value={phoneValue}
+                onChange={setPhoneValue}
+                placeholder="Disabled"
+                disabled
+              />
+            </Form.Control>
+            <Form.Control>
+              <Form.Label>Error Phone Number</Form.Label>
+              <PhoneNumber
+                value={phoneValue}
+                onChange={setPhoneValue}
+                placeholder="Enter phone number"
+                error="Invalid phone number"
               />
             </Form.Control>
           </div>
@@ -146,6 +190,17 @@ export function FormExamples() {
                 <Input placeholder="Doe" />
               </Form.Control>
             </div>
+
+            <Form.Control>
+              <Form.Label htmlFor="phone" required>
+                Phone Number
+              </Form.Label>
+              <PhoneNumber
+                value={phoneValue}
+                onChange={setPhoneValue}
+                placeholder="Enter phone number"
+              />
+            </Form.Control>
 
             <Form.Control>
               <Form.Label>Experience Level</Form.Label>
