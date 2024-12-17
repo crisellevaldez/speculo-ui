@@ -13,9 +13,9 @@ import { Drawer } from "./components/Drawer/Drawer";
 import { Form } from "./components/Form/Form";
 import { HoverCard } from "./components/HoverCard/HoverCard";
 import { Input } from "./components/Input/Input";
-import { Label } from "./components/Label/Label";
 import { Modal } from "./components/Modal/Modal";
 import { Pagination } from "./components/Pagination/Pagination";
+import { PhoneNumber } from "./components/PhoneNumber/PhoneNumber";
 import { Progress } from "./components/Progress/Progress";
 import { Radio } from "./components/Radio/Radio";
 import { Select } from "./components/Select/Select";
@@ -42,9 +42,9 @@ export {
   Form,
   HoverCard,
   Input,
-  Label,
   Modal,
   Pagination,
+  PhoneNumber,
   Progress,
   Radio,
   Select,
