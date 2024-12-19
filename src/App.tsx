@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import PlaygroundPage from "./docs/pages/examples/Playground";
 import { DocsLayout } from "./docs/layout/Layout";
 import { ButtonDocs } from "./docs/components/ButtonDocs";
 import { GettingStarted } from "./docs/pages/GettingStarted";
@@ -13,7 +14,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to="/docs" replace />} />
+        <Route path="/" element={<PlaygroundPage />} />
+        <Route path="/playground" element={<PlaygroundPage />} />
         <Route path="/firebase-test" element={<FirebaseTest />} />
         <Route path="/docs" element={<DocsLayout />}>
           <Route index element={<GettingStarted />} />

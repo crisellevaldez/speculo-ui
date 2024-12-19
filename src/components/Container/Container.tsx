@@ -23,7 +23,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
       <Component
         ref={ref}
         className={cn(
-          "max-w-full",
+          "w-full",
           "2xl:max-w-[1500px]",
           "3xl:max-w-[2000px]",
           padding && "px-4 sm:px-6 lg:px-8",

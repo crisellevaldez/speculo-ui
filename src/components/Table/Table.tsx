@@ -99,15 +99,16 @@ export function Table<T extends Record<string, unknown>>({
     });
   };
 
-  // Column resizing handlers
+  // Column resizing
   const handleResizeStart = (index: number, e: React.MouseEvent) => {
-    const startWidth = columns[index].width
-      ? parseInt(columns[index].width!)
-      : 100;
+    e.preventDefault();
+    const thElement = e.currentTarget.parentElement as HTMLTableCellElement;
+    const currentWidth = thElement.getBoundingClientRect().width;
+
     setResizing({
       index,
       startX: e.pageX,
-      startWidth,
+      startWidth: currentWidth,
     });
   };
 
@@ -116,15 +117,20 @@ export function Table<T extends Record<string, unknown>>({
       if (!resizing) return;
 
       const diff = e.pageX - resizing.startX;
-      const newWidth = Math.max(100, resizing.startWidth + diff);
+      const newWidth = Math.max(50, resizing.startWidth + diff);
 
       setColumns((prevColumns) => {
         const newColumns = [...prevColumns];
-        newColumns[resizing.index] = {
-          ...newColumns[resizing.index],
-          width: `${newWidth}px`,
-        };
-        return newColumns;
+        const currentColumn = newColumns[resizing.index];
+
+        if (newWidth !== resizing.startWidth) {
+          newColumns[resizing.index] = {
+            ...currentColumn,
+            width: `${newWidth}px`,
+          };
+          return newColumns;
+        }
+        return prevColumns;
       });
     },
     [resizing],
@@ -162,19 +168,19 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   return (
-    <div className="relative h-full w-full overflow-auto rounded-xl border shadow-sm [scrollbar-gutter:stable] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar]:w-2.5">
+    <div className="relative h-full w-full overflow-auto rounded-xl [scrollbar-gutter:stable] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar]:w-2.5">
       <div
-        className="inline-block min-w-full align-middle"
+        className="inline-block min-w-full border align-middle shadow-sm"
         style={{ width: `${totalWidth}px` }}
       >
         <table className={cn("relative w-full border-collapse", className)}>
           {/* Fixed header */}
-          <thead className="sticky top-0 z-[3]">
-            <tr className="border-b border-gray-200">
+          <thead className="sticky top-0 z-[3] overflow-hidden rounded-t-xl">
+            <tr className="border-b border-gray-200 [&>th:first-child]:rounded-tl-xl [&>th:last-child]:rounded-tr-xl">
               {selectable && (
                 <th
                   scope="col"
-                  className="sticky left-0 z-[3] w-14 bg-gray-200 px-3 py-3 text-left"
+                  className="sticky left-0 z-[3] w-14 bg-black px-3 py-3 text-left text-white"
                 >
                   <input
                     type="checkbox"
@@ -205,10 +211,10 @@ export function Table<T extends Record<string, unknown>>({
                         : undefined,
                     }}
                     className={cn(
-                      "relative bg-gray-200 px-3 py-3 text-left text-xs font-bold uppercase tracking-wide text-gray-900",
+                      "relative bg-black px-3 py-3 text-left text-xs font-bold uppercase tracking-wide text-white",
                       sortable &&
                         column.sortable &&
-                        "cursor-pointer hover:bg-gray-300",
+                        "cursor-pointer hover:bg-zinc-800",
                       isPinnedLeft && "z-[3]",
                     )}
                     onClick={() => sortable && handleSort(String(column.key))}
@@ -227,12 +233,9 @@ export function Table<T extends Record<string, unknown>>({
                           </span>
                         )}
                     </div>
-                    {/* Resizer handle */}
+                    {/* Simple resizer handle */}
                     <div
-                      className={cn(
-                        "absolute -right-1 top-0 z-10 h-full w-2 cursor-col-resize bg-transparent hover:bg-gray-400 group-hover:bg-gray-400",
-                        resizing?.index === index && "bg-blue-500",
-                      )}
+                      className="absolute -right-0.5 top-0 z-10 h-full w-px cursor-col-resize"
                       onMouseDown={(e) => handleResizeStart(index, e)}
                     />
                   </th>
