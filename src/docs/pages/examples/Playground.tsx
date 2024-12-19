@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Container } from "../../../components/Container/Container";
 import { Table } from "../../../components/Table/Table";
 import { Modal } from "../../../components/Modal/Modal";
