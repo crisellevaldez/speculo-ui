@@ -168,9 +168,9 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   return (
-    <div className="relative h-full w-full overflow-auto rounded-xl [scrollbar-gutter:stable] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar]:w-2.5">
+    <div className="relative h-full w-full overflow-auto rounded-xl border shadow-sm [scrollbar-gutter:stable] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar]:w-2.5">
       <div
-        className="inline-block min-w-full border align-middle shadow-sm"
+        className="inline-block min-w-full"
         style={{ width: `${totalWidth}px` }}
       >
         <table className={cn("relative w-full border-collapse", className)}>
