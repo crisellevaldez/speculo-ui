@@ -18,7 +18,7 @@ const PlaygroundPage = () => {
   }));
 
   const regularData = Array.from({ length: 50 }, (_, index) => {
-    const rowData: Record<string, any> = {};
+    const rowData: Record<string, string | number> = {};
     regularColumns.forEach((col) => {
       rowData[col.key] = `Value ${index + 1}-${col.key.replace("col", "")}`;
     });
@@ -33,7 +33,7 @@ const PlaygroundPage = () => {
   }));
 
   const modalData = Array.from({ length: 50 }, (_, index) => {
-    const rowData: Record<string, any> = {};
+    const rowData: Record<string, string | number> = {};
     modalColumns.forEach((col) => {
       rowData[col.key] = `Value ${index + 1}-${col.key.replace("col", "")}`;
     });
