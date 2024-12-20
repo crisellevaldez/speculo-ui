@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { cn } from "../../utils/cn";
 import { ArrowUp, ArrowDown } from "lucide-react";
+import { Loading } from "../Loading/Loading";
 
 export interface Column<T> {
   key: keyof T | string;
@@ -23,7 +24,7 @@ export interface TableProps<T extends Record<string, unknown>> {
   sortable?: boolean;
   onSort?: (key: string, direction: "asc" | "desc") => void;
   className?: string;
-  scrollable?: boolean;
+  loading?: boolean;
 }
 
 export function Table<T extends Record<string, unknown>>({
@@ -36,7 +37,7 @@ export function Table<T extends Record<string, unknown>>({
   sortable = false,
   onSort,
   className,
-  scrollable = false,
+  loading = false,
 }: TableProps<T>) {
   const [columns, setColumns] = useState(initialColumns);
   const [sortConfig, setSortConfig] = useState<{
@@ -214,10 +215,13 @@ export function Table<T extends Record<string, unknown>>({
                       "relative bg-black px-3 py-3 text-left text-xs font-bold uppercase tracking-wide text-white",
                       sortable &&
                         column.sortable &&
+                        !loading &&
                         "cursor-pointer hover:bg-zinc-800",
                       isPinnedLeft && "z-[3]",
                     )}
-                    onClick={() => sortable && handleSort(String(column.key))}
+                    onClick={() =>
+                      !loading && sortable && handleSort(String(column.key))
+                    }
                   >
                     <div className="flex items-center gap-2">
                       <span className="truncate">{column.header}</span>
@@ -235,8 +239,13 @@ export function Table<T extends Record<string, unknown>>({
                     </div>
                     {/* Simple resizer handle */}
                     <div
-                      className="absolute -right-0.5 top-0 z-10 h-full w-px cursor-col-resize"
-                      onMouseDown={(e) => handleResizeStart(index, e)}
+                      className={cn(
+                        "absolute -right-0.5 top-0 z-10 h-full w-px",
+                        !loading && "cursor-col-resize",
+                      )}
+                      onMouseDown={(e) =>
+                        !loading && handleResizeStart(index, e)
+                      }
                     />
                   </th>
                 );
@@ -244,7 +253,12 @@ export function Table<T extends Record<string, unknown>>({
             </tr>
           </thead>
 
-          <tbody className="divide-y divide-gray-200">
+          <tbody
+            className={cn(
+              "divide-y divide-gray-200",
+              loading && "pointer-events-none opacity-50",
+            )}
+          >
             {data.map((item) => (
               <tr key={keyExtractor(item)} className="group hover:bg-gray-100">
                 {selectable && (
@@ -274,7 +288,6 @@ export function Table<T extends Record<string, unknown>>({
                       style={{
                         minWidth: column.minWidth,
                         width: column.width,
-                        maxWidth: scrollable ? column.width : undefined,
                         position: isPinnedLeft ? "sticky" : undefined,
                         left,
                         boxShadow: isLastPinned
@@ -283,33 +296,17 @@ export function Table<T extends Record<string, unknown>>({
                       }}
                       className={cn(
                         "px-3 py-4 text-sm text-gray-900",
-                        scrollable && "max-w-0",
                         column.key === "actions" && "min-w-[120px]",
                         isPinnedLeft &&
                           "z-[1] bg-white group-hover:bg-gray-100",
                       )}
                     >
-                      <div
-                        className={cn(
-                          scrollable ? "overflow-hidden" : undefined,
-                        )}
-                      >
-                        <div
-                          className={cn(
-                            scrollable ? "overflow-x-auto" : undefined,
-                          )}
-                        >
+                      <div>
+                        <div>
                           {column.cell ? (
                             column.cell(item)
                           ) : (
-                            <span
-                              className={cn(
-                                "block",
-                                scrollable
-                                  ? "whitespace-nowrap"
-                                  : "whitespace-normal break-words",
-                              )}
-                            >
+                            <span className="block whitespace-normal break-words">
                               {String(item[column.key as keyof T])}
                             </span>
                           )}
@@ -323,6 +320,7 @@ export function Table<T extends Record<string, unknown>>({
           </tbody>
         </table>
       </div>
+      {loading && <Loading />}
     </div>
   );
 }

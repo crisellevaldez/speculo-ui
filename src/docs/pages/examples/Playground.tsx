@@ -9,6 +9,9 @@ const PlaygroundPage = () => {
   const [isBaseModalOpen, setIsBaseModalOpen] = useState(false);
   const [isLargeModalOpen, setIsLargeModalOpen] = useState(false);
   const [isTableModalOpen, setIsTableModalOpen] = useState(false);
+  const [isTableLoading, setIsTableLoading] = useState(false);
+  const [isModalTableLoading, setIsModalTableLoading] = useState(false);
+  const [isModalLoading, setIsModalLoading] = useState(false);
 
   // Sample data for regular table
   const regularColumns = Array.from({ length: 30 }, (_, i) => ({
@@ -51,9 +54,15 @@ const PlaygroundPage = () => {
         </div>
 
         {/* Table Section */}
-        <div>
-          <h3 className="mb-4 text-xl font-semibold">Table Component</h3>
+        <div className="h-[calc(100vh-350px)]">
+          <div className="mb-4 flex items-center justify-between">
+            <h3 className="text-xl font-semibold">Table Component</h3>
+            <Button onClick={() => setIsTableLoading(!isTableLoading)}>
+              Toggle Loading
+            </Button>
+          </div>
           <Table
+            loading={isTableLoading}
             columns={regularColumns}
             data={regularData}
             keyExtractor={(item) => item.col1}
@@ -86,8 +95,21 @@ const PlaygroundPage = () => {
           isOpen={isTableModalOpen}
           onClose={() => setIsTableModalOpen(false)}
           className="w-full max-w-[95vw]"
+          loading={isModalLoading}
         >
-          <Modal.Header>Table Modal</Modal.Header>
+          <Modal.Header className="flex items-center justify-between">
+            <span>Table Modal</span>
+            <div className="flex gap-2">
+              <Button onClick={() => setIsModalLoading(!isModalLoading)}>
+                Toggle Modal Loading
+              </Button>
+              <Button
+                onClick={() => setIsModalTableLoading(!isModalTableLoading)}
+              >
+                Toggle Table Loading
+              </Button>
+            </div>
+          </Modal.Header>
           <Modal.Body>
             <Table
               columns={modalColumns}
@@ -95,6 +117,7 @@ const PlaygroundPage = () => {
               keyExtractor={(item) => item.col1}
               sortable
               selectable
+              loading={isModalTableLoading}
             />
           </Modal.Body>
           <Modal.Footer>

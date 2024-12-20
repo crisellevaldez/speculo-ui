@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { cn } from "../../utils/cn";
+import { Loading } from "../Loading/Loading";
 
 export interface ModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ export interface ModalProps {
   closeOnEsc?: boolean;
   initialFocus?: React.RefObject<HTMLElement>;
   className?: string;
+  loading?: boolean;
 }
 
 export interface ModalHeaderProps {
@@ -99,6 +101,7 @@ export const Modal: React.FC<ModalProps> & {
   closeOnEsc = true,
   initialFocus,
   className,
+  loading = false,
 }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -108,7 +111,7 @@ export const Modal: React.FC<ModalProps> & {
     if (!isOpen || !closeOnEsc) return;
 
     const handleEsc = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (!loading && event.key === "Escape") {
         onClose();
       }
     };
@@ -133,7 +136,11 @@ export const Modal: React.FC<ModalProps> & {
 
   // Handle click outside
   const handleOverlayClick = (event: React.MouseEvent) => {
-    if (closeOnOverlayClick && event.target === overlayRef.current) {
+    if (
+      !loading &&
+      closeOnOverlayClick &&
+      event.target === overlayRef.current
+    ) {
       onClose();
     }
   };
@@ -143,7 +150,7 @@ export const Modal: React.FC<ModalProps> & {
   const childrenWithProps = React.Children.map(children, (child) => {
     if (React.isValidElement(child) && child.type === Modal.Header) {
       return React.cloneElement(child as React.ReactElement<ModalHeaderProps>, {
-        onClose,
+        onClose: loading ? undefined : onClose,
       });
     }
     return child;
@@ -160,6 +167,7 @@ export const Modal: React.FC<ModalProps> & {
         className={cn(
           "relative flex max-h-[calc(100vh-2rem)] w-full flex-col rounded-lg bg-white shadow-xl outline-none",
           sizes[size],
+          loading && "pointer-events-none",
           className,
         )}
         role="dialog"
@@ -167,6 +175,7 @@ export const Modal: React.FC<ModalProps> & {
         tabIndex={-1}
       >
         {childrenWithProps}
+        {loading && <Loading />}
       </div>
     </div>,
     document.body,

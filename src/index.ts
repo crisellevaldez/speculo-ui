@@ -26,6 +26,7 @@ import { Tabs } from "./components/Tabs/Tabs";
 import { Textarea } from "./components/Textarea/Textarea";
 import { ToastProvider, useToast, type Toast } from "./components/Toast/Toast";
 import { Typography } from "./components/Typography/Typography";
+import { Loading } from "./components/Loading/Loading";
 import { cn } from "./utils/cn";
 
 // Export all components and utilities
@@ -56,6 +57,7 @@ export {
   ToastProvider,
   useToast,
   Typography,
+  Loading,
   cn,
 };
 
