@@ -183,13 +183,12 @@ export default function DataDisplayExamples() {
 
       <section className="space-y-4">
         <div className="prose max-w-none">
-          <h2>Scrollable Table with Sticky Header</h2>
+          <h2>Basic Table with Sticky Header</h2>
           <p>
-            This table demonstrates both sticky header and horizontal scrolling
-            within cells:
+            This table demonstrates basic functionality with sticky header:
             <ul>
               <li>Header remains fixed while scrolling</li>
-              <li>Content scrolls horizontally when it exceeds cell width</li>
+              <li>Content wraps naturally within cells</li>
               <li>Resizable columns</li>
               <li>Sortable columns with Lucide icons</li>
             </ul>
@@ -202,7 +201,6 @@ export default function DataDisplayExamples() {
             data={sampleData}
             keyExtractor={(item) => item.id}
             sortable
-            scrollable
           />
         </div>
       </section>
