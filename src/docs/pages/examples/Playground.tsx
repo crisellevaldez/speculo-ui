@@ -3,6 +3,8 @@ import { Container } from "../../../components/Container/Container";
 import { Table } from "../../../components/Table/Table";
 import { Modal } from "../../../components/Modal/Modal";
 import { Button } from "../../../components/Button/Button";
+import { DatePicker } from "../../../components/DatePicker/DatePicker";
+import { TimePicker } from "../../../components/TimePicker/TimePicker";
 
 const PlaygroundPage = () => {
   const [isSmallModalOpen, setIsSmallModalOpen] = useState(false);
@@ -12,21 +14,92 @@ const PlaygroundPage = () => {
   const [isTableLoading, setIsTableLoading] = useState(false);
   const [isModalTableLoading, setIsModalTableLoading] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [selectedRowId, setSelectedRowId] = useState<string | undefined>(
+    undefined,
+  );
 
-  // Sample data for regular table
-  const regularColumns = Array.from({ length: 30 }, (_, i) => ({
-    key: `col${i + 1}`,
-    header: `Column ${i + 1}`,
-    sortable: true,
-  }));
+  // Sample data for regular table with meaningful columns
+  const regularColumns = [
+    {
+      key: "name",
+      header: "Name",
+      sortable: true,
+      resizable: true,
+      width: "200px",
+      isPinned: true,
+      pinPosition: "left",
+    },
+    {
+      key: "email",
+      header: "Email",
+      sortable: true,
+      resizable: true,
+      width: "250px",
+      isPinned: true,
+      pinPosition: "left",
+    },
+    {
+      key: "role",
+      header: "Role",
+      sortable: true,
+      resizable: false,
+      width: "150px",
+    },
+    {
+      key: "department",
+      header: "Department",
+      sortable: true,
+      resizable: true,
+      width: "200px",
+    },
+    {
+      key: "status",
+      header: "Status",
+      sortable: true,
+      resizable: false,
+      width: "120px",
+    },
+  ];
 
-  const regularData = Array.from({ length: 50 }, (_, index) => {
-    const rowData: Record<string, string | number> = {};
-    regularColumns.forEach((col) => {
-      rowData[col.key] = `Value ${index + 1}-${col.key.replace("col", "")}`;
-    });
-    return rowData;
-  });
+  const regularData = [
+    {
+      name: "John Smith",
+      email: "john.smith@example.com",
+      role: "Developer",
+      department: "Engineering",
+      status: "Active",
+    },
+    {
+      name: "Sarah Johnson",
+      email: "sarah.j@example.com",
+      role: "Designer",
+      department: "Product",
+      status: "Active",
+    },
+    {
+      name: "Michael Brown",
+      email: "michael.b@example.com",
+      role: "Manager",
+      department: "Sales",
+      status: "Away",
+    },
+    {
+      name: "Emily Davis",
+      email: "emily.d@example.com",
+      role: "Analyst",
+      department: "Finance",
+      status: "Active",
+    },
+    {
+      name: "David Wilson",
+      email: "david.w@example.com",
+      role: "Developer",
+      department: "Engineering",
+      status: "Inactive",
+    },
+  ];
 
   // Sample data for modal table with more columns
   const modalColumns = Array.from({ length: 100 }, (_, i) => ({
@@ -65,10 +138,52 @@ const PlaygroundPage = () => {
             loading={isTableLoading}
             columns={regularColumns}
             data={regularData}
-            keyExtractor={(item) => item.col1}
+            keyExtractor={(item) => item.email}
             sortable
             selectable
+            rowSelectable
+            selectedRowId={selectedRowId}
+            onRowSelect={(id) => {
+              setSelectedRowId(id || undefined);
+              const selectedRow = regularData.find((row) => row.email === id);
+              console.log("Selected ID:", id);
+              console.log("Selected Row Data:", selectedRow);
+            }}
           />
+        </div>
+
+        {/* Date and Time Picker Section */}
+        <div>
+          <h3 className="mb-4 text-xl font-semibold">Date & Time Components</h3>
+          <div className="flex flex-wrap items-start gap-8">
+            <div className="space-y-4">
+              <h4 className="font-medium">DatePicker</h4>
+              <DatePicker
+                value={selectedDate}
+                onChange={setSelectedDate}
+                minDate={new Date()}
+                placeholder="Select date"
+              />
+              <div className="text-sm text-gray-500">
+                Selected: {selectedDate?.toLocaleDateString()}
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="font-medium">TimePicker</h4>
+              <TimePicker
+                value={selectedTime}
+                onChange={setSelectedTime}
+                minTime="09:00"
+                maxTime="17:00"
+                step={30}
+                placeholder="Select time"
+              />
+              <div className="text-sm text-gray-500">
+                Selected: {selectedTime}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Modal Section */}

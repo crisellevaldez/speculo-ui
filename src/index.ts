@@ -9,6 +9,8 @@ import { Checkbox } from "./components/Checkbox/Checkbox";
 import { ComboBox } from "./components/ComboBox/ComboBox";
 import { Container } from "./components/Container/Container";
 import { DateRangePicker } from "./components/DateRangePicker/DateRangePicker";
+import { DatePicker } from "./components/DatePicker/DatePicker";
+import { TimePicker } from "./components/TimePicker/TimePicker";
 import { Drawer } from "./components/Drawer/Drawer";
 import { Form } from "./components/Form/Form";
 import { HoverCard } from "./components/HoverCard/HoverCard";
@@ -39,6 +41,8 @@ export {
   ComboBox,
   Container,
   DateRangePicker,
+  DatePicker,
+  TimePicker,
   Drawer,
   Form,
   HoverCard,

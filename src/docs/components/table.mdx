@@ -1,6 +1,6 @@
 # Table
 
-A flexible table component designed as a template for server-side implementation with sorting and row selection capabilities.
+A flexible table component designed as a template for server-side implementation with sorting, row selection, column resizing, and pinning capabilities.
 
 ## Basic Implementation
 
@@ -17,11 +17,15 @@ const columns = [
     key: "name",
     header: "Name",
     sortable: true,
+    resizable: true,
+    width: "200px",
   },
   {
     key: "email",
     header: "Email",
     sortable: true,
+    resizable: true,
+    width: "250px",
   },
   {
     key: "status",
@@ -85,54 +89,14 @@ function ServerSideTable() {
 }
 ```
 
-## Custom Rendering
-
-Examples of custom cell rendering:
-
-```jsx
-const columns = [
-  {
-    key: "avatar",
-    header: "User",
-    cell: (user) => (
-      <div className="flex items-center gap-3">
-        <img src={user.avatar} alt="" className="h-8 w-8 rounded-full" />
-        <div>
-          <div className="font-medium">{user.name}</div>
-          <div className="text-sm text-gray-500">{user.email}</div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    key: "actions",
-    header: "",
-    cell: (item) => (
-      <div className="flex gap-2">
-        <button
-          onClick={() => handleEdit(item)}
-          className="rounded-md bg-blue-50 p-1 text-blue-600 hover:bg-blue-100"
-        >
-          Edit
-        </button>
-        <button
-          onClick={() => handleDelete(item)}
-          className="rounded-md bg-red-50 p-1 text-red-600 hover:bg-red-100"
-        >
-          Delete
-        </button>
-      </div>
-    ),
-  },
-];
-```
-
 ## Row Selection
 
-Enable row selection with callbacks:
+The Table component supports two types of row selection:
+
+1. Checkbox Selection:
 
 ```jsx
-function SelectableTable() {
+function CheckboxSelectionTable() {
   const [selectedRows, setSelectedRows] = useState([]);
 
   return (
@@ -151,21 +115,94 @@ function SelectableTable() {
 }
 ```
 
+2. Click Selection (Single Row):
+
+```jsx
+function ClickSelectionTable() {
+  const [selectedRowId, setSelectedRowId] = useState();
+
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      keyExtractor={(item) => item.id}
+      rowSelectable
+      selectedRowId={selectedRowId}
+      onRowSelect={(id) => {
+        setSelectedRowId(id);
+        console.log(
+          "Selected Row:",
+          data.find((row) => row.id === id),
+        );
+      }}
+    />
+  );
+}
+```
+
+## Column Features
+
+### Resizable Columns
+
+Enable column resizing at the individual column level:
+
+```jsx
+const columns = [
+  {
+    key: "name",
+    header: "Name",
+    resizable: true, // This column can be resized
+    width: "200px", // Initial width
+  },
+  {
+    key: "email",
+    header: "Email",
+    resizable: false, // This column cannot be resized
+  },
+];
+```
+
+### Pinned Columns
+
+Pin columns to the left side of the table:
+
+```jsx
+const columns = [
+  {
+    key: "name",
+    header: "Name",
+    isPinned: true,
+    pinPosition: "left",
+    width: "200px",
+  },
+  {
+    key: "email",
+    header: "Email",
+    isPinned: true,
+    pinPosition: "left",
+    width: "250px",
+  },
+];
+```
+
 ## Component API
 
 ### Props
 
-| Prop         | Type                                              | Default   | Description                             |
-| ------------ | ------------------------------------------------- | --------- | --------------------------------------- |
-| columns      | Column[]                                          | required  | Table column configurations             |
-| data         | T[]                                               | required  | Data to display in the table            |
-| keyExtractor | (item: T) => string                               | required  | Function to get unique key for each row |
-| selectable   | boolean                                           | false     | Enable row selection                    |
-| selectedRows | string[]                                          | []        | Array of selected row keys              |
-| onSelectRows | (rows: string[]) => void                          | undefined | Callback when selection changes         |
-| sortable     | boolean                                           | false     | Enable column sorting                   |
-| onSort       | (key: string, direction: "asc" \| "desc") => void | undefined | Callback for server-side sorting        |
-| className    | string                                            | undefined | Additional CSS classes                  |
+| Prop          | Type                                              | Default   | Description                              |
+| ------------- | ------------------------------------------------- | --------- | ---------------------------------------- |
+| columns       | Column[]                                          | required  | Table column configurations              |
+| data          | T[]                                               | required  | Data to display in the table             |
+| keyExtractor  | (item: T) => string                               | required  | Function to get unique key for each row  |
+| selectable    | boolean                                           | false     | Enable checkbox selection                |
+| selectedRows  | string[]                                          | []        | Array of selected row keys               |
+| onSelectRows  | (rows: string[]) => void                          | undefined | Callback when checkbox selection changes |
+| rowSelectable | boolean                                           | false     | Enable row click selection               |
+| selectedRowId | string                                            | undefined | Currently selected row ID                |
+| onRowSelect   | (id: string \| undefined) => void                 | undefined | Callback when row selection changes      |
+| sortable      | boolean                                           | false     | Enable column sorting                    |
+| onSort        | (key: string, direction: "asc" \| "desc") => void | undefined | Callback for server-side sorting         |
+| className     | string                                            | undefined | Additional CSS classes                   |
 
 ### Column Interface
 
@@ -175,6 +212,11 @@ interface Column<T> {
   header: React.ReactNode;
   cell?: (item: T) => React.ReactNode;
   sortable?: boolean;
+  minWidth?: string;
+  width?: string;
+  isPinned?: boolean;
+  pinPosition?: string;
+  resizable?: boolean;
 }
 ```
 
@@ -209,11 +251,12 @@ The Table component follows accessibility best practices:
    - Consider mobile responsiveness
    - Show empty state messages
 
-4. Customization
+4. Column Configuration
 
-   - Use custom cell renderers for complex content
-   - Style according to your design system
-   - Consider different viewport sizes
+   - Set appropriate initial widths for resizable columns
+   - Consider which columns should be pinned for better UX
+   - Use resizable columns judiciously
+   - Ensure pinned columns have fixed widths
 
 5. Error Handling
    - Handle empty data states

@@ -11,7 +11,8 @@ export interface Column<T> {
   minWidth?: string;
   width?: string;
   isPinned?: boolean;
-  pinPosition?: "left" | "right";
+  pinPosition?: string;
+  resizable?: boolean;
 }
 
 export interface TableProps<T extends Record<string, unknown>> {
@@ -25,6 +26,10 @@ export interface TableProps<T extends Record<string, unknown>> {
   onSort?: (key: string, direction: "asc" | "desc") => void;
   className?: string;
   loading?: boolean;
+  // Row selection props
+  rowSelectable?: boolean;
+  selectedRowId?: string;
+  onRowSelect?: (id: string | undefined) => void;
 }
 
 export function Table<T extends Record<string, unknown>>({
@@ -38,6 +43,9 @@ export function Table<T extends Record<string, unknown>>({
   onSort,
   className,
   loading = false,
+  rowSelectable = false,
+  selectedRowId,
+  onRowSelect,
 }: TableProps<T>) {
   const [columns, setColumns] = useState(initialColumns);
   const [sortConfig, setSortConfig] = useState<{
@@ -103,14 +111,30 @@ export function Table<T extends Record<string, unknown>>({
   // Column resizing
   const handleResizeStart = (index: number, e: React.MouseEvent) => {
     e.preventDefault();
-    const thElement = e.currentTarget.parentElement as HTMLTableCellElement;
-    const currentWidth = thElement.getBoundingClientRect().width;
+    e.stopPropagation();
+
+    const column = columns[index];
+    if (!column.resizable) return;
+
+    const currentWidth = column.width ? parseInt(column.width) : 100;
 
     setResizing({
       index,
       startX: e.pageX,
       startWidth: currentWidth,
     });
+
+    // Ensure width is set before starting resize
+    if (!column.width) {
+      setColumns((prev) => {
+        const newColumns = [...prev];
+        newColumns[index] = {
+          ...column,
+          width: `${currentWidth}px`,
+        };
+        return newColumns;
+      });
+    }
   };
 
   const handleResizeMove = useCallback(
@@ -124,7 +148,8 @@ export function Table<T extends Record<string, unknown>>({
         const newColumns = [...prevColumns];
         const currentColumn = newColumns[resizing.index];
 
-        if (newWidth !== resizing.startWidth) {
+        // Only update if width actually changed
+        if (newWidth !== parseInt(currentColumn.width || "100")) {
           newColumns[resizing.index] = {
             ...currentColumn,
             width: `${newWidth}px`,
@@ -238,15 +263,17 @@ export function Table<T extends Record<string, unknown>>({
                         )}
                     </div>
                     {/* Simple resizer handle */}
-                    <div
-                      className={cn(
-                        "absolute -right-0.5 top-0 z-10 h-full w-px",
-                        !loading && "cursor-col-resize",
-                      )}
-                      onMouseDown={(e) =>
-                        !loading && handleResizeStart(index, e)
-                      }
-                    />
+                    {column.resizable && (
+                      <div
+                        className={cn(
+                          "absolute -right-0.5 top-0 z-10 h-full w-px bg-zinc-600 hover:bg-zinc-500",
+                          !loading && "cursor-col-resize group-hover:h-full",
+                        )}
+                        onMouseDown={(e) =>
+                          !loading && handleResizeStart(index, e)
+                        }
+                      />
+                    )}
                   </th>
                 );
               })}
@@ -260,9 +287,33 @@ export function Table<T extends Record<string, unknown>>({
             )}
           >
             {data.map((item) => (
-              <tr key={keyExtractor(item)} className="group hover:bg-gray-100">
+              <tr
+                key={keyExtractor(item)}
+                onClick={() =>
+                  rowSelectable &&
+                  onRowSelect?.(
+                    String(keyExtractor(item)) === selectedRowId
+                      ? undefined
+                      : String(keyExtractor(item)),
+                  )
+                }
+                className={cn(
+                  "group",
+                  rowSelectable && "cursor-pointer",
+                  String(keyExtractor(item)) === selectedRowId
+                    ? "bg-gray-100 hover:bg-gray-200"
+                    : "hover:bg-gray-100",
+                )}
+              >
                 {selectable && (
-                  <td className="sticky left-0 z-[1] w-14 bg-white px-3 py-4 group-hover:bg-gray-100">
+                  <td
+                    className={cn(
+                      "sticky left-0 z-[1] w-14 px-3 py-4",
+                      String(keyExtractor(item)) === selectedRowId
+                        ? "bg-gray-100 group-hover:bg-gray-200"
+                        : "bg-white group-hover:bg-gray-100",
+                    )}
+                  >
                     <input
                       type="checkbox"
                       checked={selectedRows.includes(
@@ -297,8 +348,13 @@ export function Table<T extends Record<string, unknown>>({
                       className={cn(
                         "px-3 py-4 text-sm text-gray-900",
                         column.key === "actions" && "min-w-[120px]",
+                        isPinnedLeft && "z-[1]",
                         isPinnedLeft &&
-                          "z-[1] bg-white group-hover:bg-gray-100",
+                          String(keyExtractor(item)) === selectedRowId
+                          ? "bg-gray-100 group-hover:bg-gray-200"
+                          : isPinnedLeft
+                            ? "bg-white group-hover:bg-gray-100"
+                            : "",
                       )}
                     >
                       <div>

@@ -1,0 +1,145 @@
+# TimePicker
+
+A time picker component that allows users to select a time with support for 12/24 hour formats and min/max time constraints.
+
+## Basic Usage
+
+```jsx
+import { TimePicker } from "components";
+
+function BasicTimePicker() {
+  const [time, setTime] = useState(null);
+
+  return (
+    <TimePicker value={time} onChange={setTime} placeholder="Select time" />
+  );
+}
+```
+
+## With 12-Hour Format
+
+```jsx
+function TwelveHourTimePicker() {
+  const [time, setTime] = useState(null);
+
+  return (
+    <TimePicker
+      value={time}
+      onChange={setTime}
+      use24Hour={false}
+      placeholder="Select time (12-hour)"
+    />
+  );
+}
+```
+
+## With Min/Max Time
+
+```jsx
+function TimePickerWithConstraints() {
+  const [time, setTime] = useState(null);
+
+  return (
+    <TimePicker
+      value={time}
+      onChange={setTime}
+      minTime="09:00" // 9 AM
+      maxTime="17:00" // 5 PM
+      placeholder="Select time (9 AM - 5 PM)"
+    />
+  );
+}
+```
+
+## With Custom Step
+
+```jsx
+function TimePickerWithCustomStep() {
+  const [time, setTime] = useState(null);
+
+  return (
+    <TimePicker
+      value={time}
+      onChange={setTime}
+      step={30} // 30-minute intervals
+      placeholder="Select time (30-min intervals)"
+    />
+  );
+}
+```
+
+## With Error State
+
+```jsx
+function TimePickerWithError() {
+  const [time, setTime] = useState(null);
+
+  return (
+    <TimePicker
+      value={time}
+      onChange={setTime}
+      error="Please select a valid time"
+      helperText="Time is required"
+    />
+  );
+}
+```
+
+## Component API
+
+### Props
+
+| Prop        | Type                           | Default       | Description                               |
+| ----------- | ------------------------------ | ------------- | ----------------------------------------- |
+| value       | string \| null                 | required      | Selected time in "HH:mm" format           |
+| onChange    | (time: string \| null) => void | required      | Callback when time changes                |
+| minTime     | string                         | undefined     | Minimum selectable time ("HH:mm")         |
+| maxTime     | string                         | undefined     | Maximum selectable time ("HH:mm")         |
+| disabled    | boolean                        | false         | Disable the time picker                   |
+| isLoading   | boolean                        | false         | Show loading state                        |
+| use24Hour   | boolean                        | false         | Use 24-hour format                        |
+| step        | number                         | 15            | Minutes between time options              |
+| placeholder | string                         | "Select time" | Placeholder text when no time is selected |
+| error       | string                         | undefined     | Error message to display                  |
+| helperText  | string                         | undefined     | Helper text to display below the input    |
+| className   | string                         | undefined     | Additional CSS classes                    |
+
+## Accessibility
+
+The TimePicker component follows accessibility best practices:
+
+- Keyboard navigation support
+- ARIA labels and roles
+- Focus management
+- Screen reader friendly
+
+## Best Practices
+
+1. Time Constraints
+
+   - Use minTime and maxTime to set reasonable time ranges
+   - Consider business hours and user context
+   - Clearly communicate time restrictions to users
+
+2. Time Intervals
+
+   - Choose appropriate step values for your use case
+   - Common intervals: 15, 30, or 60 minutes
+   - Consider user needs when setting intervals
+
+3. Format Selection
+
+   - Use 24-hour format for professional/technical contexts
+   - Use 12-hour format for general consumer applications
+   - Consider locale preferences
+
+4. Error Handling
+
+   - Provide clear error messages
+   - Use helper text to guide users
+   - Validate times on form submission
+
+5. User Experience
+   - Use appropriate default values
+   - Provide clear time format indication
+   - Consider mobile usability

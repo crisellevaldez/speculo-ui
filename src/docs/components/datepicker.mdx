@@ -1,0 +1,130 @@
+# DatePicker
+
+A date picker component that allows users to select a single date with support for min/max dates and disabled dates.
+
+## Basic Usage
+
+```jsx
+import { DatePicker } from "components";
+
+function BasicDatePicker() {
+  const [date, setDate] = useState(null);
+
+  return (
+    <DatePicker value={date} onChange={setDate} placeholder="Select date" />
+  );
+}
+```
+
+## With Min/Max Dates
+
+```jsx
+function DatePickerWithConstraints() {
+  const [date, setDate] = useState(null);
+  const minDate = new Date(); // Today
+  const maxDate = new Date();
+  maxDate.setMonth(maxDate.getMonth() + 3); // 3 months from now
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={setDate}
+      minDate={minDate}
+      maxDate={maxDate}
+      placeholder="Select date (next 3 months)"
+    />
+  );
+}
+```
+
+## With Disabled Dates
+
+```jsx
+function DatePickerWithDisabledDates() {
+  const [date, setDate] = useState(null);
+  const disabledDates = [
+    new Date(2024, 0, 1), // New Year's Day
+    new Date(2024, 11, 25), // Christmas
+  ];
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={setDate}
+      disabledDates={disabledDates}
+      placeholder="Select date (holidays disabled)"
+    />
+  );
+}
+```
+
+## With Error State
+
+```jsx
+function DatePickerWithError() {
+  const [date, setDate] = useState(null);
+
+  return (
+    <DatePicker
+      value={date}
+      onChange={setDate}
+      error="Please select a valid date"
+      helperText="Date is required"
+    />
+  );
+}
+```
+
+## Component API
+
+### Props
+
+| Prop          | Type                            | Default       | Description                               |
+| ------------- | ------------------------------- | ------------- | ----------------------------------------- |
+| value         | Date \| null                    | required      | Selected date                             |
+| onChange      | (date: Date \| null) => void    | required      | Callback when date changes                |
+| minDate       | Date                            | undefined     | Minimum selectable date                   |
+| maxDate       | Date                            | undefined     | Maximum selectable date                   |
+| disabled      | boolean                         | false         | Disable the date picker                   |
+| isLoading     | boolean                         | false         | Show loading state                        |
+| locale        | string                          | "en-US"       | Locale for date formatting                |
+| weekStartsOn  | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 | 0             | First day of week (0 = Sunday)            |
+| disabledDates | Date[]                          | []            | Array of dates to disable                 |
+| placeholder   | string                          | "Select date" | Placeholder text when no date is selected |
+| error         | string                          | undefined     | Error message to display                  |
+| helperText    | string                          | undefined     | Helper text to display below the input    |
+| className     | string                          | undefined     | Additional CSS classes                    |
+
+## Accessibility
+
+The DatePicker component follows accessibility best practices:
+
+- Keyboard navigation support
+- ARIA labels and roles
+- Focus management
+- Screen reader friendly
+
+## Best Practices
+
+1. Date Constraints
+
+   - Use minDate and maxDate to set reasonable date ranges
+   - Consider business logic when setting date constraints
+   - Clearly communicate date restrictions to users
+
+2. Error Handling
+
+   - Provide clear error messages
+   - Use helper text to guide users
+   - Validate dates on form submission
+
+3. User Experience
+
+   - Use appropriate default values
+   - Consider locale-specific date formatting
+   - Provide clear placeholder text
+
+4. Performance
+   - Memoize callbacks and computed values
+   - Consider lazy loading for large date ranges
+   - Handle loading states appropriately

@@ -165,7 +165,7 @@ export const Modal: React.FC<ModalProps> & {
       <div
         ref={modalRef}
         className={cn(
-          "relative flex max-h-[calc(100vh-2rem)] w-full flex-col rounded-lg bg-white shadow-xl outline-none",
+          "relative flex max-h-[calc(100vh-2rem)] w-full flex-col rounded-2xl bg-white shadow-xl outline-none",
           sizes[size],
           loading && "pointer-events-none",
           className,
