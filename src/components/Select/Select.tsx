@@ -132,7 +132,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const selectedOptionStyles = "bg-gray-100";
 
     return (
-      <div className={baseStyles}>
+      <div ref={ref} className={cn("w-full", baseStyles)}>
         <div
           ref={buttonRef}
           className={triggerStyles}
