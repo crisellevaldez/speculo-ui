@@ -41,8 +41,26 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
   ) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const containerRef = useRef<HTMLDivElement>(null);
+    const buttonRef = useRef<HTMLDivElement>(null);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    // Update dropdown position on scroll
+    useEffect(() => {
+      if (!isOpen) return;
+
+      const updatePosition = () => {
+        if (dropdownRef.current && buttonRef.current) {
+          const rect = buttonRef.current.getBoundingClientRect();
+          dropdownRef.current.style.left = `${rect.left}px`;
+          dropdownRef.current.style.top = `${rect.bottom + 8}px`;
+          dropdownRef.current.style.width = `${rect.width}px`;
+        }
+      };
+
+      window.addEventListener("scroll", updatePosition, true);
+      return () => window.removeEventListener("scroll", updatePosition, true);
+    }, [isOpen]);
 
     const selectedOptions = multiple
       ? options.filter(
@@ -84,9 +102,11 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
 
     useEffect(() => {
       const handleClickOutside = (event: MouseEvent) => {
+        const target = event.target as Node;
         if (
-          containerRef.current &&
-          !containerRef.current.contains(event.target as Node)
+          dropdownRef.current &&
+          !dropdownRef.current.contains(target) &&
+          !buttonRef.current?.contains(target)
         ) {
           setIsOpen(false);
           setSearchQuery("");
@@ -112,9 +132,9 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const selectedOptionStyles = "bg-gray-100";
 
     return (
-      <div ref={containerRef} className={baseStyles}>
+      <div className={baseStyles}>
         <div
-          ref={ref}
+          ref={buttonRef}
           className={triggerStyles}
           onClick={() => !disabled && !isLoading && setIsOpen(!isOpen)}
           role="combobox"
@@ -202,7 +222,19 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         </div>
 
         {isOpen && !isLoading && (
-          <div className="absolute z-10 mt-1 w-full rounded-md border border-gray-200 bg-white shadow-lg">
+          <div
+            ref={dropdownRef}
+            style={{
+              position: "fixed",
+              left: buttonRef.current?.getBoundingClientRect().left + "px",
+              top:
+                (buttonRef.current?.getBoundingClientRect().bottom || 0) +
+                8 +
+                "px",
+              width: buttonRef.current?.getBoundingClientRect().width + "px",
+            }}
+            className="z-[9999] rounded-md border border-gray-200 bg-white shadow-lg"
+          >
             {searchable && (
               <div className="p-2">
                 <input

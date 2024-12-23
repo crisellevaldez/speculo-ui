@@ -5,6 +5,7 @@ import { Modal } from "../../../components/Modal/Modal";
 import { Button } from "../../../components/Button/Button";
 import { DatePicker } from "../../../components/DatePicker/DatePicker";
 import { TimePicker } from "../../../components/TimePicker/TimePicker";
+import { Select } from "../../../components/Select/Select";
 
 const PlaygroundPage = () => {
   const [isSmallModalOpen, setIsSmallModalOpen] = useState(false);
@@ -261,9 +262,45 @@ const PlaygroundPage = () => {
           onClose={() => setIsBaseModalOpen(false)}
           size="base"
         >
-          <Modal.Header>Base Modal</Modal.Header>
+          <Modal.Header>Base Modal with Form Components</Modal.Header>
           <Modal.Body>
-            <p>This is a base modal with max-width-2xl.</p>
+            <div className="space-y-6">
+              <div>
+                <label className="mb-2 block text-sm font-medium">
+                  Select Option
+                </label>
+                <Select
+                  options={[
+                    { value: "1", label: "Option 1" },
+                    { value: "2", label: "Option 2" },
+                    { value: "3", label: "Option 3" },
+                    { value: "4", label: "Option 4" },
+                    { value: "5", label: "Option 5" },
+                  ]}
+                  placeholder="Choose an option"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium">
+                  Select Date
+                </label>
+                <DatePicker
+                  value={selectedDate}
+                  onChange={setSelectedDate}
+                  placeholder="Select date"
+                />
+              </div>
+              <div>
+                <label className="mb-2 block text-sm font-medium">
+                  Select Time
+                </label>
+                <TimePicker
+                  value={selectedTime}
+                  onChange={setSelectedTime}
+                  placeholder="Select time"
+                />
+              </div>
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => setIsBaseModalOpen(false)}>Close</Button>
