@@ -42,7 +42,24 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
   ) => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [tempDate, setTempDate] = React.useState<Date | null>(value);
-    const containerRef = React.useRef<HTMLDivElement>(null);
+    const buttonRef = React.useRef<HTMLButtonElement>(null);
+    const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+    // Update dropdown position on scroll
+    React.useEffect(() => {
+      if (!isOpen) return;
+
+      const updatePosition = () => {
+        if (dropdownRef.current && buttonRef.current) {
+          const rect = buttonRef.current.getBoundingClientRect();
+          dropdownRef.current.style.left = `${rect.left}px`;
+          dropdownRef.current.style.top = `${rect.bottom + 8}px`;
+        }
+      };
+
+      window.addEventListener("scroll", updatePosition, true);
+      return () => window.removeEventListener("scroll", updatePosition, true);
+    }, [isOpen]);
 
     React.useEffect(() => {
       setTempDate(value);
@@ -65,9 +82,11 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
     React.useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
+        const target = e.target as Node;
         if (
-          containerRef.current &&
-          !containerRef.current.contains(e.target as Node)
+          dropdownRef.current &&
+          !dropdownRef.current.contains(target) &&
+          !buttonRef.current?.contains(target)
         ) {
           setIsOpen(false);
           setTempDate(value);
@@ -94,24 +113,21 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     );
 
     return (
-      <div
-        ref={ref}
-        className={cn("relative inline-block", className)}
-        {...props}
-      >
+      <div ref={ref} className={cn("relative w-full", className)} {...props}>
         <button
+          ref={buttonRef}
           type="button"
           onClick={() => !disabled && !isLoading && setIsOpen(true)}
           disabled={disabled || isLoading}
-          className={cn(buttonStyles, "w-[200px]")}
+          className={cn(buttonStyles, "w-full")}
         >
-          <span className="text-gray-900">
+          <span className="flex-1 text-left text-gray-900">
             {formatDate(value) || placeholder}
           </span>
           {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+            <Loader2 className="ml-2 h-4 w-4 shrink-0 animate-spin text-gray-500" />
           ) : (
-            <CalendarIcon className="h-4 w-4 text-gray-500" />
+            <CalendarIcon className="ml-2 h-4 w-4 shrink-0 text-gray-500" />
           )}
         </button>
 
@@ -129,10 +145,18 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
 
         {isOpen && !disabled && !isLoading && (
           <div
-            ref={containerRef}
+            ref={dropdownRef}
+            style={{
+              position: "fixed",
+              left: buttonRef.current?.getBoundingClientRect().left + "px",
+              top:
+                (buttonRef.current?.getBoundingClientRect().bottom || 0) +
+                8 +
+                "px",
+            }}
             className={cn(
-              "absolute left-0 top-full mt-2 flex flex-col rounded-md bg-white p-2 shadow-lg",
-              "animate-in fade-in-0 zoom-in-95 z-50 border border-gray-200",
+              "flex flex-col rounded-md bg-white p-2 shadow-lg",
+              "animate-in fade-in-0 zoom-in-95 z-[9999] border border-gray-200",
             )}
           >
             <Calendar
@@ -145,11 +169,13 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               weekStartsOn={weekStartsOn}
               disabledDates={disabledDates}
             />
-            <div className="mt-2 flex justify-end gap-2 px-2">
-              <Button variant="outline" onClick={handleClear}>
+            <div className="mt-2 flex justify-end gap-2 border-t pt-2">
+              <Button variant="outline" size="sm" onClick={handleClear}>
                 Clear
               </Button>
-              <Button onClick={handleOk}>OK</Button>
+              <Button size="sm" onClick={handleOk}>
+                OK
+              </Button>
             </div>
           </div>
         )}
