@@ -50,7 +50,7 @@ export const PhoneNumber = React.forwardRef<HTMLInputElement, PhoneNumberProps>(
             withCountryCallingCode
             countryCallingCodeEditable={false}
             className={cn(
-              "block w-full rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-900 shadow-sm",
+              "block w-full rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-900 shadow-sm",
               "placeholder-gray-500 placeholder:text-sm",
               "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
               error ? "phone-input-error" : "phone-input-default",

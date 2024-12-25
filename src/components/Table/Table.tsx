@@ -207,7 +207,7 @@ export function Table<T extends Record<string, unknown>>({
               {selectable && (
                 <th
                   scope="col"
-                  className="sticky left-0 z-[9999] w-14 overflow-hidden bg-black px-3 py-3 text-left text-white"
+                  className="sticky left-0 z-[20] w-14 overflow-hidden bg-black px-3 py-3 text-left text-white"
                 >
                   <input
                     type="checkbox"
@@ -244,7 +244,11 @@ export function Table<T extends Record<string, unknown>>({
                         column.sortable &&
                         !loading &&
                         "cursor-pointer hover:bg-zinc-800",
-                      isPinnedLeft && "z-[9999] overflow-hidden",
+                      isPinnedLeft && isPinnedLeft && column.key === "actions"
+                        ? "z-[2] overflow-hidden"
+                        : isPinnedLeft
+                          ? "z-[20] overflow-hidden"
+                          : "",
                     )}
                     onClick={() =>
                       !loading && sortable && handleSort(String(column.key))
@@ -315,7 +319,7 @@ export function Table<T extends Record<string, unknown>>({
                 {selectable && (
                   <td
                     className={cn(
-                      "sticky left-0 z-[9999] w-14 overflow-hidden px-3 py-4",
+                      "sticky left-0 z-[2] w-14 overflow-hidden px-3 py-4",
                       String(keyExtractor(item)) === selectedRowId
                         ? "bg-gray-100 group-hover:bg-gray-200"
                         : "bg-white group-hover:bg-gray-100",
@@ -356,7 +360,7 @@ export function Table<T extends Record<string, unknown>>({
                         "px-3 py-4 text-sm text-gray-900",
                         column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
-                        isPinnedLeft && "z-[9999] overflow-hidden",
+                        isPinnedLeft && "z-[2] overflow-hidden",
                         isPinnedLeft &&
                           String(keyExtractor(item)) === selectedRowId
                           ? "bg-gray-100 group-hover:bg-gray-200"

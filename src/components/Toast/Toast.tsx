@@ -63,7 +63,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
         }, duration);
       }
     },
-    [maxToasts, removeToast]
+    [maxToasts, removeToast],
   );
 
   const contextValue = {
@@ -84,8 +84,8 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
       {createPortal(
         <div
           className={cn(
-            "fixed z-50 m-4 flex flex-col gap-2",
-            positionClasses[position]
+            "fixed z-[9999] m-4 flex flex-col gap-2",
+            positionClasses[position],
           )}
           role="log"
           aria-live="polite"
@@ -101,7 +101,7 @@ export const ToastProvider: React.FC<ToastProviderProps> = ({
             />
           ))}
         </div>,
-        document.body
+        document.body,
       )}
     </ToastContext.Provider>
   );
@@ -197,9 +197,9 @@ const ToastItem: React.FC<ToastItemProps> = ({
   return (
     <div
       className={cn(
-        "flex w-80 items-start gap-3 rounded-lg border p-4 shadow-lg transition-all duration-200",
+        "flex w-96 items-start gap-3 rounded-lg border p-4 shadow-lg transition-all duration-200",
         variants[variant].className,
-        isExiting && "translate-x-full opacity-0"
+        isExiting && "translate-x-full opacity-0",
       )}
       role="alert"
     >

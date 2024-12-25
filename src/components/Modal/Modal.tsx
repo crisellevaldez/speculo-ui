@@ -97,7 +97,7 @@ export const Modal: React.FC<ModalProps> & {
   onClose,
   children,
   size = "base",
-  closeOnOverlayClick = true,
+  closeOnOverlayClick = false,
   closeOnEsc = true,
   initialFocus,
   className,
@@ -127,15 +127,24 @@ export const Modal: React.FC<ModalProps> & {
     const elementToFocus = initialFocus?.current || modalRef.current;
     elementToFocus?.focus();
 
-    // Prevent body scroll
+    // Prevent body scroll while maintaining layout
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = "hidden";
+    document.body.style.paddingRight = `${scrollbarWidth}px`;
+
     return () => {
       document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
     };
   }, [isOpen, initialFocus]);
 
   // Handle click outside
   const handleOverlayClick = (event: React.MouseEvent) => {
+    // Only close if:
+    // 1. Modal is not in loading state
+    // 2. closeOnOverlayClick is explicitly set to true
+    // 3. Click target is the overlay itself (not modal content)
     if (
       !loading &&
       closeOnOverlayClick &&
