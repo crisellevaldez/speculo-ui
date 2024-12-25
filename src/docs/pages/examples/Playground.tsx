@@ -87,8 +87,6 @@ const PlaygroundPage = () => {
       sortable: true,
       resizable: true,
       width: "250px",
-      isPinned: true,
-      pinPosition: "left",
     },
     {
       key: "role",
@@ -96,8 +94,6 @@ const PlaygroundPage = () => {
       sortable: true,
       resizable: false,
       width: "150px",
-      isPinned: true,
-      pinPosition: "left",
       isCentered: true,
     },
     {

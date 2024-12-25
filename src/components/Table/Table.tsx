@@ -62,7 +62,7 @@ export function Table<T extends Record<string, unknown>>({
   // Calculate total width of all columns
   const totalWidth =
     columns.reduce((acc, col) => acc + parseInt(col.width || "100"), 0) +
-    (selectable ? 56 : 0); // Add width of checkbox column if selectable
+    (selectable ? 48 : 0); // Add width of checkbox column if selectable (3rem = 48px)
 
   // Get the last pinned column index
   const lastPinnedIndex = columns.reduce(
@@ -183,7 +183,7 @@ export function Table<T extends Record<string, unknown>>({
   const getLeftPosition = (index: number) => {
     let position = 0;
     if (selectable) {
-      position += 56; // Width of checkbox column (w-14 = 3.5rem = 56px)
+      position += 48; // Width of checkbox column (3rem = 48px)
     }
     if (index > 0) {
       position += columns
@@ -207,16 +207,18 @@ export function Table<T extends Record<string, unknown>>({
               {selectable && (
                 <th
                   scope="col"
-                  className="sticky left-0 z-[20] w-14 overflow-hidden bg-black px-3 py-3 text-left text-white"
+                  className="sticky left-0 z-[20] w-[3rem] overflow-hidden bg-black px-3 py-3 text-center text-white"
                 >
-                  <input
-                    type="checkbox"
-                    checked={
-                      data.length > 0 && selectedRows.length === data.length
-                    }
-                    onChange={handleSelectAll}
-                    className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
-                  />
+                  <div className="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      checked={
+                        data.length > 0 && selectedRows.length === data.length
+                      }
+                      onChange={handleSelectAll}
+                      className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                    />
+                  </div>
                 </th>
               )}
               {columns.map((column, index) => {
@@ -319,22 +321,24 @@ export function Table<T extends Record<string, unknown>>({
                 {selectable && (
                   <td
                     className={cn(
-                      "sticky left-0 z-[2] w-14 overflow-hidden px-3 py-4",
+                      "sticky left-0 z-[2] w-[3rem] overflow-hidden px-3 py-4",
                       String(keyExtractor(item)) === selectedRowId
                         ? "bg-gray-100 group-hover:bg-gray-200"
                         : "bg-white group-hover:bg-gray-100",
                     )}
                   >
-                    <input
-                      type="checkbox"
-                      checked={selectedRows.includes(
-                        String(keyExtractor(item)),
-                      )}
-                      onChange={() =>
-                        handleSelectRow(String(keyExtractor(item)))
-                      }
-                      className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
-                    />
+                    <div className="flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        checked={selectedRows.includes(
+                          String(keyExtractor(item)),
+                        )}
+                        onChange={() =>
+                          handleSelectRow(String(keyExtractor(item)))
+                        }
+                        className="rounded border-gray-300 text-gray-900 focus:ring-gray-900"
+                      />
+                    </div>
                   </td>
                 )}
                 {columns.map((column, index) => {
