@@ -6,6 +6,9 @@ import { Button } from "../../../components/Button/Button";
 import { DatePicker } from "../../../components/DatePicker/DatePicker";
 import { TimePicker } from "../../../components/TimePicker/TimePicker";
 import { Select } from "../../../components/Select/Select";
+import { Input } from "../../../components/Input/Input";
+import { Textarea } from "../../../components/Textarea/Textarea";
+import { Search, Mail, User } from "lucide-react";
 
 const PlaygroundPage = () => {
   const [isSmallModalOpen, setIsSmallModalOpen] = useState(false);
@@ -20,6 +23,9 @@ const PlaygroundPage = () => {
   const [selectedRowId, setSelectedRowId] = useState<string | undefined>(
     undefined,
   );
+  const [singleSelectValue, setSingleSelectValue] = useState<string>("");
+  const [multiSelectValue, setMultiSelectValue] = useState<string[]>([]);
+  const [textareaValue, setTextareaValue] = useState("");
 
   // Sample data for regular table with meaningful columns
   const regularColumns = [
@@ -27,7 +33,7 @@ const PlaygroundPage = () => {
       key: "name",
       header: "Name",
       sortable: true,
-      resizable: true,
+      resizable: false,
       width: "200px",
       isPinned: true,
       pinPosition: "left",
@@ -38,7 +44,7 @@ const PlaygroundPage = () => {
       sortable: true,
       resizable: true,
       width: "250px",
-      isPinned: true,
+      isPinned: false,
       pinPosition: "left",
     },
     {
@@ -47,6 +53,7 @@ const PlaygroundPage = () => {
       sortable: true,
       resizable: false,
       width: "150px",
+      isCentered: true,
     },
     {
       key: "department",
@@ -61,6 +68,7 @@ const PlaygroundPage = () => {
       sortable: true,
       resizable: false,
       width: "120px",
+      isCentered: true,
     },
   ];
 
@@ -125,6 +133,181 @@ const PlaygroundPage = () => {
           <p className="mb-8 text-gray-600">
             Explore our component library with different variations and sizes.
           </p>
+        </div>
+
+        {/* Input Section */}
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold">Input Component</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-4">
+              <Input placeholder="Basic input" />
+              <Input
+                placeholder="With helper text"
+                helperText="This is a helper text"
+              />
+              <Input placeholder="With error" error="This field is required" />
+              <Input placeholder="Disabled input" disabled />
+              <Input placeholder="Loading state" isLoading />
+            </div>
+            <div className="space-y-4">
+              <Input
+                placeholder="With start icon"
+                startIcon={<Search className="h-4 w-4" />}
+              />
+              <Input
+                placeholder="With end icon"
+                endIcon={<Mail className="h-4 w-4" />}
+              />
+              <Input
+                placeholder="With both icons"
+                startIcon={<User className="h-4 w-4" />}
+                endIcon={<Mail className="h-4 w-4" />}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Select Section */}
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold">Select Component</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-4">
+              <Select
+                options={[
+                  { value: "1", label: "Option 1" },
+                  { value: "2", label: "Option 2" },
+                  { value: "3", label: "Option 3" },
+                ]}
+                value={singleSelectValue}
+                onChange={(value) => setSingleSelectValue(value as string)}
+                placeholder="Single select"
+              />
+              <Select
+                options={[
+                  { value: "1", label: "Option 1" },
+                  { value: "2", label: "Option 2" },
+                  { value: "3", label: "Option 3" },
+                ]}
+                value={singleSelectValue}
+                onChange={(value) => setSingleSelectValue(value as string)}
+                placeholder="With error"
+                error="Please select an option"
+              />
+              <Select
+                options={[
+                  { value: "1", label: "Option 1" },
+                  { value: "2", label: "Option 2" },
+                  { value: "3", label: "Option 3" },
+                ]}
+                placeholder="Loading state"
+                isLoading
+              />
+            </div>
+            <div className="space-y-4">
+              <Select
+                options={[
+                  { value: "1", label: "Option 1" },
+                  { value: "2", label: "Option 2" },
+                  { value: "3", label: "Option 3" },
+                ]}
+                value={multiSelectValue}
+                onChange={(value) => setMultiSelectValue(value as string[])}
+                placeholder="Multi select"
+                multiple
+              />
+              <Select
+                options={[
+                  { value: "1", label: "Option 1" },
+                  { value: "2", label: "Option 2" },
+                  { value: "3", label: "Option 3" },
+                ]}
+                value={multiSelectValue}
+                onChange={(value) => setMultiSelectValue(value as string[])}
+                placeholder="Searchable multi select"
+                multiple
+                searchable
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Textarea Section */}
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold">Textarea Component</h3>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="space-y-4">
+              <Textarea placeholder="Basic textarea" />
+              <Textarea
+                placeholder="Auto-resize textarea"
+                autoResize
+                value={textareaValue}
+                onChange={(e) => setTextareaValue(e.target.value)}
+              />
+              <Textarea
+                placeholder="With error"
+                error="This field is required"
+              />
+            </div>
+            <div className="space-y-4">
+              <Textarea
+                placeholder="With character count"
+                maxLength={100}
+                showCount
+                value={textareaValue}
+                onChange={(e) => setTextareaValue(e.target.value)}
+              />
+              <Textarea placeholder="Loading state" isLoading />
+              <Textarea placeholder="Disabled textarea" disabled />
+            </div>
+          </div>
+        </div>
+
+        {/* Button Section */}
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold">Button Component</h3>
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-4">
+              <Button variant="primary" size="sm">
+                Small Primary
+              </Button>
+              <Button variant="primary" size="md">
+                Medium Primary
+              </Button>
+              <Button variant="primary" size="lg">
+                Large Primary
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <Button variant="secondary" size="sm">
+                Small Secondary
+              </Button>
+              <Button variant="secondary" size="md">
+                Medium Secondary
+              </Button>
+              <Button variant="secondary" size="lg">
+                Large Secondary
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <Button variant="outline" size="sm">
+                Small Outline
+              </Button>
+              <Button variant="outline" size="md">
+                Medium Outline
+              </Button>
+              <Button variant="outline" size="lg">
+                Large Outline
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <Button variant="primary" isLoading>
+                Loading
+              </Button>
+              <Button variant="primary" disabled>
+                Disabled
+              </Button>
+            </div>
+          </div>
         </div>
 
         {/* Table Section */}

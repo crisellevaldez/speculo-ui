@@ -68,7 +68,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     };
 
     const baseStyles =
-      "block w-full rounded-md border px-4 py-2 text-gray-900 border-gray-300 text-sm shadow-sm placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400";
+      "block w-full rounded-md border px-4 py-1.5 text-gray-900 border-gray-300 text-sm shadow-sm placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400";
     const stateStyles = cn(
       (disabled || isLoading) && "cursor-not-allowed bg-gray-50 text-gray-500",
       error

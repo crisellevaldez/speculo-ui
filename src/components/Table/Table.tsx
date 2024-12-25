@@ -13,6 +13,7 @@ export interface Column<T> {
   isPinned?: boolean;
   pinPosition?: string;
   resizable?: boolean;
+  isCentered?: boolean;
 }
 
 export interface TableProps<T extends Record<string, unknown>> {
@@ -206,7 +207,7 @@ export function Table<T extends Record<string, unknown>>({
               {selectable && (
                 <th
                   scope="col"
-                  className="sticky left-0 z-[3] w-14 bg-black px-3 py-3 text-left text-white"
+                  className="sticky left-0 z-[9999] w-14 overflow-hidden bg-black px-3 py-3 text-left text-white"
                 >
                   <input
                     type="checkbox"
@@ -237,18 +238,24 @@ export function Table<T extends Record<string, unknown>>({
                         : undefined,
                     }}
                     className={cn(
-                      "relative bg-black px-3 py-3 text-left text-xs font-bold uppercase tracking-wide text-white",
+                      "relative bg-black px-3 py-3 text-xs font-bold uppercase tracking-wide text-white",
+                      column.isCentered ? "text-center" : "text-left",
                       sortable &&
                         column.sortable &&
                         !loading &&
                         "cursor-pointer hover:bg-zinc-800",
-                      isPinnedLeft && "z-[3]",
+                      isPinnedLeft && "z-[9999] overflow-hidden",
                     )}
                     onClick={() =>
                       !loading && sortable && handleSort(String(column.key))
                     }
                   >
-                    <div className="flex items-center gap-2">
+                    <div
+                      className={cn(
+                        "flex items-center gap-2",
+                        column.isCentered && "justify-center",
+                      )}
+                    >
                       <span className="truncate">{column.header}</span>
                       {sortable &&
                         column.sortable &&
@@ -263,7 +270,7 @@ export function Table<T extends Record<string, unknown>>({
                         )}
                     </div>
                     {/* Simple resizer handle */}
-                    {column.resizable && (
+                    {column.resizable && !isPinnedLeft && (
                       <div
                         className={cn(
                           "absolute -right-0.5 top-0 z-10 h-full w-px bg-zinc-600 hover:bg-zinc-500",
@@ -308,7 +315,7 @@ export function Table<T extends Record<string, unknown>>({
                 {selectable && (
                   <td
                     className={cn(
-                      "sticky left-0 z-[1] w-14 px-3 py-4",
+                      "sticky left-0 z-[9999] w-14 overflow-hidden px-3 py-4",
                       String(keyExtractor(item)) === selectedRowId
                         ? "bg-gray-100 group-hover:bg-gray-200"
                         : "bg-white group-hover:bg-gray-100",
@@ -347,8 +354,9 @@ export function Table<T extends Record<string, unknown>>({
                       }}
                       className={cn(
                         "px-3 py-4 text-sm text-gray-900",
+                        column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
-                        isPinnedLeft && "z-[1]",
+                        isPinnedLeft && "z-[9999] overflow-hidden",
                         isPinnedLeft &&
                           String(keyExtractor(item)) === selectedRowId
                           ? "bg-gray-100 group-hover:bg-gray-200"

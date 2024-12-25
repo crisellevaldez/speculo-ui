@@ -131,7 +131,7 @@ export const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>(
     }, [value]);
 
     const buttonStyles = cn(
-      "shadow-sm flex h-10 items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-2",
+      "shadow-sm flex items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-1.5",
       "text-sm ring-offset-background placeholder:text-gray-500",
       "focus:outline-none focus:ring-1 focus:ring-gray-400",
       "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",

@@ -121,14 +121,14 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const baseStyles =
       "relative w-full placeholder-gray-500 placeholder:text-sm";
     const triggerStyles = cn(
-      "flex min-h-[40px] w-full items-center justify-between rounded-md border bg-white px-3 py-2 text-sm border-gray-300 shadow-sm",
+      "flex min-h-[36px] w-full items-center justify-between rounded-md border bg-white px-3 py-1.5 text-sm border-gray-300 shadow-sm",
       (disabled || isLoading) && "cursor-not-allowed bg-gray-50",
       error
         ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
         : "focus:outline-none focus:ring-1 focus:ring-gray-400",
       className,
     );
-    const optionStyles = "px-3 py-2 text-sm hover:bg-gray-100 cursor-pointer";
+    const optionStyles = "px-3 py-1.5 text-sm hover:bg-gray-100 cursor-pointer";
     const selectedOptionStyles = "bg-gray-100";
 
     return (
@@ -148,7 +148,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
               selectedOptions.map((option) => (
                 <span
                   key={option.value}
-                  className="inline-flex items-center gap-1 rounded-md bg-gray-200 px-2 py-1 text-sm"
+                  className="inline-flex items-center gap-1 rounded-md bg-gray-200 px-2 py-0.5 text-xs"
                 >
                   {option.label}
                   {multiple && !isLoading && (

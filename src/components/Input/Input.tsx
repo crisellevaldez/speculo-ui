@@ -25,7 +25,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     const baseStyles =
-      "shadow-sm block w-full border rounded-md border-gray-300 px-3 py-2 text-gray-900 text-sm" +
+      "shadow-sm block w-full border rounded-md border-gray-300 px-3 py-1.5 text-gray-900 text-sm" +
       "placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500";
 
     const errorStyles = error
@@ -46,7 +46,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <>
-        <div className="relative">
+        <div className="relative text-sm">
           {startIcon && (
             <div
               className={cn(
