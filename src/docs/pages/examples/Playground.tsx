@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container } from "../../../components/Container/Container";
+import moment from "moment-timezone";
 import { ToastProvider, useToast } from "../../../components/Toast/Toast";
 import { PhoneNumber } from "../../../components/PhoneNumber/PhoneNumber";
 import { Table } from "../../../components/Table/Table";
@@ -57,6 +58,8 @@ const PlaygroundPage = () => {
   const [isModalTableLoading, setIsModalTableLoading] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [tokyoTimezone] = useState("Asia/Tokyo");
+  const [manilaTimezone] = useState("Asia/Manila");
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const [selectedRowId, setSelectedRowId] = useState<string | undefined>(
     undefined,
@@ -235,6 +238,93 @@ const PlaygroundPage = () => {
             <p className="mb-8 text-gray-600">
               Explore our component library with different variations and sizes.
             </p>
+          </div>
+
+          {/* Timezone-aware DatePicker Demo */}
+          <div>
+            <h3 className="mb-4 text-xl font-semibold">
+              Timezone-aware DatePicker (Tokyo & Manila)
+            </h3>
+            <div className="flex flex-wrap items-start gap-8">
+              <div className="space-y-4">
+                <h4 className="font-medium">Tokyo Timezone</h4>
+                <div className="space-y-2">
+                  <DatePicker
+                    value={selectedDate}
+                    onChange={setSelectedDate}
+                    minDate={moment.tz(tokyoTimezone).startOf("day").toDate()}
+                    placeholder={`Select date (${tokyoTimezone})`}
+                  />
+                  <div className="text-sm text-gray-500">
+                    Selected:{" "}
+                    {selectedDate
+                      ? moment(selectedDate)
+                          .tz(tokyoTimezone)
+                          .format("YYYY-MM-DD HH:mm:ss z")
+                      : "None"}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Min Date:{" "}
+                    {moment
+                      .tz(tokyoTimezone)
+                      .startOf("day")
+                      .format("YYYY-MM-DD HH:mm:ss z")}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Current Time (Tokyo):{" "}
+                    {moment().tz(tokyoTimezone).format("YYYY-MM-DD HH:mm:ss z")}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="font-medium">Manila Timezone</h4>
+                <div className="space-y-2">
+                  <DatePicker
+                    value={selectedDate}
+                    onChange={setSelectedDate}
+                    minDate={moment.tz(manilaTimezone).startOf("day").toDate()}
+                    placeholder={`Select date (${manilaTimezone})`}
+                  />
+                  <div className="text-sm text-gray-500">
+                    Selected:{" "}
+                    {selectedDate
+                      ? moment(selectedDate)
+                          .tz(manilaTimezone)
+                          .format("YYYY-MM-DD HH:mm:ss z")
+                      : "None"}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Min Date:{" "}
+                    {moment
+                      .tz(manilaTimezone)
+                      .startOf("day")
+                      .format("YYYY-MM-DD HH:mm:ss z")}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Current Time (Manila):{" "}
+                    {moment()
+                      .tz(manilaTimezone)
+                      .format("YYYY-MM-DD HH:mm:ss z")}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h4 className="font-medium">TimePicker</h4>
+                <TimePicker
+                  value={selectedTime}
+                  onChange={setSelectedTime}
+                  minTime="09:00"
+                  maxTime="17:00"
+                  step={30}
+                  placeholder="Select time"
+                />
+                <div className="text-sm text-gray-500">
+                  Selected: {selectedTime}
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Input Section */}
@@ -488,42 +578,6 @@ const PlaygroundPage = () => {
                 console.log("Selected Row Data:", selectedRow);
               }}
             />
-          </div>
-
-          {/* Date and Time Picker Section */}
-          <div>
-            <h3 className="mb-4 text-xl font-semibold">
-              Date & Time Components
-            </h3>
-            <div className="flex flex-wrap items-start gap-8">
-              <div className="space-y-4">
-                <h4 className="font-medium">DatePicker</h4>
-                <DatePicker
-                  value={selectedDate}
-                  onChange={setSelectedDate}
-                  minDate={new Date()}
-                  placeholder="Select date"
-                />
-                <div className="text-sm text-gray-500">
-                  Selected: {selectedDate?.toLocaleDateString()}
-                </div>
-              </div>
-
-              <div className="space-y-4">
-                <h4 className="font-medium">TimePicker</h4>
-                <TimePicker
-                  value={selectedTime}
-                  onChange={setSelectedTime}
-                  minTime="09:00"
-                  maxTime="17:00"
-                  step={30}
-                  placeholder="Select time"
-                />
-                <div className="text-sm text-gray-500">
-                  Selected: {selectedTime}
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Modal Section */}

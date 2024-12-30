@@ -79,21 +79,21 @@ function DatePickerWithError() {
 
 ### Props
 
-| Prop          | Type                            | Default       | Description                               |
-| ------------- | ------------------------------- | ------------- | ----------------------------------------- |
-| value         | Date \| null                    | required      | Selected date                             |
-| onChange      | (date: Date \| null) => void    | required      | Callback when date changes                |
-| minDate       | Date                            | undefined     | Minimum selectable date                   |
-| maxDate       | Date                            | undefined     | Maximum selectable date                   |
-| disabled      | boolean                         | false         | Disable the date picker                   |
-| isLoading     | boolean                         | false         | Show loading state                        |
-| locale        | string                          | "en-US"       | Locale for date formatting                |
-| weekStartsOn  | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 | 0             | First day of week (0 = Sunday)            |
-| disabledDates | Date[]                          | []            | Array of dates to disable                 |
-| placeholder   | string                          | "Select date" | Placeholder text when no date is selected |
-| error         | string                          | undefined     | Error message to display                  |
-| helperText    | string                          | undefined     | Helper text to display below the input    |
-| className     | string                          | undefined     | Additional CSS classes                    |
+| Prop          | Type                            | Default       | Description                                  |
+| ------------- | ------------------------------- | ------------- | -------------------------------------------- |
+| value         | Date \| null                    | required      | Selected date                                |
+| onChange      | (date: Date \| null) => void    | required      | Callback when date changes                   |
+| minDate       | Date                            | undefined     | Minimum selectable date (UTC timezone-aware) |
+| maxDate       | Date                            | undefined     | Maximum selectable date (UTC timezone-aware) |
+| disabled      | boolean                         | false         | Disable the date picker                      |
+| isLoading     | boolean                         | false         | Show loading state                           |
+| locale        | string                          | "en-US"       | Locale for date formatting                   |
+| weekStartsOn  | 0 \| 1 \| 2 \| 3 \| 4 \| 5 \| 6 | 0             | First day of week (0 = Sunday)               |
+| disabledDates | Date[]                          | []            | Array of dates to disable                    |
+| placeholder   | string                          | "Select date" | Placeholder text when no date is selected    |
+| error         | string                          | undefined     | Error message to display                     |
+| helperText    | string                          | undefined     | Helper text to display below the input       |
+| className     | string                          | undefined     | Additional CSS classes                       |
 
 ## Accessibility
 
@@ -125,6 +125,12 @@ The DatePicker component follows accessibility best practices:
    - Provide clear placeholder text
 
 4. Performance
+
    - Memoize callbacks and computed values
    - Consider lazy loading for large date ranges
    - Handle loading states appropriately
+
+5. Timezone Handling
+   - minDate and maxDate are compared in UTC timezone
+   - Date comparisons are done at day boundaries (00:00:00 for minDate, 23:59:59 for maxDate)
+   - This ensures consistent behavior across different timezones

@@ -44,10 +44,54 @@ const isDateDisabled = (
     minDate,
     maxDate,
     disabledDates,
-  }: Pick<CalendarProps, "minDate" | "maxDate" | "disabledDates">
+  }: Pick<CalendarProps, "minDate" | "maxDate" | "disabledDates">,
 ) => {
-  if (minDate && date < minDate) return true;
-  if (maxDate && date > maxDate) return true;
+  if (minDate) {
+    // Compare dates at start of day in UTC to handle timezone differences
+    const dateStartOfDay = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
+    );
+    const minDateStartOfDay = new Date(
+      Date.UTC(
+        minDate.getFullYear(),
+        minDate.getMonth(),
+        minDate.getDate(),
+        0,
+        0,
+        0,
+        0,
+      ),
+    );
+    if (dateStartOfDay < minDateStartOfDay) return true;
+  }
+
+  if (maxDate) {
+    // Compare dates at end of day in UTC to handle timezone differences
+    const dateEndOfDay = new Date(
+      Date.UTC(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        23,
+        59,
+        59,
+        999,
+      ),
+    );
+    const maxDateEndOfDay = new Date(
+      Date.UTC(
+        maxDate.getFullYear(),
+        maxDate.getMonth(),
+        maxDate.getDate(),
+        23,
+        59,
+        59,
+        999,
+      ),
+    );
+    if (dateEndOfDay > maxDateEndOfDay) return true;
+  }
+
   if (disabledDates?.some((disabled) => isSameDay(date, disabled))) return true;
   return false;
 };
@@ -69,7 +113,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       onMouseLeave,
       ...props
     },
-    ref
+    ref,
   ) => {
     const [viewDate, setViewDate] = React.useState(value);
     const [focusedDate, setFocusedDate] = React.useState<Date | null>(null);
@@ -129,25 +173,25 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
         case "ArrowLeft":
           e.preventDefault();
           setFocusedDate(
-            new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1)
+            new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1),
           );
           break;
         case "ArrowRight":
           e.preventDefault();
           setFocusedDate(
-            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1)
+            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1),
           );
           break;
         case "ArrowUp":
           e.preventDefault();
           setFocusedDate(
-            new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7)
+            new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7),
           );
           break;
         case "ArrowDown":
           e.preventDefault();
           setFocusedDate(
-            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7)
+            new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7),
           );
           break;
         case "Enter":
@@ -160,7 +204,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
 
     const handleMonthChange = (increment: number) => {
       setViewDate(
-        (prev) => new Date(prev.getFullYear(), prev.getMonth() + increment, 1)
+        (prev) => new Date(prev.getFullYear(), prev.getMonth() + increment, 1),
       );
     };
 
@@ -179,20 +223,20 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       <div
         ref={ref}
         className={cn(
-          "p-4 w-[calc(100vw-2rem)] sm:w-[320px]",
-          disabled && "opacity-50 cursor-not-allowed",
-          className
+          "w-[calc(100vw-2rem)] p-4 sm:w-[320px]",
+          disabled && "cursor-not-allowed opacity-50",
+          className,
         )}
         {...props}
       >
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <button
             type="button"
             onClick={() => handleMonthChange(-1)}
             disabled={disabled}
             className={cn(
-              "p-2 hover:bg-accent rounded-md",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              "rounded-md p-2 hover:bg-accent",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
             aria-label="Previous month"
           >
@@ -219,8 +263,8 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
             onClick={() => handleMonthChange(1)}
             disabled={disabled}
             className={cn(
-              "p-2 hover:bg-accent rounded-md",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              "rounded-md p-2 hover:bg-accent",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
             )}
             aria-label="Next month"
           >
@@ -242,7 +286,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
         </div>
 
         <div
-          className="grid grid-cols-7 gap-1 text-center text-sm mb-2"
+          className="mb-2 grid grid-cols-7 gap-1 text-center text-sm"
           role="row"
         >
           {weekDays.map((day, i) => (
@@ -260,7 +304,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
 
             const isSelected = value && isSameDay(date, value);
             const isHighlighted = highlightedDates.some((d) =>
-              isSameDay(date, d)
+              isSameDay(date, d),
             );
             const isDisabled = isDateDisabled(date, {
               minDate,
@@ -280,16 +324,16 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
                 onMouseLeave={() => onMouseLeave?.(date)}
                 disabled={disabled || isDisabled}
                 className={cn(
-                  "aspect-square p-2 text-sm rounded-md",
+                  "aspect-square rounded-md p-2 text-sm",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   "hover:bg-accent hover:text-accent-foreground",
-                  "disabled:opacity-50 disabled:cursor-not-allowed",
+                  "disabled:cursor-not-allowed disabled:opacity-50",
                   isSelected &&
                     "bg-primary text-primary-foreground hover:bg-primary/90",
                   isHighlighted &&
                     !isSelected &&
                     "bg-accent text-accent-foreground",
-                  isFocused && !isSelected && "ring-2 ring-ring"
+                  isFocused && !isSelected && "ring-2 ring-ring",
                 )}
                 role="gridcell"
                 aria-selected={isSelected}
@@ -302,7 +346,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
         </div>
       </div>
     );
-  }
+  },
 );
 
 Calendar.displayName = "Calendar";
