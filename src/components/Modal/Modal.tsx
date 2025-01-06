@@ -58,11 +58,11 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
       {onClose && (
         <button
           type="button"
-          className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+          className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800 md:h-5 md:w-5"
           onClick={onClose}
         >
           <span className="sr-only">Close</span>
-          <X className="h-5 w-5" />
+          <X className="h-2.5 w-2.5 md:h-3 md:w-3" />
         </button>
       )}
     </div>

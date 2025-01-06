@@ -183,7 +183,7 @@ export function Table<T extends Record<string, unknown>>({
   const getLeftPosition = (index: number) => {
     let position = 0;
     if (selectable) {
-      position += 48; // Width of checkbox column (3rem = 48px)
+      position += 45; // Width of checkbox column (3rem = 48px) + border width (1px)
     }
     if (index > 0) {
       position += columns
@@ -195,7 +195,7 @@ export function Table<T extends Record<string, unknown>>({
   };
 
   return (
-    <div className="relative h-full w-full overflow-auto rounded-xl border shadow-sm [scrollbar-gutter:stable] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-2.5 [&::-webkit-scrollbar]:w-2.5">
+    <div className="relative h-full w-full overflow-auto rounded-xl border shadow-sm [scrollbar-gutter:stable] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar]:w-1 xl:[&::-webkit-scrollbar]:h-2 xl:[&::-webkit-scrollbar]:w-2">
       <div
         className="inline-block min-w-full"
         style={{ width: `${totalWidth}px` }}
@@ -361,7 +361,7 @@ export function Table<T extends Record<string, unknown>>({
                           : undefined,
                       }}
                       className={cn(
-                        "px-3 py-4 text-sm text-gray-900",
+                        "px-1 py-2 text-[13px] text-gray-900 3xl:px-2 3xl:py-3 3xl:text-[14px]",
                         column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
                         isPinnedLeft && "z-[2] overflow-hidden",
