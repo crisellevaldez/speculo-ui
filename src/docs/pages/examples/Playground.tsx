@@ -152,7 +152,29 @@ const PlaygroundPage = () => {
 
   return (
     <Container>
-      <div className="mb-4 space-y-4 divide-y divide-gray-200">
+      <div className="mb-4 space-y-8 divide-y divide-gray-200">
+        <div className="space-y-4 pb-4">
+          <h2 className="font-semibold">Table Size Variants</h2>
+          <div className="font-inter space-y-8">
+            {(["sm", "md", "lg", "xl"] as const).map((size) => (
+              <div key={size} className="space-y-2">
+                <h3 className="text-sm font-medium capitalize text-gray-600">
+                  {size} Size
+                </h3>
+                <Table
+                  columns={[
+                    { key: "name", header: "Name", sortable: true },
+                    { key: "role", header: "Role", sortable: true },
+                    { key: "department", header: "Department", sortable: true },
+                  ]}
+                  data={data.slice(0, 3)}
+                  keyExtractor={(item) => item.email}
+                  size={size}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="space-y-4 pb-4">
           <h2 className="font-semibold">Drawer Example</h2>
           <div className="flex flex-wrap gap-2">

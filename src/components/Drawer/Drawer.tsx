@@ -38,7 +38,7 @@ const DrawerHeader: React.FC<DrawerHeaderProps> = ({
           onClick={onClose}
         >
           <span className="sr-only">Close</span>
-          <X className="h-3 w-3" />
+          <X className="h-4 w-4" />
         </button>
       )}
     </div>

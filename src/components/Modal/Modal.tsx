@@ -64,7 +64,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
           <span className="sr-only">Close</span>
           <div>
             {" "}
-            <X className="h-3 w-3" />{" "}
+            <X className="h-4 w-4" />{" "}
           </div>
         </button>
       )}

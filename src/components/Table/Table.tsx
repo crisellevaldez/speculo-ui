@@ -31,6 +31,8 @@ export interface TableProps<T extends Record<string, unknown>> {
   rowSelectable?: boolean;
   selectedRowId?: string;
   onRowSelect?: (id: string | undefined) => void;
+  // Size variant
+  size?: "sm" | "md" | "lg" | "xl";
 }
 
 export function Table<T extends Record<string, unknown>>({
@@ -47,6 +49,7 @@ export function Table<T extends Record<string, unknown>>({
   rowSelectable = false,
   selectedRowId,
   onRowSelect,
+  size = "md",
 }: TableProps<T>) {
   const [columns, setColumns] = useState(initialColumns);
   const [sortConfig, setSortConfig] = useState<{
@@ -361,7 +364,14 @@ export function Table<T extends Record<string, unknown>>({
                           : undefined,
                       }}
                       className={cn(
-                        "px-1 py-2 text-[13px] text-gray-900 3xl:px-3 3xl:py-4 3xl:text-[14px]",
+                        "text-[13px] text-gray-900 3xl:text-[14px]",
+                        size === "sm"
+                          ? "px-2 py-1.5 3xl:px-2 3xl:py-2"
+                          : size === "lg"
+                            ? "px-4 py-3 3xl:px-4 3xl:py-5"
+                            : size === "xl"
+                              ? "px-6 py-4 3xl:px-6 3xl:py-6"
+                              : "px-1 py-2 3xl:px-3 3xl:py-4",
                         column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
                         isPinnedLeft && "z-[2] overflow-hidden",
