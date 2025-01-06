@@ -361,7 +361,7 @@ export function Table<T extends Record<string, unknown>>({
                           : undefined,
                       }}
                       className={cn(
-                        "px-1 py-2 text-[13px] text-gray-900 3xl:px-2 3xl:py-3 3xl:text-[14px]",
+                        "px-1 py-2 text-[13px] text-gray-900 3xl:px-3 3xl:py-4 3xl:text-[14px]",
                         column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
                         isPinnedLeft && "z-[2] overflow-hidden",

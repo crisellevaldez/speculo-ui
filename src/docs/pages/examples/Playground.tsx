@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Table } from "../../../components/Table/Table";
 import { Container } from "../../../components/Container/Container";
 import { Button } from "../../../components/Button/Button";
@@ -14,7 +14,7 @@ interface TableData {
 }
 
 const PlaygroundPage = () => {
-  const [isTableLoading, setIsTableLoading] = useState(false);
+  const [isTableLoading] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState<string | undefined>(
     undefined,
   );
@@ -25,19 +25,7 @@ const PlaygroundPage = () => {
   const [drawerSize, setDrawerSize] = useState<
     "sm" | "md" | "lg" | "xl" | "full"
   >("xl");
-  const [isMobile, setIsMobile] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // md breakpoint
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
 
   const columns = [
     {
