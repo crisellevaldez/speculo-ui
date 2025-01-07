@@ -58,7 +58,7 @@ const ModalHeader: React.FC<ModalHeaderProps> = ({
       {onClose && (
         <button
           type="button"
-          className="h-4.5 flex w-4 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800 md:h-5 md:w-5"
+          className="h-4.5 flex items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800 md:h-5 md:w-5"
           onClick={onClose}
         >
           <span className="sr-only">Close</span>

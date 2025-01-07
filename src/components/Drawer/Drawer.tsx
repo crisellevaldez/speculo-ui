@@ -34,11 +34,11 @@ const DrawerHeader: React.FC<DrawerHeaderProps> = ({
       {onClose && (
         <button
           type="button"
-          className="flex h-4 w-4 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800 md:h-5 md:w-5"
+          className="flex h-4 items-center justify-center rounded-full bg-black text-white transition-colors hover:bg-gray-800 md:h-5 md:w-5"
           onClick={onClose}
         >
           <span className="sr-only">Close</span>
-          <X className="h-4 w-4" />
+          <X className="h-5 w-5 p-[3px]" />{" "}
         </button>
       )}
     </div>
