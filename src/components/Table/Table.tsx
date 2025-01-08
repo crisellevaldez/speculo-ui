@@ -33,6 +33,8 @@ export interface TableProps<T extends Record<string, unknown>> {
   onRowSelect?: (id: string | undefined) => void;
   // Size variant
   size?: "sm" | "md" | "lg" | "xl";
+  // Empty state
+  emptyStateText?: string;
 }
 
 export function Table<T extends Record<string, unknown>>({
@@ -50,6 +52,7 @@ export function Table<T extends Record<string, unknown>>({
   selectedRowId,
   onRowSelect,
   size = "md",
+  emptyStateText,
 }: TableProps<T>) {
   const [columns, setColumns] = useState(initialColumns);
   const [sortConfig, setSortConfig] = useState<{
@@ -302,6 +305,16 @@ export function Table<T extends Record<string, unknown>>({
               loading && "pointer-events-none opacity-50",
             )}
           >
+            {data.length === 0 && !loading && (
+              <tr>
+                <td
+                  colSpan={selectable ? columns.length + 1 : columns.length}
+                  className="px-3 py-8 text-center text-sm text-gray-500"
+                >
+                  {emptyStateText || "No records found"}
+                </td>
+              </tr>
+            )}
             {data.map((item) => (
               <tr
                 key={keyExtractor(item)}

@@ -11,6 +11,7 @@ interface TableData {
   role: string;
   department: string;
   status: string;
+  [key: string]: unknown;
 }
 
 const PlaygroundPage = () => {
@@ -154,8 +155,22 @@ const PlaygroundPage = () => {
     <Container>
       <div className="mb-4 space-y-8 divide-y divide-gray-200">
         <div className="space-y-4 pb-4">
+          <h2 className="font-semibold">Empty State Example</h2>
+          <Table<TableData>
+            columns={[
+              { key: "name", header: "Name", sortable: true },
+              { key: "role", header: "Role", sortable: true },
+              { key: "department", header: "Department", sortable: true },
+            ]}
+            data={[]}
+            keyExtractor={(item) => item.email}
+            emptyStateText="No employees found"
+          />
+        </div>
+
+        <div className="space-y-4 pb-4">
           <h2 className="font-semibold">Table Size Variants</h2>
-          <div className="font-inter space-y-8">
+          <div className="space-y-8 font-inter">
             {(["sm", "md", "lg", "xl"] as const).map((size) => (
               <div key={size} className="space-y-2">
                 <h3 className="text-sm font-medium capitalize text-gray-600">
