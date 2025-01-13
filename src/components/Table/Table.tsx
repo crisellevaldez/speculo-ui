@@ -222,7 +222,7 @@ export function Table<T extends Record<string, unknown>>({
                       "--left-position": "0px",
                     } as React.CSSProperties
                   }
-                  className="relative w-[3rem] overflow-hidden bg-black px-3 py-3 text-center text-white md:sticky md:left-[--left-position] md:z-[20]"
+                  className="w-[3rem] overflow-hidden bg-black px-3 py-3 text-center text-white md:sticky md:left-[--left-position] md:z-[20]"
                 >
                   <div className="flex items-center justify-center">
                     <input
@@ -255,7 +255,7 @@ export function Table<T extends Record<string, unknown>>({
                         } as React.CSSProperties)),
                     }}
                     className={cn(
-                      "relative bg-black px-3 py-3 text-xs font-bold uppercase tracking-wide text-white",
+                      "bg-black px-3 py-3 text-xs font-bold uppercase tracking-wide text-white",
                       column.isCentered ? "text-center" : "text-left",
                       sortable &&
                         column.sortable &&
@@ -263,7 +263,7 @@ export function Table<T extends Record<string, unknown>>({
                         "cursor-pointer hover:bg-zinc-800",
                       isPinnedLeft
                         ? "overflow-hidden md:sticky md:left-[--left-position] md:z-[20]"
-                        : "relative",
+                        : "relative", // Keep relative for non-pinned headers (needed for resize handle)
                       isLastPinned &&
                         "md:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
                     )}
@@ -361,7 +361,7 @@ export function Table<T extends Record<string, unknown>>({
                       } as React.CSSProperties
                     }
                     className={cn(
-                      "relative w-[3rem] overflow-hidden px-3 py-4 md:sticky md:left-[--left-position] md:z-[2]",
+                      "w-[3rem] overflow-hidden px-3 py-4 md:sticky md:left-[--left-position] md:z-[2]",
                       String(keyExtractor(item)) === selectedRowId
                         ? "bg-gray-100 group-hover:bg-gray-200"
                         : "bg-white group-hover:bg-gray-100",
@@ -412,7 +412,7 @@ export function Table<T extends Record<string, unknown>>({
                         column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
                         isPinnedLeft &&
-                          "relative overflow-hidden md:sticky md:left-[--left-position] md:z-[2]",
+                          "sticky overflow-hidden md:left-[--left-position] md:z-[2]",
                         isLastPinned &&
                           "md:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
                         isPinnedLeft &&
