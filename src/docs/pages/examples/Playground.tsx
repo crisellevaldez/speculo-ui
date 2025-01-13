@@ -165,10 +165,7 @@ const PlaygroundPage = () => {
       <div className="mb-4 space-y-8 divide-y divide-gray-200">
         <div className="space-y-4 pb-4">
           <h2 className="font-semibold">Pinned Columns Example</h2>
-          <p lassName="mb-4 text-sm text-gray-600">
-            The "Name" column is pinned on desktop (lg screens and up) but
-            scrolls normally on mobile/tablet
-          </p>
+
           <Table<TableData>
             selectable
             selectedRows={selectedRows}
