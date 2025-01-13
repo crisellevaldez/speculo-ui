@@ -262,7 +262,7 @@ export function Table<T extends Record<string, unknown>>({
                         !loading &&
                         "cursor-pointer hover:bg-zinc-800",
                       isPinnedLeft
-                        ? "relative overflow-hidden md:sticky md:left-[--left-position] md:z-[20]"
+                        ? "overflow-hidden md:sticky md:left-[--left-position] md:z-[20]"
                         : "relative",
                       isLastPinned &&
                         "md:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
