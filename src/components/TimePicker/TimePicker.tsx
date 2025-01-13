@@ -42,21 +42,40 @@ export const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>(
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-    // Update dropdown position on scroll
+    // Update dropdown position on scroll or resize
     React.useEffect(() => {
       if (!isOpen) return;
 
       const updatePosition = () => {
         if (dropdownRef.current && buttonRef.current) {
-          const rect = buttonRef.current.getBoundingClientRect();
-          dropdownRef.current.style.left = `${rect.left}px`;
-          dropdownRef.current.style.top = `${rect.bottom + 8}px`;
-          dropdownRef.current.style.width = `${rect.width}px`;
+          const buttonRect = buttonRef.current.getBoundingClientRect();
+          const dropdownHeight = 320; // Approximate max height including padding and borders
+          const spaceBelow = window.innerHeight - buttonRect.bottom;
+          const spaceAbove = buttonRect.top;
+          const openUpward =
+            spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+
+          dropdownRef.current.style.left = `${buttonRect.left}px`;
+          dropdownRef.current.style.width = `${buttonRect.width}px`;
+
+          if (openUpward) {
+            dropdownRef.current.style.bottom = `${window.innerHeight - buttonRect.top + 8}px`;
+            dropdownRef.current.style.top = "auto";
+          } else {
+            dropdownRef.current.style.top = `${buttonRect.bottom + 8}px`;
+            dropdownRef.current.style.bottom = "auto";
+          }
         }
       };
 
+      updatePosition(); // Initial position
       window.addEventListener("scroll", updatePosition, true);
-      return () => window.removeEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
+
+      return () => {
+        window.removeEventListener("scroll", updatePosition, true);
+        window.removeEventListener("resize", updatePosition);
+      };
     }, [isOpen]);
 
     React.useEffect(() => {
@@ -176,18 +195,30 @@ export const TimePicker = React.forwardRef<HTMLDivElement, TimePickerProps>(
             style={{
               position: "fixed",
               left: buttonRef.current?.getBoundingClientRect().left + "px",
-              top:
-                (buttonRef.current?.getBoundingClientRect().bottom || 0) +
-                8 +
-                "px",
+              ...(() => {
+                if (!buttonRef.current) return { top: 0 };
+                const buttonRect = buttonRef.current.getBoundingClientRect();
+                const dropdownHeight = 320; // Approximate max height including padding and borders
+                const spaceBelow = window.innerHeight - buttonRect.bottom;
+                const spaceAbove = buttonRect.top;
+                const openUpward =
+                  spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+
+                return openUpward
+                  ? { bottom: window.innerHeight - buttonRect.top + 8 + "px" }
+                  : { top: buttonRect.bottom + 8 + "px" };
+              })(),
               width: buttonRef.current?.getBoundingClientRect().width + "px",
             }}
             className={cn(
               "flex flex-col rounded-md bg-white p-2 shadow-lg",
-              "animate-in fade-in-0 zoom-in-95 z-[9999] overflow-auto border border-gray-200",
+              "animate-in fade-in-0 zoom-in-95 z-[9999] max-h-[320px] border border-gray-200",
             )}
           >
-            <div className="flex flex-col">
+            <div
+              className="flex flex-col overflow-auto"
+              style={{ scrollbarWidth: "thin" }}
+            >
               {timeOptions.map((time) => (
                 <button
                   key={time}

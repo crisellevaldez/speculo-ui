@@ -45,21 +45,40 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const dropdownRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    // Update dropdown position on scroll
+    // Update dropdown position on scroll or resize
     useEffect(() => {
       if (!isOpen) return;
 
       const updatePosition = () => {
         if (dropdownRef.current && buttonRef.current) {
-          const rect = buttonRef.current.getBoundingClientRect();
-          dropdownRef.current.style.left = `${rect.left}px`;
-          dropdownRef.current.style.top = `${rect.bottom + 8}px`;
-          dropdownRef.current.style.width = `${rect.width}px`;
+          const buttonRect = buttonRef.current.getBoundingClientRect();
+          const dropdownHeight = 320; // Max height of dropdown (max-h-60 = 15rem = 240px) + padding and borders
+          const spaceBelow = window.innerHeight - buttonRect.bottom;
+          const spaceAbove = buttonRect.top;
+          const openUpward =
+            spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+
+          dropdownRef.current.style.left = `${buttonRect.left}px`;
+          dropdownRef.current.style.width = `${buttonRect.width}px`;
+
+          if (openUpward) {
+            dropdownRef.current.style.bottom = `${window.innerHeight - buttonRect.top + 8}px`;
+            dropdownRef.current.style.top = "auto";
+          } else {
+            dropdownRef.current.style.top = `${buttonRect.bottom + 8}px`;
+            dropdownRef.current.style.bottom = "auto";
+          }
         }
       };
 
+      updatePosition(); // Initial position
       window.addEventListener("scroll", updatePosition, true);
-      return () => window.removeEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
+
+      return () => {
+        window.removeEventListener("scroll", updatePosition, true);
+        window.removeEventListener("resize", updatePosition);
+      };
     }, [isOpen]);
 
     const selectedOptions = multiple
@@ -227,20 +246,29 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
             style={{
               position: "fixed",
               left: buttonRef.current?.getBoundingClientRect().left + "px",
-              top:
-                (buttonRef.current?.getBoundingClientRect().bottom || 0) +
-                8 +
-                "px",
+              ...(() => {
+                if (!buttonRef.current) return { top: 0 };
+                const buttonRect = buttonRef.current.getBoundingClientRect();
+                const dropdownHeight = 320; // Max height of dropdown (max-h-60 = 15rem = 240px) + padding and borders
+                const spaceBelow = window.innerHeight - buttonRect.bottom;
+                const spaceAbove = buttonRect.top;
+                const openUpward =
+                  spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+
+                return openUpward
+                  ? { bottom: window.innerHeight - buttonRect.top + 8 + "px" }
+                  : { top: buttonRect.bottom + 8 + "px" };
+              })(),
               width: buttonRef.current?.getBoundingClientRect().width + "px",
             }}
-            className="z-[9999] rounded-md border border-gray-200 bg-white shadow-lg"
+            className="z-[9999] flex max-h-[320px] flex-col rounded-md border border-gray-200 bg-white shadow-lg"
           >
             {searchable && (
               <div className="p-2">
                 <input
                   ref={inputRef}
                   type="text"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
@@ -249,9 +277,10 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
               </div>
             )}
             <ul
-              className="max-h-60 overflow-auto"
+              className="flex-1 overflow-auto"
               role="listbox"
               aria-multiselectable={multiple}
+              style={{ scrollbarWidth: "thin" }}
             >
               {filteredOptions.map((option) => (
                 <li

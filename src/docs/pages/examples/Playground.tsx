@@ -5,6 +5,9 @@ import { Button } from "../../../components/Button/Button";
 import { Drawer } from "../../../components/Drawer/Drawer";
 import { Modal } from "../../../components/Modal/Modal";
 import { DateRangePicker } from "../../../components/DateRangePicker/DateRangePicker";
+import { Select } from "../../../components/Select/Select";
+import { TimePicker } from "../../../components/TimePicker/TimePicker";
+import { DatePicker } from "../../../components/DatePicker/DatePicker";
 
 interface TableData {
   name: string;
@@ -162,7 +165,7 @@ const PlaygroundPage = () => {
       <div className="mb-4 space-y-8 divide-y divide-gray-200">
         <div className="space-y-4 pb-4">
           <h2 className="font-semibold">Pinned Columns Example</h2>
-          <p className="mb-4 text-sm text-gray-600">
+          <p lassName="mb-4 text-sm text-gray-600">
             The "Name" column is pinned on desktop (lg screens and up) but
             scrolls normally on mobile/tablet
           </p>
@@ -340,6 +343,53 @@ const PlaygroundPage = () => {
             <p className="mt-2 text-sm text-gray-600">
               The modal uses the same close button style as the drawer.
             </p>
+          </div>
+        </div>
+
+        <div className="space-y-4 pt-4">
+          <h2 className="font-semibold">Dropdown Positioning Example</h2>
+          <p className="mb-4 text-sm text-gray-600">
+            Select and TimePicker components will automatically position their
+            dropdowns above the trigger when there isn't enough space below.
+          </p>
+          <div className="flex h-[80vh] items-end">
+            <div className="w-full space-y-4 rounded-lg border bg-gray-50 p-4">
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  Select (opens upward when near bottom)
+                </label>
+                <Select
+                  options={[
+                    { value: "1", label: "Option 1" },
+                    { value: "2", label: "Option 2" },
+                    { value: "3", label: "Option 3" },
+                    { value: "4", label: "Option 4" },
+                    { value: "5", label: "Option 5" },
+                  ]}
+                  placeholder="Select an option"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  TimePicker (opens upward when near bottom)
+                </label>
+                <TimePicker
+                  value={null}
+                  onChange={() => {}}
+                  placeholder="Select time"
+                />
+              </div>
+              <div>
+                <label className="mb-1 block text-sm font-medium text-gray-700">
+                  DatePicker (opens upward when near bottom)
+                </label>
+                <DatePicker
+                  value={null}
+                  onChange={() => {}}
+                  placeholder="Select date"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

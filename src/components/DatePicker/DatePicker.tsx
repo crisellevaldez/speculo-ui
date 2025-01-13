@@ -45,20 +45,39 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-    // Update dropdown position on scroll
+    // Update dropdown position on scroll or resize
     React.useEffect(() => {
       if (!isOpen) return;
 
       const updatePosition = () => {
         if (dropdownRef.current && buttonRef.current) {
-          const rect = buttonRef.current.getBoundingClientRect();
-          dropdownRef.current.style.left = `${rect.left}px`;
-          dropdownRef.current.style.top = `${rect.bottom + 8}px`;
+          const buttonRect = buttonRef.current.getBoundingClientRect();
+          const dropdownHeight = 360; // Calendar height + padding + buttons
+          const spaceBelow = window.innerHeight - buttonRect.bottom;
+          const spaceAbove = buttonRect.top;
+          const openUpward =
+            spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+
+          dropdownRef.current.style.left = `${buttonRect.left}px`;
+
+          if (openUpward) {
+            dropdownRef.current.style.bottom = `${window.innerHeight - buttonRect.top + 8}px`;
+            dropdownRef.current.style.top = "auto";
+          } else {
+            dropdownRef.current.style.top = `${buttonRect.bottom + 8}px`;
+            dropdownRef.current.style.bottom = "auto";
+          }
         }
       };
 
+      updatePosition(); // Initial position
       window.addEventListener("scroll", updatePosition, true);
-      return () => window.removeEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
+
+      return () => {
+        window.removeEventListener("scroll", updatePosition, true);
+        window.removeEventListener("resize", updatePosition);
+      };
     }, [isOpen]);
 
     React.useEffect(() => {
@@ -149,10 +168,19 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
             style={{
               position: "fixed",
               left: buttonRef.current?.getBoundingClientRect().left + "px",
-              top:
-                (buttonRef.current?.getBoundingClientRect().bottom || 0) +
-                8 +
-                "px",
+              ...(() => {
+                if (!buttonRef.current) return { top: 0 };
+                const buttonRect = buttonRef.current.getBoundingClientRect();
+                const dropdownHeight = 360; // Calendar height + padding + buttons
+                const spaceBelow = window.innerHeight - buttonRect.bottom;
+                const spaceAbove = buttonRect.top;
+                const openUpward =
+                  spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
+
+                return openUpward
+                  ? { bottom: window.innerHeight - buttonRect.top + 8 + "px" }
+                  : { top: buttonRect.bottom + 8 + "px" };
+              })(),
             }}
             className={cn(
               "flex flex-col rounded-md bg-white p-2 shadow-lg",
