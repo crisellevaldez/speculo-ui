@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { cn } from "../../utils/cn";
-import { ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUp, ArrowDown, Inbox } from "lucide-react";
 import { Loading } from "../Loading/Loading";
 
 export interface Column<T> {
@@ -73,7 +73,7 @@ export function Table<T extends Record<string, unknown>>({
   // Get the last pinned column index
   const lastPinnedIndex = columns.reduce(
     (acc, col, index) =>
-      col.isPinned && col.pinPosition === "left" ? index : acc,
+      (col.isPinned && col.pinPosition === "left") || index === 0 ? index : acc,
     -1,
   );
 
@@ -192,10 +192,14 @@ export function Table<T extends Record<string, unknown>>({
       position += 45; // Width of checkbox column (3rem = 48px) + border width (1px)
     }
     if (index > 0) {
-      position += columns
-        .slice(0, index)
-        .filter((col) => col.isPinned && col.pinPosition === "left")
-        .reduce((acc, col) => acc + parseInt(col.width || "100"), 0);
+      // Include all previous columns up to the current index
+      position += columns.slice(0, index).reduce((acc, col, idx) => {
+        // Include if it's the first column or explicitly pinned
+        if (idx === 0 || (col.isPinned && col.pinPosition === "left")) {
+          return acc + parseInt(col.width || "100");
+        }
+        return acc;
+      }, 0);
     }
     return position;
   };
@@ -213,7 +217,12 @@ export function Table<T extends Record<string, unknown>>({
               {selectable && (
                 <th
                   scope="col"
-                  className="sticky left-0 z-[20] w-[3rem] overflow-hidden bg-black px-3 py-3 text-center text-white"
+                  style={
+                    {
+                      "--left-position": "0px",
+                    } as React.CSSProperties
+                  }
+                  className="relative w-[3rem] overflow-hidden bg-black px-3 py-3 text-center text-white md:sticky md:left-[--left-position] md:z-[20]"
                 >
                   <div className="flex items-center justify-center">
                     <input
@@ -229,7 +238,8 @@ export function Table<T extends Record<string, unknown>>({
               )}
               {columns.map((column, index) => {
                 const isPinnedLeft =
-                  column.isPinned && column.pinPosition === "left";
+                  (column.isPinned && column.pinPosition === "left") ||
+                  index === 0;
                 const isLastPinned = index === lastPinnedIndex;
                 const left = isPinnedLeft ? getLeftPosition(index) : undefined;
                 return (
@@ -239,11 +249,10 @@ export function Table<T extends Record<string, unknown>>({
                     style={{
                       minWidth: column.minWidth,
                       width: column.width,
-                      position: isPinnedLeft ? "sticky" : undefined,
-                      left,
-                      boxShadow: isLastPinned
-                        ? "2px 0 5px -2px rgba(0,0,0,0.1)"
-                        : undefined,
+                      ...(isPinnedLeft &&
+                        ({
+                          "--left-position": `${left}px`,
+                        } as React.CSSProperties)),
                     }}
                     className={cn(
                       "relative bg-black px-3 py-3 text-xs font-bold uppercase tracking-wide text-white",
@@ -252,11 +261,11 @@ export function Table<T extends Record<string, unknown>>({
                         column.sortable &&
                         !loading &&
                         "cursor-pointer hover:bg-zinc-800",
-                      isPinnedLeft && isPinnedLeft && column.key === "actions"
-                        ? "z-[2] overflow-hidden"
-                        : isPinnedLeft
-                          ? "z-[20] overflow-hidden"
-                          : "",
+                      isPinnedLeft
+                        ? "relative overflow-hidden md:sticky md:left-[--left-position] md:z-[20]"
+                        : "relative",
+                      isLastPinned &&
+                        "md:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
                     )}
                     onClick={() =>
                       !loading && sortable && handleSort(String(column.key))
@@ -309,9 +318,19 @@ export function Table<T extends Record<string, unknown>>({
               <tr>
                 <td
                   colSpan={selectable ? columns.length + 1 : columns.length}
-                  className="px-3 py-8 text-center text-sm text-gray-500"
+                  className="px-3 py-12"
                 >
-                  {emptyStateText || "No records found"}
+                  <div className="mx-auto flex max-w-[320px] flex-col items-center justify-center gap-2">
+                    <div className="rounded-full bg-gray-100 p-3">
+                      <Inbox className="h-6 w-6 text-gray-400" />
+                    </div>
+                    <p className="text-sm font-medium text-gray-900">
+                      {emptyStateText || "No records found"}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Try adjusting your search or filters
+                    </p>
+                  </div>
                 </td>
               </tr>
             )}
@@ -336,8 +355,13 @@ export function Table<T extends Record<string, unknown>>({
               >
                 {selectable && (
                   <td
+                    style={
+                      {
+                        "--left-position": "0px",
+                      } as React.CSSProperties
+                    }
                     className={cn(
-                      "sticky left-0 z-[2] w-[3rem] overflow-hidden px-3 py-4",
+                      "relative w-[3rem] overflow-hidden px-3 py-4 md:sticky md:left-[--left-position] md:z-[2]",
                       String(keyExtractor(item)) === selectedRowId
                         ? "bg-gray-100 group-hover:bg-gray-200"
                         : "bg-white group-hover:bg-gray-100",
@@ -359,7 +383,8 @@ export function Table<T extends Record<string, unknown>>({
                 )}
                 {columns.map((column, index) => {
                   const isPinnedLeft =
-                    column.isPinned && column.pinPosition === "left";
+                    (column.isPinned && column.pinPosition === "left") ||
+                    index === 0;
                   const isLastPinned = index === lastPinnedIndex;
                   const left = isPinnedLeft
                     ? getLeftPosition(index)
@@ -370,11 +395,10 @@ export function Table<T extends Record<string, unknown>>({
                       style={{
                         minWidth: column.minWidth,
                         width: column.width,
-                        position: isPinnedLeft ? "sticky" : undefined,
-                        left,
-                        boxShadow: isLastPinned
-                          ? "2px 0 5px -2px rgba(0,0,0,0.1)"
-                          : undefined,
+                        ...(isPinnedLeft &&
+                          ({
+                            "--left-position": `${left}px`,
+                          } as React.CSSProperties)),
                       }}
                       className={cn(
                         "text-[13px] text-gray-900 3xl:text-[14px]",
@@ -387,7 +411,10 @@ export function Table<T extends Record<string, unknown>>({
                               : "px-3 py-3 3xl:px-3 3xl:py-4",
                         column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
-                        isPinnedLeft && "z-[2] overflow-hidden",
+                        isPinnedLeft &&
+                          "relative overflow-hidden md:sticky md:left-[--left-position] md:z-[2]",
+                        isLastPinned &&
+                          "md:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
                         isPinnedLeft &&
                           String(keyExtractor(item)) === selectedRowId
                           ? "bg-gray-100 group-hover:bg-gray-200"

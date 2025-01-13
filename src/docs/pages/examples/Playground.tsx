@@ -4,6 +4,7 @@ import { Container } from "../../../components/Container/Container";
 import { Button } from "../../../components/Button/Button";
 import { Drawer } from "../../../components/Drawer/Drawer";
 import { Modal } from "../../../components/Modal/Modal";
+import { DateRangePicker } from "../../../components/DateRangePicker/DateRangePicker";
 
 interface TableData {
   name: string;
@@ -27,6 +28,11 @@ const PlaygroundPage = () => {
     "sm" | "md" | "lg" | "xl" | "full"
   >("xl");
   const [modalOpen, setModalOpen] = useState(false);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [dateRange, setDateRange] = useState<{
+    from: Date | null;
+    to: Date | null;
+  }>({ from: null, to: null });
 
   const columns = [
     {
@@ -155,12 +161,113 @@ const PlaygroundPage = () => {
     <Container>
       <div className="mb-4 space-y-8 divide-y divide-gray-200">
         <div className="space-y-4 pb-4">
+          <h2 className="font-semibold">Pinned Columns Example</h2>
+          <p className="mb-4 text-sm text-gray-600">
+            The "Name" column is pinned on desktop (lg screens and up) but
+            scrolls normally on mobile/tablet
+          </p>
+          <Table<TableData>
+            selectable
+            selectedRows={selectedRows}
+            onSelectRows={setSelectedRows}
+            columns={[
+              {
+                key: "name",
+                header: "Name",
+                sortable: true,
+                width: "200px",
+                isPinned: true,
+                pinPosition: "left",
+              },
+              { key: "email", header: "Email", sortable: true, width: "250px" },
+              { key: "role", header: "Role", sortable: true, width: "150px" },
+              {
+                key: "department",
+                header: "Department",
+                sortable: true,
+                width: "200px",
+              },
+              {
+                key: "status",
+                header: "Status",
+                sortable: true,
+                width: "150px",
+              },
+              {
+                key: "location",
+                header: "Location",
+                sortable: true,
+                width: "200px",
+              },
+              { key: "team", header: "Team", sortable: true, width: "180px" },
+              {
+                key: "manager",
+                header: "Manager",
+                sortable: true,
+                width: "200px",
+              },
+            ]}
+            data={data.slice(0, 5)}
+            keyExtractor={(item) => item.email}
+          />
+        </div>
+
+        <div className="space-y-4 pb-4">
           <h2 className="font-semibold">Empty State Example</h2>
           <Table<TableData>
             columns={[
-              { key: "name", header: "Name", sortable: true },
-              { key: "role", header: "Role", sortable: true },
-              { key: "department", header: "Department", sortable: true },
+              { key: "name", header: "Name", sortable: true, width: "200px" },
+              { key: "email", header: "Email", sortable: true, width: "250px" },
+              { key: "role", header: "Role", sortable: true, width: "150px" },
+              {
+                key: "department",
+                header: "Department",
+                sortable: true,
+                width: "200px",
+              },
+              {
+                key: "status",
+                header: "Status",
+                sortable: true,
+                width: "150px",
+              },
+              {
+                key: "location",
+                header: "Location",
+                sortable: true,
+                width: "200px",
+              },
+              { key: "team", header: "Team", sortable: true, width: "180px" },
+              {
+                key: "manager",
+                header: "Manager",
+                sortable: true,
+                width: "200px",
+              },
+              {
+                key: "startDate",
+                header: "Start Date",
+                sortable: true,
+                width: "150px",
+              },
+              {
+                key: "endDate",
+                header: "End Date",
+                sortable: true,
+                width: "150px",
+              },
+              {
+                key: "salary",
+                header: "Salary",
+                sortable: true,
+                width: "150px",
+              },
+              {
+                key: "performance",
+                header: "Performance",
+                sortable: true,
+                width: "180px",
+              },
             ]}
             data={[]}
             keyExtractor={(item) => item.email}
@@ -264,10 +371,20 @@ const PlaygroundPage = () => {
       >
         <Modal.Header>Sample Modal</Modal.Header>
         <Modal.Body>
-          <p className="text-gray-600">
-            This modal demonstrates the new close button style that matches the
-            drawer.
-          </p>
+          <div className="space-y-4">
+            <p className="text-gray-600">
+              This modal demonstrates the new close button style that matches
+              the drawer.
+            </p>
+            <div>
+              <h3 className="mb-2 text-sm font-medium">Date Range Example</h3>
+              <DateRangePicker
+                value={dateRange}
+                onChange={setDateRange}
+                placeholder={{ from: "Start date", to: "End date" }}
+              />
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline" onClick={() => setModalOpen(false)}>

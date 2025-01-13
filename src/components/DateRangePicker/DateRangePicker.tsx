@@ -54,7 +54,8 @@ export const DateRangePicker = React.forwardRef<
     const [isOpen, setIsOpen] = React.useState(false);
     const [hoveredDate, setHoveredDate] = React.useState<Date | null>(null);
     const [tempRange, setTempRange] = React.useState<DateRange>(value);
-    const containerRef = React.useRef<HTMLDivElement>(null);
+    const triggerRef = React.useRef<HTMLDivElement>(null);
+    const dropdownRef = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
       setTempRange(value);
@@ -64,7 +65,6 @@ export const DateRangePicker = React.forwardRef<
       if (!tempRange.to) {
         setTempRange({ from: date, to: null });
       } else {
-        // If selected start date is after end date, make end date same as start date
         if (date > tempRange.to) {
           setTempRange({ from: date, to: date });
         } else {
@@ -77,7 +77,6 @@ export const DateRangePicker = React.forwardRef<
       if (!tempRange.from) {
         setTempRange({ from: date, to: date });
       } else {
-        // If selected end date is before start date, make start date same as end date
         if (date < tempRange.from) {
           setTempRange({ from: date, to: date });
         } else {
@@ -108,8 +107,9 @@ export const DateRangePicker = React.forwardRef<
     React.useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
         if (
-          containerRef.current &&
-          !containerRef.current.contains(e.target as Node)
+          dropdownRef.current &&
+          !dropdownRef.current.contains(e.target as Node) &&
+          !triggerRef.current?.contains(e.target as Node)
         ) {
           setIsOpen(false);
           setTempRange(value);
@@ -141,12 +141,12 @@ export const DateRangePicker = React.forwardRef<
         className={cn("relative inline-block", className)}
         {...props}
       >
-        <div className="flex gap-2">
+        <div ref={triggerRef} className="flex gap-2">
           <button
             type="button"
             onClick={() => !disabled && !isLoading && setIsOpen(true)}
             disabled={disabled || isLoading}
-            className={cn(buttonStyles, "w-[150px]")}
+            className={cn(buttonStyles, "w-[120px] md:w-[150px]")}
           >
             <span className="text-gray-900">
               {formatDate(value.from) || placeholder.from}
@@ -162,7 +162,7 @@ export const DateRangePicker = React.forwardRef<
             type="button"
             onClick={() => !disabled && !isLoading && setIsOpen(true)}
             disabled={disabled || isLoading}
-            className={cn(buttonStyles, "w-[150px]")}
+            className={cn(buttonStyles, "w-[120px] md:w-[150px]")}
           >
             <span className="text-gray-900">
               {formatDate(value.to) || placeholder.to}
@@ -188,112 +188,120 @@ export const DateRangePicker = React.forwardRef<
         )}
 
         {isOpen && !disabled && !isLoading && (
-          <div
-            ref={containerRef}
-            className={cn(
-              "absolute left-0 top-full mt-2 flex flex-col rounded-md bg-white p-2 shadow-lg",
-              "animate-in fade-in-0 zoom-in-95 z-50 border border-gray-200",
-            )}
-          >
-            <div className="flex">
-              <Calendar
-                value={tempRange.from || undefined}
-                onChange={handleStartDateSelect}
-                minDate={minDate}
-                maxDate={maxDate}
-                disabled={disabled}
-                locale={locale}
-                weekStartsOn={weekStartsOn}
-                disabledDates={disabledDates}
-                highlightedDates={[
-                  ...(tempRange.from && tempRange.to
-                    ? Array.from(
-                        {
-                          length:
-                            (tempRange.to.getTime() -
-                              tempRange.from.getTime()) /
-                              (1000 * 60 * 60 * 24) +
-                            1,
-                        },
-                        (_, i) =>
-                          new Date(
-                            tempRange.from!.getTime() + i * 1000 * 60 * 60 * 24,
-                          ),
-                      )
-                    : []),
-                  ...(previewRange
-                    ? Array.from(
-                        {
-                          length:
-                            (previewRange.to.getTime() -
-                              previewRange.from.getTime()) /
-                              (1000 * 60 * 60 * 24) +
-                            1,
-                        },
-                        (_, i) =>
-                          new Date(
-                            previewRange.from.getTime() +
-                              i * 1000 * 60 * 60 * 24,
-                          ),
-                      )
-                    : []),
-                ]}
-                onMouseEnter={(date) => setHoveredDate(date)}
-                onMouseLeave={() => setHoveredDate(null)}
-              />
-              <Calendar
-                value={tempRange.to || undefined}
-                onChange={handleEndDateSelect}
-                minDate={minDate}
-                maxDate={maxDate}
-                disabled={disabled}
-                locale={locale}
-                weekStartsOn={weekStartsOn}
-                disabledDates={disabledDates}
-                highlightedDates={[
-                  ...(tempRange.from && tempRange.to
-                    ? Array.from(
-                        {
-                          length:
-                            (tempRange.to.getTime() -
-                              tempRange.from.getTime()) /
-                              (1000 * 60 * 60 * 24) +
-                            1,
-                        },
-                        (_, i) =>
-                          new Date(
-                            tempRange.from!.getTime() + i * 1000 * 60 * 60 * 24,
-                          ),
-                      )
-                    : []),
-                  ...(previewRange
-                    ? Array.from(
-                        {
-                          length:
-                            (previewRange.to.getTime() -
-                              previewRange.from.getTime()) /
-                              (1000 * 60 * 60 * 24) +
-                            1,
-                        },
-                        (_, i) =>
-                          new Date(
-                            previewRange.from.getTime() +
-                              i * 1000 * 60 * 60 * 24,
-                          ),
-                      )
-                    : []),
-                ]}
-                onMouseEnter={(date) => setHoveredDate(date)}
-                onMouseLeave={() => setHoveredDate(null)}
-              />
+          <>
+            <div className="fixed inset-0 bg-black/50" />
+            <div
+              ref={dropdownRef}
+              className={cn(
+                "flex flex-col overflow-hidden rounded-md bg-white shadow-lg",
+                "animate-in fade-in-0 zoom-in-95 z-[9999] border border-gray-200",
+                "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
+                "w-[95%] p-5 md:w-[720px]",
+                "max-h-[calc(100vh-4rem)]",
+              )}
+            >
+              <div className="flex min-h-0 flex-col gap-4 overflow-auto p-2 md:flex-row md:gap-2 lg:justify-center [&>*]:shrink-0">
+                <Calendar
+                  value={tempRange.from || undefined}
+                  onChange={handleStartDateSelect}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  disabled={disabled}
+                  locale={locale}
+                  weekStartsOn={weekStartsOn}
+                  disabledDates={disabledDates}
+                  highlightedDates={[
+                    ...(tempRange.from && tempRange.to
+                      ? Array.from(
+                          {
+                            length:
+                              (tempRange.to.getTime() -
+                                tempRange.from.getTime()) /
+                                (1000 * 60 * 60 * 24) +
+                              1,
+                          },
+                          (_, i) =>
+                            new Date(
+                              tempRange.from!.getTime() +
+                                i * 1000 * 60 * 60 * 24,
+                            ),
+                        )
+                      : []),
+                    ...(previewRange
+                      ? Array.from(
+                          {
+                            length:
+                              (previewRange.to.getTime() -
+                                previewRange.from.getTime()) /
+                                (1000 * 60 * 60 * 24) +
+                              1,
+                          },
+                          (_, i) =>
+                            new Date(
+                              previewRange.from.getTime() +
+                                i * 1000 * 60 * 60 * 24,
+                            ),
+                        )
+                      : []),
+                  ]}
+                  onMouseEnter={(date) => setHoveredDate(date)}
+                  onMouseLeave={() => setHoveredDate(null)}
+                />
+                <Calendar
+                  value={tempRange.to || undefined}
+                  onChange={handleEndDateSelect}
+                  minDate={minDate}
+                  maxDate={maxDate}
+                  disabled={disabled}
+                  locale={locale}
+                  weekStartsOn={weekStartsOn}
+                  disabledDates={disabledDates}
+                  highlightedDates={[
+                    ...(tempRange.from && tempRange.to
+                      ? Array.from(
+                          {
+                            length:
+                              (tempRange.to.getTime() -
+                                tempRange.from.getTime()) /
+                                (1000 * 60 * 60 * 24) +
+                              1,
+                          },
+                          (_, i) =>
+                            new Date(
+                              tempRange.from!.getTime() +
+                                i * 1000 * 60 * 60 * 24,
+                            ),
+                        )
+                      : []),
+                    ...(previewRange
+                      ? Array.from(
+                          {
+                            length:
+                              (previewRange.to.getTime() -
+                                previewRange.from.getTime()) /
+                                (1000 * 60 * 60 * 24) +
+                              1,
+                          },
+                          (_, i) =>
+                            new Date(
+                              previewRange.from.getTime() +
+                                i * 1000 * 60 * 60 * 24,
+                            ),
+                        )
+                      : []),
+                  ]}
+                  onMouseEnter={(date) => setHoveredDate(date)}
+                  onMouseLeave={() => setHoveredDate(null)}
+                />
+              </div>
+              <div className="sticky bottom-0 mt-2 flex justify-end gap-2 border-t bg-white p-2">
+                <Button variant="outline" onClick={handleClear}>
+                  Clear
+                </Button>
+                <Button onClick={handleOk}>OK</Button>
+              </div>
             </div>
-            <div className="mt-2 flex justify-end gap-2 px-2">
-              <Button variant="outline" onClick={handleClear}>
-                Clear
-              </Button>
-              <Button onClick={handleOk}>OK</Button>
-            </div>
-          </div>
+          </>
         )}
       </div>
     );
