@@ -25,7 +25,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     ref,
   ) => {
     const baseStyles =
-      "shadow-sm block w-full border rounded-md border-gray-300 px-3 py-1.5 text-gray-900 text-sm " +
+      "shadow-sm block w-full border rounded-md border-gray-300 py-1.5 text-gray-900 text-sm " +
       "placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500";
 
     const errorStyles = error
@@ -39,8 +39,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputStyles = cn(
       baseStyles,
       errorStyles,
-      startIcon && "pl-9",
-      endIcon || isLoading ? "pr-9" : startIcon && "pr-3",
+      startIcon ? "pl-9" : "pl-3",
+      endIcon || isLoading ? "pr-9" : "pr-3",
       className,
     );
 
