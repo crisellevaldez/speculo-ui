@@ -246,22 +246,112 @@ const PlaygroundPage = () => {
           <h2 className="font-semibold">Table Examples</h2>
           <div className="space-y-8">
             <div>
-              <h3 className="mb-2 text-sm font-medium">
-                Resizable Columns Example
-              </h3>
-              <p className="mb-4 text-sm text-gray-600">
-                Try dragging the column dividers to resize. First column is
-                pinned and not resizable.
-              </p>
-              <div className="h-[400px] overflow-auto">
-                <Table<TableData>
-                  columns={resizableColumns}
-                  data={data}
-                  keyExtractor={(item) => item.email}
-                  selectable
-                  selectedRows={selectedRows}
-                  onSelectRows={setSelectedRows}
-                />
+              <div className="space-y-8">
+                <div>
+                  <p className="mb-4 text-sm text-gray-600">
+                    Resizable columns with data
+                  </p>
+                  <div className="h-[400px] overflow-auto">
+                    <Table<TableData>
+                      columns={resizableColumns}
+                      data={data}
+                      keyExtractor={(item) => item.email}
+                      selectable
+                      selectedRows={selectedRows}
+                      onSelectRows={setSelectedRows}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <p className="mb-4 text-sm text-gray-600">
+                    Empty table with many columns
+                  </p>
+                  <div className="h-[400px] overflow-auto">
+                    <Table<TableData>
+                      columns={[
+                        {
+                          key: "id",
+                          header: "ID",
+                          width: "100px",
+                          isPinned: true,
+                          pinPosition: "left",
+                        },
+                        {
+                          key: "name",
+                          header: "Full Name",
+                          width: "200px",
+                          isPinned: true,
+                          pinPosition: "left",
+                        },
+                        {
+                          key: "email",
+                          header: "Email Address",
+                          width: "250px",
+                          resizable: true,
+                        },
+                        {
+                          key: "phoneNumber",
+                          header: "Phone Number",
+                          width: "200px",
+                          resizable: true,
+                        },
+                        {
+                          key: "department",
+                          header: "Department",
+                          width: "200px",
+                          resizable: true,
+                        },
+                        {
+                          key: "role",
+                          header: "Role",
+                          width: "150px",
+                          resizable: true,
+                        },
+                        {
+                          key: "status",
+                          header: "Status",
+                          width: "150px",
+                          resizable: true,
+                        },
+                        {
+                          key: "lastCallAnswered",
+                          header: "Last Call",
+                          width: "200px",
+                          resizable: true,
+                        },
+                        {
+                          key: "recentOutcome",
+                          header: "Recent Outcome",
+                          width: "200px",
+                          resizable: true,
+                        },
+                        {
+                          key: "source",
+                          header: "Source",
+                          width: "150px",
+                          resizable: true,
+                        },
+                        {
+                          key: "opt_in",
+                          header: "Opt-in Status",
+                          width: "150px",
+                          resizable: true,
+                        },
+                        {
+                          key: "opt_in_date",
+                          header: "Opt-in Date",
+                          width: "200px",
+                          resizable: true,
+                        },
+                      ]}
+                      data={[]}
+                      keyExtractor={(item) => item.email}
+                      emptyStateText="No records found in the database"
+                      selectable
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

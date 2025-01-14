@@ -206,6 +206,21 @@ export function Table<T extends Record<string, unknown>>({
 
   return (
     <div className="relative h-full w-full overflow-auto rounded-xl border shadow-sm [scrollbar-gutter:stable] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar]:h-1 [&::-webkit-scrollbar]:w-1 xl:[&::-webkit-scrollbar]:h-2 xl:[&::-webkit-scrollbar]:w-2">
+      {data.length === 0 && !loading && (
+        <div className="absolute inset-x-0 bottom-0 top-[57px] flex items-center justify-center bg-white">
+          <div className="flex w-[320px] flex-col items-center justify-center gap-2 rounded-lg bg-white p-6">
+            <div className="rounded-full bg-gray-100 p-3">
+              <Inbox className="h-6 w-6 text-gray-400" />
+            </div>
+            <p className="text-sm font-medium text-gray-900">
+              {emptyStateText || "No records found"}
+            </p>
+            <p className="text-sm text-gray-500">
+              Try adjusting your search or filters
+            </p>
+          </div>
+        </div>
+      )}
       <div
         className="inline-block min-w-full"
         style={{ width: `${totalWidth}px` }}
@@ -311,29 +326,10 @@ export function Table<T extends Record<string, unknown>>({
           <tbody
             className={cn(
               "divide-y divide-gray-200",
-              loading && "pointer-events-none opacity-50",
+              (loading || (data.length === 0 && !loading)) &&
+                "pointer-events-none opacity-0",
             )}
           >
-            {data.length === 0 && !loading && (
-              <tr>
-                <td
-                  colSpan={selectable ? columns.length + 1 : columns.length}
-                  className="px-3 py-12"
-                >
-                  <div className="mx-auto flex max-w-[320px] flex-col items-center justify-center gap-2">
-                    <div className="rounded-full bg-gray-100 p-3">
-                      <Inbox className="h-6 w-6 text-gray-400" />
-                    </div>
-                    <p className="text-sm font-medium text-gray-900">
-                      {emptyStateText || "No records found"}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      Try adjusting your search or filters
-                    </p>
-                  </div>
-                </td>
-              </tr>
-            )}
             {data.map((item) => (
               <tr
                 key={keyExtractor(item)}
