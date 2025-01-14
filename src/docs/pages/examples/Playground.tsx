@@ -203,32 +203,41 @@ const PlaygroundPage = () => {
                 className="max-w-sm"
               />
 
-              <h3 className="mb-2 mt-8 text-sm font-medium">
-                Input with Search Icon
-              </h3>
-              <p className="mb-4 text-sm text-gray-600">
-                Example of an input field with a search icon.
-              </p>
-              <Input
-                startIcon={
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-5 w-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                    />
-                  </svg>
-                }
-                placeholder="Search..."
-                className="max-w-sm"
-              />
+              <h3 className="mb-2 mt-8 text-sm font-medium">Input Examples</h3>
+              <div className="space-y-4">
+                <div>
+                  <p className="mb-2 text-sm text-gray-600">
+                    Input with search icon (pl-9 and pr-3 padding)
+                  </p>
+                  <Input
+                    startIcon={
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="h-5 w-5"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
+                        />
+                      </svg>
+                    }
+                    placeholder="Search with icon..."
+                    className="max-w-sm"
+                  />
+                </div>
+
+                <div>
+                  <p className="mb-2 text-sm text-gray-600">
+                    Input without icon (px-3 padding)
+                  </p>
+                  <Input placeholder="Regular input..." className="max-w-sm" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
