@@ -42,10 +42,11 @@ const SidebarItem = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "group flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium",
+        "group flex items-center rounded-md px-3 py-2 text-sm font-medium",
+        collapsed ? "justify-center" : "gap-2",
         "hover:bg-accent hover:text-accent-foreground",
         disabled && "pointer-events-none opacity-50",
-        depth > 0 && "ml-4",
+        depth > 0 && !collapsed && "ml-4",
         isLink && "cursor-pointer",
       )}
       role={isLink ? "link" : "button"}
@@ -59,12 +60,7 @@ const SidebarItem = React.forwardRef<
       }}
     >
       {icon && (
-        <span
-          className={cn(
-            "flex h-4 w-4 items-center justify-center",
-            collapsed && "mx-auto",
-          )}
-        >
+        <span className={cn("flex h-4 w-4 items-center justify-center")}>
           {icon}
         </span>
       )}

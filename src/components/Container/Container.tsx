@@ -26,7 +26,7 @@ export const Container = React.forwardRef<HTMLDivElement, ContainerProps>(
           "w-full",
           "2xl:max-w-[1500px]",
           "3xl:max-w-[2000px]",
-          padding && "px-4 md:px-6 lg:px-8",
+          padding && "px-6 lg:px-8",
           centered && "mx-auto",
           className,
         )}
