@@ -39,9 +39,9 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
     const inputStyles = cn(
       baseStyles,
       errorStyles,
+      className,
       startIcon ? "pl-9" : "pl-3",
       endIcon || isLoading ? "pr-9" : "pr-3",
-      className,
     );
 
     return (
