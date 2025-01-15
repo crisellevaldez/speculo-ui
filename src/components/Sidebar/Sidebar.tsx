@@ -153,7 +153,7 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       <div
         ref={ref}
         className={cn(
-          collapsed ? "w-12 md:w-14 lg:w-16" : "w-64",
+          collapsed ? "w-16" : "w-64",
           "flex h-full flex-col gap-4 border-r bg-background p-2 transition-all duration-300 md:p-3 lg:p-4",
           className,
         )}
