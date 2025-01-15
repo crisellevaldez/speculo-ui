@@ -70,11 +70,16 @@ export function Table<T extends Record<string, unknown>>({
     columns.reduce((acc, col) => acc + parseInt(col.width || "100"), 0) +
     (selectable ? 48 : 0); // Add width of checkbox column if selectable (3rem = 48px)
 
-  // Get the last pinned column index
-  const lastPinnedIndex = columns.reduce(
+  // Get the last left-pinned column index
+  const lastLeftPinnedIndex = columns.reduce(
     (acc, col, index) =>
       (col.isPinned && col.pinPosition === "left") || index === 0 ? index : acc,
     -1,
+  );
+
+  // Get the first right-pinned column index
+  const firstRightPinnedIndex = columns.findIndex(
+    (col) => col.isPinned && col.pinPosition === "right",
   );
 
   // Handle row selection
@@ -194,12 +199,27 @@ export function Table<T extends Record<string, unknown>>({
     if (index > 0) {
       // Include all previous columns up to the current index
       position += columns.slice(0, index).reduce((acc, col, idx) => {
-        // Include if it's the first column or explicitly pinned
+        // Include if it's the first column or explicitly pinned left
         if (idx === 0 || (col.isPinned && col.pinPosition === "left")) {
           return acc + parseInt(col.width || "100");
         }
         return acc;
       }, 0);
+    }
+    return position;
+  };
+
+  // Calculate right position for pinned columns
+  const getRightPosition = (index: number) => {
+    if (index < firstRightPinnedIndex || firstRightPinnedIndex === -1)
+      return undefined;
+
+    let position = 0;
+    // Include all following columns up to the last index
+    for (let i = columns.length - 1; i > index; i--) {
+      if (columns[i].isPinned && columns[i].pinPosition === "right") {
+        position += parseInt(columns[i].width || "100");
+      }
     }
     return position;
   };
@@ -255,8 +275,15 @@ export function Table<T extends Record<string, unknown>>({
                 const isPinnedLeft =
                   (column.isPinned && column.pinPosition === "left") ||
                   index === 0;
-                const isLastPinned = index === lastPinnedIndex;
+                const isPinnedRight =
+                  column.isPinned && column.pinPosition === "right";
+                const isLastLeftPinned = index === lastLeftPinnedIndex;
+                const isFirstRightPinned = index === firstRightPinnedIndex;
                 const left = isPinnedLeft ? getLeftPosition(index) : undefined;
+                const right = isPinnedRight
+                  ? getRightPosition(index)
+                  : undefined;
+
                 return (
                   <th
                     key={String(column.key)}
@@ -268,6 +295,10 @@ export function Table<T extends Record<string, unknown>>({
                         ({
                           "--left-position": `${left}px`,
                         } as React.CSSProperties)),
+                      ...(isPinnedRight &&
+                        ({
+                          "--right-position": `${right}px`,
+                        } as React.CSSProperties)),
                     }}
                     className={cn(
                       "bg-black px-3 py-3 text-xs font-bold uppercase tracking-wide text-white",
@@ -278,9 +309,17 @@ export function Table<T extends Record<string, unknown>>({
                         "cursor-pointer hover:bg-zinc-800",
                       isPinnedLeft
                         ? "overflow-hidden md:sticky md:left-[--left-position] md:z-[20]"
-                        : "relative", // Keep relative for non-pinned headers (needed for resize handle)
-                      isLastPinned &&
+                        : isPinnedRight
+                          ? "overflow-hidden md:sticky md:right-[--right-position] md:z-[20]"
+                          : "relative", // Keep relative for non-pinned headers (needed for resize handle)
+                      isLastLeftPinned && [
+                        "md:after:absolute md:after:right-0 md:after:top-0 md:after:h-full md:after:w-px md:after:bg-gray-300 md:after:content-['']",
                         "md:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
+                      ],
+                      isFirstRightPinned && [
+                        "md:before:absolute md:before:left-0 md:before:top-0 md:before:h-full md:before:w-px md:before:bg-gray-300 md:before:content-['']",
+                        "md:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)]",
+                      ],
                     )}
                     onClick={() =>
                       !loading && sortable && handleSort(String(column.key))
@@ -306,7 +345,7 @@ export function Table<T extends Record<string, unknown>>({
                         )}
                     </div>
                     {/* Simple resizer handle */}
-                    {column.resizable && !isPinnedLeft && (
+                    {column.resizable && !isPinnedLeft && !isPinnedRight && (
                       <div
                         className={cn(
                           "absolute -right-0.5 top-0 z-10 h-full w-px bg-zinc-600 hover:bg-zinc-500",
@@ -381,10 +420,17 @@ export function Table<T extends Record<string, unknown>>({
                   const isPinnedLeft =
                     (column.isPinned && column.pinPosition === "left") ||
                     index === 0;
-                  const isLastPinned = index === lastPinnedIndex;
+                  const isPinnedRight =
+                    column.isPinned && column.pinPosition === "right";
+                  const isLastLeftPinned = index === lastLeftPinnedIndex;
+                  const isFirstRightPinned = index === firstRightPinnedIndex;
                   const left = isPinnedLeft
                     ? getLeftPosition(index)
                     : undefined;
+                  const right = isPinnedRight
+                    ? getRightPosition(index)
+                    : undefined;
+
                   return (
                     <td
                       key={String(column.key)}
@@ -394,6 +440,10 @@ export function Table<T extends Record<string, unknown>>({
                         ...(isPinnedLeft &&
                           ({
                             "--left-position": `${left}px`,
+                          } as React.CSSProperties)),
+                        ...(isPinnedRight &&
+                          ({
+                            "--right-position": `${right}px`,
                           } as React.CSSProperties)),
                       }}
                       className={cn(
@@ -407,14 +457,23 @@ export function Table<T extends Record<string, unknown>>({
                               : "px-3 py-3 3xl:px-3 3xl:py-4",
                         column.isCentered ? "text-center" : "text-left",
                         column.key === "actions" && "min-w-[120px]",
-                        isPinnedLeft &&
-                          "sticky overflow-hidden md:left-[--left-position] md:z-[2]",
-                        isLastPinned &&
+                        isPinnedLeft
+                          ? "sticky overflow-hidden md:left-[--left-position] md:z-[2]"
+                          : isPinnedRight
+                            ? "sticky overflow-hidden md:right-[--right-position] md:z-[2]"
+                            : "",
+                        isLastLeftPinned && [
+                          "md:after:absolute md:after:right-0 md:after:top-0 md:after:h-full md:after:w-px md:after:bg-gray-300 md:after:content-['']",
                           "md:shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]",
-                        isPinnedLeft &&
+                        ],
+                        isFirstRightPinned && [
+                          "md:before:absolute md:before:left-0 md:before:top-0 md:before:h-full md:before:w-px md:before:bg-gray-300 md:before:content-['']",
+                          "md:shadow-[-2px_0_5px_-2px_rgba(0,0,0,0.1)]",
+                        ],
+                        (isPinnedLeft || isPinnedRight) &&
                           String(keyExtractor(item)) === selectedRowId
                           ? "bg-gray-100 group-hover:bg-gray-200"
-                          : isPinnedLeft
+                          : isPinnedLeft || isPinnedRight
                             ? "bg-white group-hover:bg-gray-100"
                             : "",
                       )}
