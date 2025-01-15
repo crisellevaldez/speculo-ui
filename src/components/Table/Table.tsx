@@ -35,6 +35,8 @@ export interface TableProps<T extends Record<string, unknown>> {
   size?: "sm" | "md" | "lg" | "xl";
   // Empty state
   emptyStateText?: string;
+  // Double click handler
+  onRowDoubleClick?: (item: T) => void;
 }
 
 export function Table<T extends Record<string, unknown>>({
@@ -53,6 +55,7 @@ export function Table<T extends Record<string, unknown>>({
   onRowSelect,
   size = "md",
   emptyStateText,
+  onRowDoubleClick,
 }: TableProps<T>) {
   const [columns, setColumns] = useState(initialColumns);
   const [sortConfig, setSortConfig] = useState<{
@@ -380,6 +383,7 @@ export function Table<T extends Record<string, unknown>>({
                       : String(keyExtractor(item)),
                   )
                 }
+                onDoubleClick={() => onRowDoubleClick?.(item)}
                 className={cn(
                   "group",
                   rowSelectable && "cursor-pointer",
@@ -396,7 +400,7 @@ export function Table<T extends Record<string, unknown>>({
                       } as React.CSSProperties
                     }
                     className={cn(
-                      "w-[3rem] overflow-hidden px-3 py-4 md:sticky md:left-[--left-position] md:z-[2]",
+                      "w-[3rem] overflow-hidden border-b border-gray-200 px-3 py-4 md:sticky md:left-[--left-position] md:z-[2]",
                       String(keyExtractor(item)) === selectedRowId
                         ? "bg-gray-100 group-hover:bg-gray-200"
                         : "bg-white group-hover:bg-gray-100",
@@ -447,7 +451,7 @@ export function Table<T extends Record<string, unknown>>({
                           } as React.CSSProperties)),
                       }}
                       className={cn(
-                        "text-[13px] text-gray-900 3xl:text-[14px]",
+                        "border-b border-gray-200 text-[13px] text-gray-900 3xl:text-[14px]",
                         size === "sm"
                           ? "px-3 py-1.5 3xl:px-3 3xl:py-2"
                           : size === "lg"

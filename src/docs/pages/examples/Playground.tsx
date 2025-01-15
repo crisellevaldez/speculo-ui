@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Table } from "../../../components/Table/Table";
-import { Container } from "../../../components/Container/Container";
+import { Sidebar } from "../../../components/Sidebar/Sidebar";
+import { Home, Users, Settings, FileText, Bell } from "lucide-react";
 
 interface TableData {
   name: string;
@@ -20,6 +21,43 @@ interface TableData {
 }
 
 const PlaygroundPage = () => {
+  const sidebarItems = [
+    {
+      icon: <Home className="h-4 w-4" />,
+      label: "Dashboard",
+      href: "#",
+    },
+    {
+      icon: <Users className="h-4 w-4" />,
+      label: "Users",
+      href: "#",
+    },
+    {
+      icon: <FileText className="h-4 w-4" />,
+      label: "Reports",
+      items: [
+        {
+          label: "Daily Report",
+          href: "#",
+        },
+        {
+          label: "Weekly Report",
+          href: "#",
+        },
+      ],
+    },
+    {
+      icon: <Bell className="h-4 w-4" />,
+      label: "Notifications",
+      href: "#",
+    },
+    {
+      icon: <Settings className="h-4 w-4" />,
+      label: "Settings",
+      href: "#",
+    },
+  ];
+
   type SortableKeys =
     | "name"
     | "email"
@@ -45,7 +83,7 @@ const PlaygroundPage = () => {
 
   // Sort data based on current sort state
   const sortedData = useMemo(() => {
-    const baseData = Array.from({ length: 50 }, (_, index) => ({
+    const baseData = Array.from({ length: 10 }, (_, index) => ({
       name: `User ${index + 1}`,
       email: `user${index + 1}@example.com`,
       phoneNumber: `+1234567890${index}`,
@@ -73,8 +111,9 @@ const PlaygroundPage = () => {
   }, [sortKey, sortDirection]);
 
   return (
-    <Container>
-      <div className="mb-4 space-y-8 font-sans">
+    <div className="flex h-screen">
+      <Sidebar items={sidebarItems} />
+      <div className="flex-1 overflow-hidden p-4">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="font-semibold">Table with Right Pinned Columns</h2>
@@ -88,7 +127,7 @@ const PlaygroundPage = () => {
               Clear Sort
             </button>
           </div>
-          <div className="h-[600px] overflow-auto">
+          <div className="h-[calc(100vh-8rem)] overflow-auto">
             <Table<TableData>
               columns={[
                 {
@@ -175,12 +214,13 @@ const PlaygroundPage = () => {
               data={sortedData}
               keyExtractor={(item) => item.email}
               sortable
+              selectable
               onSort={handleSort}
             />
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

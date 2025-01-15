@@ -42,8 +42,8 @@ const SidebarItem = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "group flex items-center rounded-md px-3 py-2 text-sm font-medium",
-        collapsed ? "justify-center" : "gap-2",
+        "group flex items-center rounded-md text-sm font-medium",
+        collapsed ? "justify-center px-2 py-2" : "gap-2 px-3 py-2",
         "hover:bg-accent hover:text-accent-foreground",
         disabled && "pointer-events-none opacity-50",
         depth > 0 && !collapsed && "ml-4",
@@ -60,7 +60,12 @@ const SidebarItem = React.forwardRef<
       }}
     >
       {icon && (
-        <span className={cn("flex h-4 w-4 items-center justify-center")}>
+        <span
+          className={cn(
+            "flex items-center justify-center",
+            collapsed ? "h-5 w-5" : "h-4 w-4",
+          )}
+        >
           {icon}
         </span>
       )}
@@ -148,8 +153,8 @@ export const Sidebar = React.forwardRef<HTMLDivElement, SidebarProps>(
       <div
         ref={ref}
         className={cn(
-          "flex h-full flex-col gap-4 border-r bg-background p-4 transition-all duration-300",
-          collapsed ? "w-16" : "w-64",
+          "flex h-full flex-col gap-4 border-r bg-background p-2 transition-all duration-300 md:p-3 lg:p-4",
+          collapsed ? "w-12 md:w-14 lg:w-16" : "w-64",
           className,
         )}
         {...props}
