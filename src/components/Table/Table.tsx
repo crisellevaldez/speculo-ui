@@ -368,8 +368,8 @@ export function Table<T extends Record<string, unknown>>({
           <tbody
             className={cn(
               "divide-y divide-gray-200",
-              (loading || (data.length === 0 && !loading)) &&
-                "pointer-events-none opacity-0",
+              loading && "pointer-events-none opacity-80",
+              data.length === 0 && !loading && "pointer-events-none opacity-0",
             )}
           >
             {data.map((item) => (

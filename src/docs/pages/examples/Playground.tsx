@@ -75,8 +75,10 @@ const PlaygroundPage = () => {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc" | null>(
     null,
   );
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSort = (key: string, direction: "asc" | "desc") => {
+    console.log("Table Sort:", { key, direction });
     setSortKey(key as SortableKeys);
     setSortDirection(direction);
   };
@@ -115,17 +117,25 @@ const PlaygroundPage = () => {
       <Sidebar items={sidebarItems} />
       <div className="flex-1 overflow-hidden p-4">
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-4">
             <h2 className="font-semibold">Table with Right Pinned Columns</h2>
-            <button
-              onClick={() => {
-                setSortKey(null);
-                setSortDirection(null);
-              }}
-              className="rounded bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-gray-200"
-            >
-              Clear Sort
-            </button>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsLoading(!isLoading)}
+                className="rounded bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-gray-200"
+              >
+                {isLoading ? "Stop Loading" : "Start Loading"}
+              </button>
+              <button
+                onClick={() => {
+                  setSortKey(null);
+                  setSortDirection(null);
+                }}
+                className="rounded bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-gray-200"
+              >
+                Clear Sort
+              </button>
+            </div>
           </div>
           <div className="h-[calc(100vh-8rem)] overflow-auto">
             <Table<TableData>
@@ -216,6 +226,7 @@ const PlaygroundPage = () => {
               sortable
               selectable
               onSort={handleSort}
+              loading={isLoading}
             />
           </div>
         </div>
