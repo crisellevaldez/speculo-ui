@@ -363,7 +363,7 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
                   "disabled:cursor-not-allowed disabled:opacity-50",
                   isSelected &&
                     "bg-primary text-primary-foreground hover:bg-primary/90",
-                  isHighlighted && !isSelected && "bg-accent text-black",
+                  isHighlighted && !isSelected && "bg-[#C68F42]/15 text-black",
                   isFocused && !isSelected && "ring-1 ring-ring",
                 )}
                 role="gridcell"
