@@ -210,7 +210,7 @@ export const DualDateRangePicker = React.forwardRef<
       if (!tempRange.to) return [tempRange.from];
 
       const dates: Date[] = [];
-      let current = new Date(tempRange.from);
+      const current = new Date(tempRange.from);
       while (current <= tempRange.to) {
         dates.push(new Date(current));
         current.setDate(current.getDate() + 1);
