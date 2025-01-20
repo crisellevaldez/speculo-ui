@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
-import { Calendar } from "../Calendar/Calendar";
+import { DualCalendar } from "./DualCalendar";
 import { Button } from "../Button/Button";
 
 export interface DateRange {
@@ -9,7 +9,7 @@ export interface DateRange {
   to: Date | null;
 }
 
-export interface DateRangePickerProps
+export interface DualDateRangePickerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
   value: DateRange;
   onChange: (range: DateRange) => void;
@@ -28,9 +28,9 @@ export interface DateRangePickerProps
   helperText?: string;
 }
 
-export const DateRangePicker = React.forwardRef<
+export const DualDateRangePicker = React.forwardRef<
   HTMLDivElement,
-  DateRangePickerProps
+  DualDateRangePickerProps
 >(
   (
     {
@@ -52,57 +52,126 @@ export const DateRangePicker = React.forwardRef<
     ref,
   ) => {
     const [isOpen, setIsOpen] = React.useState(false);
-    const [hoveredDate, setHoveredDate] = React.useState<Date | null>(null);
     const [tempRange, setTempRange] = React.useState<DateRange>(value);
+    const [isEditingEndDate, setIsEditingEndDate] = React.useState(false);
     const triggerRef = React.useRef<HTMLDivElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
+
+    // Get current month and next month dates
+    const today = new Date();
+    const [leftMonth, setLeftMonth] = React.useState(
+      new Date(today.getFullYear(), today.getMonth(), 1),
+    );
+    const [rightMonth, setRightMonth] = React.useState(
+      new Date(today.getFullYear(), today.getMonth() + 1, 1),
+    );
 
     React.useEffect(() => {
       setTempRange(value);
     }, [value]);
 
-    const handleStartDateSelect = (date: Date) => {
-      if (!tempRange.to) {
-        setTempRange({ from: date, to: null });
-      } else {
-        if (date > tempRange.to) {
-          setTempRange({ from: date, to: date });
+    const handleDateSelect = (date: Date) => {
+      if (isEditingEndDate) {
+        // When editing end date, only update the end date
+        if (date < tempRange.from!) {
+          setTempRange({ ...tempRange, to: tempRange.from, from: date });
         } else {
-          setTempRange({ ...tempRange, from: date });
+          setTempRange({ ...tempRange, to: date });
+        }
+      } else {
+        // Normal date selection flow
+        if (!tempRange.from) {
+          // When selecting start date
+          const selectedMonth = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            1,
+          );
+          const nextMonth = new Date(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            1,
+          );
+
+          setLeftMonth(selectedMonth);
+          setRightMonth(nextMonth);
+          setTempRange({ from: date, to: null });
+        } else if (!tempRange.to) {
+          // When selecting end date
+          if (date < tempRange.from) {
+            setTempRange({ from: date, to: tempRange.from });
+          } else {
+            setTempRange({ ...tempRange, to: date });
+          }
+        } else {
+          // Starting new selection
+          const selectedMonth = new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            1,
+          );
+          const nextMonth = new Date(
+            date.getFullYear(),
+            date.getMonth() + 1,
+            1,
+          );
+
+          setLeftMonth(selectedMonth);
+          setRightMonth(nextMonth);
+          setTempRange({ from: date, to: null });
         }
       }
     };
 
-    const handleEndDateSelect = (date: Date) => {
-      if (!tempRange.from) {
-        setTempRange({ from: date, to: date });
-      } else {
-        if (date < tempRange.from) {
-          setTempRange({ from: date, to: date });
-        } else {
-          setTempRange({ ...tempRange, to: date });
-        }
+    const handleStartClick = () => {
+      if (!disabled && !isLoading) {
+        setIsEditingEndDate(false);
+        setIsOpen(true);
+      }
+    };
+
+    const handleEndClick = () => {
+      if (!disabled && !isLoading && value.from) {
+        setIsEditingEndDate(true);
+        setTempRange(value);
+        // Set calendar months based on start date
+        const startMonth = new Date(
+          value.from.getFullYear(),
+          value.from.getMonth(),
+          1,
+        );
+        const nextMonth = new Date(
+          value.from.getFullYear(),
+          value.from.getMonth() + 1,
+          1,
+        );
+        setLeftMonth(startMonth);
+        setRightMonth(nextMonth);
+        setIsOpen(true);
+      } else if (!disabled && !isLoading) {
+        // If no start date, behave like normal
+        setIsEditingEndDate(false);
+        setIsOpen(true);
       }
     };
 
     const handleClear = () => {
       setTempRange({ from: null, to: null });
       onChange({ from: null, to: null });
+      setIsEditingEndDate(false);
     };
 
     const handleOk = () => {
-      onChange(tempRange);
+      if (tempRange.from && !tempRange.to) {
+        // If only start date is selected, use it as both start and end
+        const finalRange = { from: tempRange.from, to: tempRange.from };
+        onChange(finalRange);
+      } else {
+        onChange(tempRange);
+      }
       setIsOpen(false);
+      setIsEditingEndDate(false);
     };
-
-    const previewRange = React.useMemo(() => {
-      if (!tempRange.from || tempRange.to || !hoveredDate) return null;
-      const isBeforeStart = hoveredDate < tempRange.from;
-      return {
-        from: isBeforeStart ? hoveredDate : tempRange.from,
-        to: isBeforeStart ? tempRange.from : hoveredDate,
-      };
-    }, [tempRange.from, tempRange.to, hoveredDate]);
 
     React.useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
@@ -113,6 +182,7 @@ export const DateRangePicker = React.forwardRef<
         ) {
           setIsOpen(false);
           setTempRange(value);
+          setIsEditingEndDate(false);
         }
       };
 
@@ -135,6 +205,27 @@ export const DateRangePicker = React.forwardRef<
         "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1",
     );
 
+    const getHighlightedDates = () => {
+      if (!tempRange.from) return [];
+      if (!tempRange.to) return [tempRange.from];
+
+      const dates: Date[] = [];
+      let current = new Date(tempRange.from);
+      while (current <= tempRange.to) {
+        dates.push(new Date(current));
+        current.setDate(current.getDate() + 1);
+      }
+      return dates;
+    };
+
+    // Get the next month after the selected start date for right calendar navigation
+    const rightMinMonth = tempRange.from
+      ? new Date(tempRange.from.getFullYear(), tempRange.from.getMonth() + 1, 1)
+      : minDate;
+
+    // For date selection, use the actual start date as minDate
+    const rightMinDate = tempRange.from || minDate;
+
     return (
       <div
         ref={ref}
@@ -144,7 +235,7 @@ export const DateRangePicker = React.forwardRef<
         <div ref={triggerRef} className="flex gap-2">
           <button
             type="button"
-            onClick={() => !disabled && !isLoading && setIsOpen(true)}
+            onClick={handleStartClick}
             disabled={disabled || isLoading}
             className={cn(buttonStyles, "w-[120px] md:w-[150px]")}
           >
@@ -160,7 +251,7 @@ export const DateRangePicker = React.forwardRef<
           <span className="flex items-center text-sm text-gray-500">to</span>
           <button
             type="button"
-            onClick={() => !disabled && !isLoading && setIsOpen(true)}
+            onClick={handleEndClick}
             disabled={disabled || isLoading}
             className={cn(buttonStyles, "w-[120px] md:w-[150px]")}
           >
@@ -231,97 +322,30 @@ export const DateRangePicker = React.forwardRef<
           >
             <div className="flex flex-col gap-4 p-4">
               <div className="flex flex-col gap-4 md:flex-row">
-                <Calendar
+                <DualCalendar
                   value={tempRange.from || undefined}
-                  onChange={handleStartDateSelect}
+                  onChange={handleDateSelect}
                   minDate={minDate}
                   maxDate={maxDate}
                   disabled={disabled}
                   locale={locale}
                   weekStartsOn={weekStartsOn}
                   disabledDates={disabledDates}
-                  highlightedDates={[
-                    ...(tempRange.from && tempRange.to
-                      ? Array.from(
-                          {
-                            length:
-                              (tempRange.to.getTime() -
-                                tempRange.from.getTime()) /
-                                (1000 * 60 * 60 * 24) +
-                              1,
-                          },
-                          (_, i) =>
-                            new Date(
-                              tempRange.from!.getTime() +
-                                i * 1000 * 60 * 60 * 24,
-                            ),
-                        )
-                      : []),
-                    ...(previewRange
-                      ? Array.from(
-                          {
-                            length:
-                              (previewRange.to.getTime() -
-                                previewRange.from.getTime()) /
-                                (1000 * 60 * 60 * 24) +
-                              1,
-                          },
-                          (_, i) =>
-                            new Date(
-                              previewRange.from.getTime() +
-                                i * 1000 * 60 * 60 * 24,
-                            ),
-                        )
-                      : []),
-                  ]}
-                  onMouseEnter={(date) => setHoveredDate(date)}
-                  onMouseLeave={() => setHoveredDate(null)}
+                  highlightedDates={getHighlightedDates()}
+                  viewDate={leftMonth}
                 />
-                <Calendar
+                <DualCalendar
                   value={tempRange.to || undefined}
-                  onChange={handleEndDateSelect}
-                  minDate={minDate}
+                  onChange={handleDateSelect}
+                  minDate={rightMinDate}
                   maxDate={maxDate}
                   disabled={disabled}
                   locale={locale}
                   weekStartsOn={weekStartsOn}
                   disabledDates={disabledDates}
-                  highlightedDates={[
-                    ...(tempRange.from && tempRange.to
-                      ? Array.from(
-                          {
-                            length:
-                              (tempRange.to.getTime() -
-                                tempRange.from.getTime()) /
-                                (1000 * 60 * 60 * 24) +
-                              1,
-                          },
-                          (_, i) =>
-                            new Date(
-                              tempRange.from!.getTime() +
-                                i * 1000 * 60 * 60 * 24,
-                            ),
-                        )
-                      : []),
-                    ...(previewRange
-                      ? Array.from(
-                          {
-                            length:
-                              (previewRange.to.getTime() -
-                                previewRange.from.getTime()) /
-                                (1000 * 60 * 60 * 24) +
-                              1,
-                          },
-                          (_, i) =>
-                            new Date(
-                              previewRange.from.getTime() +
-                                i * 1000 * 60 * 60 * 24,
-                            ),
-                        )
-                      : []),
-                  ]}
-                  onMouseEnter={(date) => setHoveredDate(date)}
-                  onMouseLeave={() => setHoveredDate(null)}
+                  highlightedDates={getHighlightedDates()}
+                  viewDate={rightMonth}
+                  minViewDate={rightMinMonth}
                 />
               </div>
             </div>
@@ -338,4 +362,4 @@ export const DateRangePicker = React.forwardRef<
   },
 );
 
-DateRangePicker.displayName = "DateRangePicker";
+DualDateRangePicker.displayName = "DualDateRangePicker";

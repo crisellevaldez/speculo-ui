@@ -1,0 +1,95 @@
+---
+title: Alert
+description: A component for displaying important messages or feedback to users.
+---
+
+# Alert
+
+Alerts are used to communicate important messages to users, such as success notifications, warnings, or error messages.
+
+## Import
+
+```tsx
+import { Alert } from '@speculo/ui';
+```
+
+## Usage
+
+### Basic Alert
+
+```tsx
+<Alert>This is a default info alert.</Alert>
+```
+
+### Alert Variants
+
+```tsx
+<Alert variant="info">
+  This is an info alert with important information.
+</Alert>
+
+<Alert variant="warning">
+  This is a warning alert. Please proceed with caution.
+</Alert>
+
+<Alert variant="success">
+  Success! Your action has been completed.
+</Alert>
+
+<Alert variant="error">
+  Error! Something went wrong.
+</Alert>
+```
+
+### With Custom Content
+
+```tsx
+<Alert variant="info">
+  Invite users to your organization. Once added, they will be able to complete registration{' '}
+  <a href="/signup" className="font-medium underline">
+    here.
+  </a>
+</Alert>
+```
+
+## Props
+
+| Prop      | Type                                        | Default | Description                    |
+| --------- | ------------------------------------------- | ------- | ------------------------------ |
+| variant   | 'info' \| 'warning' \| 'success' \| 'error' | 'info'  | The style variant of the alert |
+| children  | ReactNode                                   | -       | The content of the alert       |
+| className | string                                      | -       | Additional CSS classes         |
+
+## Examples
+
+### Info Alert
+
+```tsx
+<Alert variant="info">
+  This feature is currently in beta. Please provide feedback.
+</Alert>
+```
+
+### Warning Alert
+
+```tsx
+<Alert variant="warning">
+  Your subscription will expire in 3 days.
+</Alert>
+```
+
+### Success Alert
+
+```tsx
+<Alert variant="success">
+  Your changes have been saved successfully.
+</Alert>
+```
+
+### Error Alert
+
+```tsx
+<Alert variant="error">
+  Failed to save changes. Please try again.
+</Alert>
+```

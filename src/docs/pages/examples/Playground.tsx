@@ -1,6 +1,12 @@
 import { useState, useMemo } from "react";
 import { Table } from "../../../components/Table/Table";
 import { Sidebar } from "../../../components/Sidebar/Sidebar";
+import { Alert } from "../../../components/Alert/Alert";
+import {
+  DateRangePicker,
+  DateRange,
+} from "../../../components/DateRangePicker/DateRangePicker";
+import { DualDateRangePicker } from "../../../components/DualDateRangePicker/DualDateRangePicker";
 import { Home, Users, Settings, FileText, Bell } from "lucide-react";
 
 interface TableData {
@@ -76,6 +82,15 @@ const PlaygroundPage = () => {
     null,
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: null,
+    to: null,
+  });
+
+  const [dualDateRange, setDualDateRange] = useState<DateRange>({
+    from: null,
+    to: null,
+  });
 
   const handleSort = (key: string, direction: "asc" | "desc") => {
     console.log("Table Sort:", { key, direction });
@@ -117,6 +132,41 @@ const PlaygroundPage = () => {
       <Sidebar items={sidebarItems} />
       <div className="flex-1 overflow-hidden p-4">
         <div className="space-y-4">
+          <div className="space-y-4">
+            <h2 className="font-semibold">Alert Examples</h2>
+            <Alert variant="info">
+              This is an info alert with a link example.{" "}
+              <a href="#" className="font-medium underline">
+                Learn more
+              </a>
+            </Alert>
+            <Alert variant="warning">
+              Your trial period will expire in 3 days. Please upgrade your
+              subscription.
+            </Alert>
+            <Alert variant="success">
+              Your changes have been saved successfully.
+            </Alert>
+            <Alert variant="error">
+              There was an error processing your request. Please try again.
+            </Alert>
+          </div>
+          <div className="mb-4 space-y-4">
+            <h2 className="font-semibold">Date Range Picker Example</h2>
+            <DateRangePicker
+              value={dateRange}
+              onChange={setDateRange}
+              placeholder={{ from: "Start date", to: "End date" }}
+            />
+          </div>
+          <div className="mb-4 space-y-4">
+            <h2 className="font-semibold">Dual Date Range Picker Example</h2>
+            <DualDateRangePicker
+              value={dualDateRange}
+              onChange={setDualDateRange}
+              placeholder={{ from: "Start date", to: "End date" }}
+            />
+          </div>
           <div className="flex items-center justify-between gap-4">
             <h2 className="font-semibold">Table with Right Pinned Columns</h2>
             <div className="flex items-center gap-4">
@@ -137,7 +187,7 @@ const PlaygroundPage = () => {
               </button>
             </div>
           </div>
-          <div className="h-[calc(100vh-8rem)] overflow-auto">
+          <div className="h-[400px] overflow-auto">
             <Table<TableData>
               columns={[
                 {

@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 
-export interface CalendarProps
+export interface DualCalendarProps
   extends Omit<
     React.HTMLAttributes<HTMLDivElement>,
     "onChange" | "onMouseEnter" | "onMouseLeave"
@@ -17,6 +17,8 @@ export interface CalendarProps
   highlightedDates?: Date[];
   onMouseEnter?: (date: Date) => void;
   onMouseLeave?: (date: Date) => void;
+  viewDate: Date;
+  minViewDate?: Date; // Minimum date for month navigation
 }
 
 const DAYS_IN_WEEK = 7;
@@ -38,16 +40,22 @@ const isSameDay = (date1: Date, date2: Date) => {
   );
 };
 
+const isSameMonth = (date1: Date, date2: Date) => {
+  return (
+    date1.getMonth() === date2.getMonth() &&
+    date1.getFullYear() === date2.getFullYear()
+  );
+};
+
 const isDateDisabled = (
   date: Date,
   {
     minDate,
     maxDate,
     disabledDates,
-  }: Pick<CalendarProps, "minDate" | "maxDate" | "disabledDates">,
+  }: Pick<DualCalendarProps, "minDate" | "maxDate" | "disabledDates">,
 ) => {
   if (minDate) {
-    // Compare dates at start of day in UTC to handle timezone differences
     const dateStartOfDay = new Date(
       Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0, 0),
     );
@@ -66,7 +74,6 @@ const isDateDisabled = (
   }
 
   if (maxDate) {
-    // Compare dates at end of day in UTC to handle timezone differences
     const dateEndOfDay = new Date(
       Date.UTC(
         date.getFullYear(),
@@ -96,11 +103,11 @@ const isDateDisabled = (
   return false;
 };
 
-export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
+export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
   (
     {
       className,
-      value = new Date(),
+      value,
       onChange,
       minDate,
       maxDate,
@@ -111,17 +118,23 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       highlightedDates = [],
       onMouseEnter,
       onMouseLeave,
+      viewDate,
+      minViewDate,
       ...props
     },
     ref,
   ) => {
-    const [viewDate, setViewDate] = React.useState(value);
     const [focusedDate, setFocusedDate] = React.useState<Date | null>(null);
+    const [currentViewDate, setCurrentViewDate] = React.useState(viewDate);
+
+    React.useEffect(() => {
+      setCurrentViewDate(viewDate);
+    }, [viewDate]);
 
     const monthYear = new Intl.DateTimeFormat(locale, {
       month: "long",
       year: "numeric",
-    }).format(viewDate);
+    }).format(currentViewDate);
 
     const weekDays = React.useMemo(() => {
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
@@ -139,8 +152,8 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
     }, [locale, weekStartsOn]);
 
     const getDaysToDisplay = React.useCallback(() => {
-      const year = viewDate.getFullYear();
-      const month = viewDate.getMonth();
+      const year = currentViewDate.getFullYear();
+      const month = currentViewDate.getMonth();
       const daysInMonth = getDaysInMonth(year, month);
       const firstDay = (getFirstDayOfMonth(year, month) - weekStartsOn + 7) % 7;
 
@@ -155,7 +168,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       }
 
       return days;
-    }, [viewDate, weekStartsOn]);
+    }, [currentViewDate, weekStartsOn]);
 
     const handleDateSelect = (date: Date) => {
       if (
@@ -203,21 +216,39 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
     };
 
     const handleMonthChange = (increment: number) => {
-      setViewDate(
-        (prev) => new Date(prev.getFullYear(), prev.getMonth() + increment, 1),
+      const newDate = new Date(
+        currentViewDate.getFullYear(),
+        currentViewDate.getMonth() + increment,
+        1,
       );
+
+      // Check if new month would be before minViewDate
+      if (minViewDate) {
+        const minMonth = new Date(
+          minViewDate.getFullYear(),
+          minViewDate.getMonth(),
+          1,
+        );
+        if (newDate < minMonth) return;
+      }
+
+      setCurrentViewDate(newDate);
     };
 
-    React.useEffect(() => {
-      if (focusedDate) {
-        const newMonth = focusedDate.getMonth();
-        const currentMonth = viewDate.getMonth();
-
-        if (newMonth !== currentMonth) {
-          setViewDate(focusedDate);
-        }
-      }
-    }, [focusedDate, viewDate]);
+    const isPrevMonthDisabled = React.useMemo(() => {
+      if (!minViewDate) return false;
+      const prevMonth = new Date(
+        currentViewDate.getFullYear(),
+        currentViewDate.getMonth() - 1,
+        1,
+      );
+      const minMonth = new Date(
+        minViewDate.getFullYear(),
+        minViewDate.getMonth(),
+        1,
+      );
+      return prevMonth < minMonth;
+    }, [currentViewDate, minViewDate]);
 
     return (
       <div
@@ -233,10 +264,12 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
           <button
             type="button"
             onClick={() => handleMonthChange(-1)}
-            disabled={disabled}
+            disabled={disabled || isPrevMonthDisabled}
             className={cn(
               "rounded-md p-2 hover:bg-accent",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+              (disabled || isPrevMonthDisabled) &&
+                "cursor-not-allowed opacity-50",
             )}
             aria-label="Previous month"
           >
@@ -347,4 +380,4 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
   },
 );
 
-Calendar.displayName = "Calendar";
+DualCalendar.displayName = "DualCalendar";
