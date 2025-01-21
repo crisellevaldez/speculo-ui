@@ -6,7 +6,8 @@ export interface DualCalendarProps
     React.HTMLAttributes<HTMLDivElement>,
     "onChange" | "onMouseEnter" | "onMouseLeave"
   > {
-  value?: Date;
+  value?: Date | null;
+  endValue?: Date | null;
   onChange?: (date: Date) => void;
   minDate?: Date;
   maxDate?: Date;
@@ -101,6 +102,7 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
     {
       className,
       value,
+      endValue,
       onChange,
       minDate,
       maxDate,
@@ -328,7 +330,8 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
               return <div key={i} role="gridcell" />;
             }
 
-            const isSelected = value && isSameDay(date, value);
+            const isStartDate = value && isSameDay(date, value);
+            const isEndDate = endValue && isSameDay(date, endValue);
             const isHighlighted = highlightedDates.some((d) =>
               isSameDay(date, d),
             );
@@ -354,13 +357,16 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   "hover:bg-[#C68F42]/25 hover:text-black",
                   "disabled:cursor-not-allowed disabled:opacity-50",
-                  isSelected &&
+                  isHighlighted &&
+                    !isStartDate &&
+                    !isEndDate &&
+                    "bg-[#C68F42]/15 text-black",
+                  (isStartDate || isEndDate) &&
                     "bg-primary text-primary-foreground hover:bg-primary/90",
-                  isHighlighted && !isSelected && "bg-[#C68F42]/15 text-black",
-                  isFocused && !isSelected && "ring-1 ring-ring",
+                  isFocused && !isStartDate && !isEndDate && "ring-1 ring-ring",
                 )}
                 role="gridcell"
-                aria-selected={isSelected}
+                aria-selected={!!(isStartDate || isEndDate)}
                 tabIndex={isFocused ? 0 : -1}
               >
                 {date.getDate()}

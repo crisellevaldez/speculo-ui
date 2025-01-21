@@ -294,15 +294,42 @@ export const DualDateRangePicker = React.forwardRef<
                   const openUpward =
                     spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
 
+                  const dropdownWidth = 650; // Approximate width of dual calendar
+                  const spaceRight = window.innerWidth - buttonRect.left;
+                  const wouldOverflowRight = spaceRight < dropdownWidth;
+
+                  let horizontalPosition = {};
+                  if (wouldOverflowRight) {
+                    // If would overflow right, align right edge with viewport
+                    horizontalPosition = {
+                      right: "1rem",
+                      left: "auto",
+                      transform: "none",
+                    };
+                  } else {
+                    horizontalPosition = {
+                      left: buttonRect.left + "px",
+                      transform: "translateX(0)",
+                      right: "auto",
+                    };
+                  }
+
                   return {
                     position: "fixed",
-                    left: buttonRect.left + "px",
+                    ...horizontalPosition,
                     ...(openUpward
                       ? {
                           bottom:
                             window.innerHeight - buttonRect.top + 8 + "px",
                         }
-                      : { top: buttonRect.bottom + 8 + "px" }),
+                      : {
+                          top: buttonRect.bottom + 8 + "px",
+                        }),
+                    maxWidth: "calc(100vw - 2rem)",
+                    // Ensure the dropdown stays within viewport bounds
+                    [`${openUpward ? "max-height" : "maxHeight"}`]: openUpward
+                      ? `${spaceAbove - 16}px`
+                      : `${spaceBelow - 16}px`,
                   };
                 }
 
@@ -318,12 +345,15 @@ export const DualDateRangePicker = React.forwardRef<
               "flex flex-col rounded-md bg-white shadow-lg",
               "animate-in fade-in-0 zoom-in-95 z-[9999] border border-gray-200",
               "max-h-[80vh] overflow-auto",
+              "lg:max-h-none lg:overflow-auto",
+              "scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400",
             )}
           >
-            <div className="flex flex-col gap-4 p-4">
-              <div className="flex flex-col gap-4 md:flex-row">
+            <div className="flex min-h-fit flex-col gap-4 p-4">
+              <div className="flex min-w-fit flex-col gap-4 md:flex-row">
                 <DualCalendar
-                  value={tempRange.from || undefined}
+                  value={tempRange.from}
+                  endValue={tempRange.to}
                   onChange={handleDateSelect}
                   minDate={minDate}
                   maxDate={maxDate}
@@ -335,7 +365,8 @@ export const DualDateRangePicker = React.forwardRef<
                   viewDate={leftMonth}
                 />
                 <DualCalendar
-                  value={tempRange.to || undefined}
+                  value={tempRange.from}
+                  endValue={tempRange.to}
                   onChange={handleDateSelect}
                   minDate={rightMinDate}
                   maxDate={maxDate}
