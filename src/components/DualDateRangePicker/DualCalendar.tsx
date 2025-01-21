@@ -134,16 +134,18 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
     const weekDays = React.useMemo(() => {
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const days = Array.from({ length: DAYS_IN_WEEK }, (_, i) => {
-        const day = new Date(2021, 0, i + 1);
+        // Start from Monday (January 3, 2022)
+        const day = new Date(2022, 0, 3 + i);
         return formatter.format(day);
       });
 
-      const reorderedDays = [
-        ...days.slice(weekStartsOn),
-        ...days.slice(0, weekStartsOn),
-      ];
+      // If weekStartsOn is 0 (Sunday), rotate the array to put Sunday first
+      if (weekStartsOn === 0) {
+        const sunday = days.pop()!;
+        days.unshift(sunday);
+      }
 
-      return reorderedDays;
+      return days;
     }, [locale, weekStartsOn]);
 
     const getDaysToDisplay = React.useCallback(() => {

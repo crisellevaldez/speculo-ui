@@ -126,7 +126,8 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
     const weekDays = React.useMemo(() => {
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const days = Array.from({ length: DAYS_IN_WEEK }, (_, i) => {
-        const day = new Date(2021, 0, i + 1);
+        // Use January 3, 2022 as reference (a Monday)
+        const day = new Date(2022, 0, 3 + i);
         return formatter.format(day);
       });
 
