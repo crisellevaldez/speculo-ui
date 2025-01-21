@@ -3,6 +3,7 @@ import { cn } from "../../utils/cn";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
 import { DualCalendar } from "./DualCalendar";
 import { Button } from "../Button/Button";
+import { useFloatingPosition } from "./useFloatingPosition";
 
 export interface DateRange {
   from: Date | null;
@@ -65,6 +66,20 @@ export const DualDateRangePicker = React.forwardRef<
     const [rightMonth, setRightMonth] = React.useState(
       new Date(today.getFullYear(), today.getMonth() + 1, 1),
     );
+
+    // Configuration for floating position
+    const positionConfig = React.useMemo(
+      () => ({
+        dropdownHeight: 360,
+        dropdownWidth: 650,
+        mobileBreakpoint: 1024,
+        padding: 8,
+      }),
+      [],
+    );
+
+    // Use the floating position hook
+    useFloatingPosition(triggerRef, dropdownRef, isOpen, positionConfig);
 
     React.useEffect(() => {
       setTempRange(value);
@@ -173,6 +188,7 @@ export const DualDateRangePicker = React.forwardRef<
       setIsEditingEndDate(false);
     };
 
+    // Handle click outside
     React.useEffect(() => {
       const handleClickOutside = (e: MouseEvent) => {
         if (
@@ -282,64 +298,8 @@ export const DualDateRangePicker = React.forwardRef<
           <div
             ref={dropdownRef}
             style={{
-              ...(() => {
-                if (!triggerRef.current) return {};
-                const buttonRect = triggerRef.current.getBoundingClientRect();
-                const isLargeScreen = window.innerWidth >= 1024;
-
-                if (isLargeScreen) {
-                  const dropdownHeight = 360;
-                  const spaceBelow = window.innerHeight - buttonRect.bottom;
-                  const spaceAbove = buttonRect.top;
-                  const openUpward =
-                    spaceBelow < dropdownHeight && spaceAbove > spaceBelow;
-
-                  const dropdownWidth = 650; // Approximate width of dual calendar
-                  const spaceRight = window.innerWidth - buttonRect.left;
-                  const wouldOverflowRight = spaceRight < dropdownWidth;
-
-                  let horizontalPosition = {};
-                  if (wouldOverflowRight) {
-                    // If would overflow right, align right edge with viewport
-                    horizontalPosition = {
-                      right: "1rem",
-                      left: "auto",
-                      transform: "none",
-                    };
-                  } else {
-                    horizontalPosition = {
-                      left: buttonRect.left + "px",
-                      transform: "translateX(0)",
-                      right: "auto",
-                    };
-                  }
-
-                  return {
-                    position: "fixed",
-                    ...horizontalPosition,
-                    ...(openUpward
-                      ? {
-                          bottom:
-                            window.innerHeight - buttonRect.top + 8 + "px",
-                        }
-                      : {
-                          top: buttonRect.bottom + 8 + "px",
-                        }),
-                    maxWidth: "calc(100vw - 2rem)",
-                    // Ensure the dropdown stays within viewport bounds
-                    [`${openUpward ? "max-height" : "maxHeight"}`]: openUpward
-                      ? `${spaceAbove - 16}px`
-                      : `${spaceBelow - 16}px`,
-                  };
-                }
-
-                return {
-                  position: "fixed",
-                  left: "50%",
-                  top: "50%",
-                  transform: "translate(-50%, -50%)",
-                };
-              })(),
+              position: "fixed",
+              maxWidth: "calc(100vw - 2rem)",
             }}
             className={cn(
               "flex flex-col rounded-md bg-white shadow-lg",

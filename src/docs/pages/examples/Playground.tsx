@@ -130,7 +130,7 @@ const PlaygroundPage = () => {
   return (
     <div className="flex h-screen">
       <Sidebar items={sidebarItems} />
-      <div className="flex-1 overflow-hidden p-4">
+      <div className="flex-1 p-4">
         <div className="space-y-4">
           <div className="space-y-4">
             <h2 className="font-semibold">Alert Examples</h2>
@@ -187,6 +187,99 @@ const PlaygroundPage = () => {
               </button>
             </div>
           </div>
+          <div className="h-[400px] overflow-auto">
+            <Table<TableData>
+              columns={[
+                {
+                  key: "name",
+                  header: "Name",
+                  width: "250px",
+                  isPinned: true,
+                  pinPosition: "left",
+                  sortable: true,
+                },
+                {
+                  key: "email",
+                  header: "Email",
+                  width: "400px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "department",
+                  header: "Department",
+                  width: "300px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "role",
+                  header: "Role",
+                  width: "250px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "phoneNumber",
+                  header: "Phone",
+                  width: "250px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "source",
+                  header: "Source",
+                  width: "250px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "recentOutcome",
+                  header: "Outcome",
+                  width: "250px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "opt_in",
+                  header: "Opt-in",
+                  width: "200px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "opt_in_date",
+                  header: "Opt-in Date",
+                  width: "300px",
+                  resizable: true,
+                  sortable: true,
+                },
+                {
+                  key: "status",
+                  header: "Status",
+                  width: "200px",
+                  isPinned: true,
+                  pinPosition: "right",
+                  sortable: true,
+                },
+                {
+                  key: "lastCallAnswered",
+                  header: "Last Activity",
+                  width: "250px",
+                  isPinned: true,
+                  pinPosition: "right",
+                  sortable: true,
+                },
+              ]}
+              data={sortedData}
+              keyExtractor={(item) => item.email}
+              sortable
+              selectable
+              onSort={handleSort}
+              loading={isLoading}
+            />
+          </div>
+
           <div className="h-[400px] overflow-auto">
             <Table<TableData>
               columns={[
