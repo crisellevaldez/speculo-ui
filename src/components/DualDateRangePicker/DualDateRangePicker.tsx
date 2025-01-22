@@ -1,6 +1,11 @@
 import React from "react";
 import { cn } from "../../utils/cn";
-import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
+import {
+  Calendar as CalendarIcon,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { DualCalendar } from "./DualCalendar";
 import { Button } from "../Button/Button";
 import { useFloatingPosition } from "./useFloatingPosition";
@@ -256,37 +261,55 @@ export const DualDateRangePicker = React.forwardRef<
         className={cn("relative inline-block", className)}
         {...props}
       >
-        <div ref={triggerRef} className="flex gap-2">
+        <div
+          ref={triggerRef}
+          className="inline-flex rounded-md border border-gray-300 bg-white shadow-sm"
+        >
           <button
             type="button"
             onClick={handleStartClick}
             disabled={disabled || isLoading}
-            className={cn(buttonStyles, "w-[120px] md:w-[150px]")}
-          >
-            <span className="text-gray-900">
-              {formatDate(value.from) || placeholder.from}
-            </span>
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-            ) : (
-              <CalendarIcon className="h-4 w-4 text-gray-500" />
+            className={cn(
+              "flex h-10 items-center px-3 py-1.5",
+              "text-sm ring-offset-background placeholder:text-gray-500",
+              "focus:outline-none focus:ring-0",
+              "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
+              error && "focus:ring-red-500",
+              "w-[120px] rounded-l-md",
+              isOpen && !isEditingEndDate && "font-semibold",
             )}
+          >
+            <div className="flex items-center gap-4">
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
+              ) : (
+                <CalendarIcon className="h-4 w-4 text-gray-500" />
+              )}
+              <span className="text-gray-900">
+                {formatDate(value.from) || placeholder.from}
+              </span>
+            </div>
           </button>
-          <span className="flex items-center text-sm text-gray-500">to</span>
+          <div className="flex h-10 items-center">
+            <span className="select-none px-1 text-sm text-gray-500">-</span>
+          </div>
           <button
             type="button"
             onClick={handleEndClick}
             disabled={disabled || isLoading}
-            className={cn(buttonStyles, "w-[120px] md:w-[150px]")}
+            className={cn(
+              "flex h-10 items-center px-3 py-1.5",
+              "text-sm ring-offset-background placeholder:text-gray-500",
+              "focus:outline-none focus:ring-0",
+              "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
+              error && "focus:ring-red-500",
+              "w-[100px] rounded-r-md",
+              isOpen && isEditingEndDate && "font-semibold",
+            )}
           >
             <span className="text-gray-900">
               {formatDate(value.to) || placeholder.to}
             </span>
-            {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin text-gray-500" />
-            ) : (
-              <CalendarIcon className="h-4 w-4 text-gray-500" />
-            )}
           </button>
         </div>
 
@@ -312,47 +335,121 @@ export const DualDateRangePicker = React.forwardRef<
             className={cn(
               "flex flex-col rounded-md bg-white shadow-lg",
               "animate-in fade-in-0 zoom-in-95 z-[9999] border border-gray-200",
-              "max-h-[80vh] overflow-auto",
-              "lg:max-h-none lg:overflow-auto",
+              "max-h-[80vh] w-auto min-w-[300px] overflow-auto",
+              "lg:max-h-none lg:min-w-[720px] lg:overflow-auto",
               "scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400",
             )}
           >
-            <div className="flex min-h-fit flex-col gap-4 p-4">
-              <div className="flex min-w-fit flex-col gap-4 md:flex-row">
-                <DualCalendar
-                  value={tempRange.from}
-                  endValue={tempRange.to}
-                  onChange={handleDateSelect}
-                  minDate={minDate}
-                  maxDate={maxDate}
-                  disabled={disabled}
-                  locale={locale}
-                  weekStartsOn={weekStartsOn}
-                  disabledDates={disabledDates}
-                  highlightedDates={getHighlightedDates()}
-                  viewDate={leftMonth}
-                />
-                <DualCalendar
-                  value={tempRange.from}
-                  endValue={tempRange.to}
-                  onChange={handleDateSelect}
-                  minDate={rightMinDate}
-                  maxDate={maxDate}
-                  disabled={disabled}
-                  locale={locale}
-                  weekStartsOn={weekStartsOn}
-                  disabledDates={disabledDates}
-                  highlightedDates={getHighlightedDates()}
-                  viewDate={rightMonth}
-                  minViewDate={rightMinMonth}
-                />
+            <div className="flex min-h-fit flex-col gap-4 p-2 pt-5 lg:p-4">
+              <div className="flex flex-col lg:flex-row">
+                <div className="flex">
+                  <button
+                    className={cn(
+                      "mt-[18px] h-fit rounded-md p-2 hover:bg-accent",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      disabled && "cursor-not-allowed opacity-50",
+                    )}
+                    type="button"
+                    onClick={() => {
+                      const newLeftMonth = new Date(
+                        leftMonth.getFullYear(),
+                        leftMonth.getMonth() - 1,
+                        1,
+                      );
+                      const newRightMonth = new Date(
+                        rightMonth.getFullYear(),
+                        rightMonth.getMonth() - 1,
+                        1,
+                      );
+                      setLeftMonth(newLeftMonth);
+                      setRightMonth(newRightMonth);
+                    }}
+                    disabled={
+                      disabled ||
+                      (minDate &&
+                        leftMonth <=
+                          new Date(
+                            minDate.getFullYear(),
+                            minDate.getMonth(),
+                            1,
+                          ))
+                    }
+                    aria-label="Previous months"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  <div className="flex flex-1 gap-4">
+                    <DualCalendar
+                      value={tempRange.from}
+                      endValue={tempRange.to}
+                      onChange={handleDateSelect}
+                      minDate={minDate}
+                      maxDate={maxDate}
+                      disabled={disabled}
+                      locale={locale}
+                      weekStartsOn={weekStartsOn}
+                      disabledDates={disabledDates}
+                      highlightedDates={getHighlightedDates()}
+                      viewDate={leftMonth}
+                    />
+                    <DualCalendar
+                      value={tempRange.from}
+                      endValue={tempRange.to}
+                      onChange={handleDateSelect}
+                      minDate={rightMinDate}
+                      maxDate={maxDate}
+                      disabled={disabled}
+                      locale={locale}
+                      weekStartsOn={weekStartsOn}
+                      disabledDates={disabledDates}
+                      highlightedDates={getHighlightedDates()}
+                      viewDate={rightMonth}
+                      className="hidden lg:block"
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newLeftMonth = new Date(
+                        leftMonth.getFullYear(),
+                        leftMonth.getMonth() + 1,
+                        1,
+                      );
+                      const newRightMonth = new Date(
+                        rightMonth.getFullYear(),
+                        rightMonth.getMonth() + 1,
+                        1,
+                      );
+                      setLeftMonth(newLeftMonth);
+                      setRightMonth(newRightMonth);
+                    }}
+                    disabled={
+                      disabled ||
+                      (maxDate &&
+                        rightMonth >=
+                          new Date(
+                            maxDate.getFullYear(),
+                            maxDate.getMonth(),
+                            1,
+                          ))
+                    }
+                    className={cn(
+                      "mt-[18px] h-fit rounded-md p-2 hover:bg-accent",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                      disabled && "cursor-not-allowed opacity-50",
+                    )}
+                    aria-label="Next months"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="sticky bottom-0 right-0 flex w-full justify-end gap-2 border-t bg-white p-2">
-              <Button variant="outline" onClick={handleClear}>
-                Clear
-              </Button>
-              <Button onClick={handleOk}>OK</Button>
+              <div className="sticky bottom-0 right-0 flex w-full justify-end gap-2 border-t bg-white p-2">
+                <Button variant="outline" onClick={handleClear}>
+                  Clear
+                </Button>
+                <Button onClick={handleOk}>OK</Button>
+              </div>
             </div>
           </div>
         )}

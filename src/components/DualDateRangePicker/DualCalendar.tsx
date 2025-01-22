@@ -6,6 +6,7 @@ export interface DualCalendarProps
     React.HTMLAttributes<HTMLDivElement>,
     "onChange" | "onMouseEnter" | "onMouseLeave"
   > {
+  hideNavigation?: boolean;
   value?: Date | null;
   endValue?: Date | null;
   onChange?: (date: Date) => void;
@@ -115,6 +116,7 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
       onMouseLeave,
       viewDate,
       minViewDate,
+      hideNavigation,
       ...props
     },
     ref,
@@ -251,72 +253,18 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
       <div
         ref={ref}
         className={cn(
-          "w-[230px] p-4 lg:w-[300px]",
+          "w-[260px] p-2 lg:w-[300px] lg:p-4",
           disabled && "cursor-not-allowed opacity-50",
           className,
         )}
         {...props}
       >
-        <div className="mb-4 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => handleMonthChange(-1)}
-            disabled={disabled || isPrevMonthDisabled}
-            className={cn(
-              "rounded-md p-2 hover:bg-accent",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-              (disabled || isPrevMonthDisabled) &&
-                "cursor-not-allowed opacity-50",
-            )}
-            aria-label="Previous month"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4"
-            >
-              <path d="m15 18-6-6 6-6" />
-            </svg>
-          </button>
-
-          <div className="font-medium">{monthYear}</div>
-
-          <button
-            type="button"
-            onClick={() => handleMonthChange(1)}
-            disabled={disabled}
-            className={cn(
-              "rounded-md p-2 hover:bg-accent",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-            )}
-            aria-label="Next month"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="h-4 w-4"
-            >
-              <path d="m9 18 6-6-6-6" />
-            </svg>
-          </button>
+        <div className="mb-2 flex items-center justify-center text-sm font-medium lg:mb-4 lg:text-base">
+          {monthYear}
         </div>
 
         <div
-          className="mb-2 grid grid-cols-7 gap-1 text-center text-sm"
+          className="mb-1 grid grid-cols-7 gap-1 text-center text-xs lg:mb-2 lg:text-sm"
           role="row"
         >
           {weekDays.map((day, i) => (
@@ -355,7 +303,7 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
                 onMouseLeave={() => onMouseLeave?.(date)}
                 disabled={disabled || isDisabled}
                 className={cn(
-                  "aspect-square rounded-md p-1 text-xs",
+                  "aspect-square rounded-md p-0.5 text-xs lg:p-1",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
                   "hover:bg-[#C68F42]/25 hover:text-black",
                   "disabled:cursor-not-allowed disabled:opacity-50",

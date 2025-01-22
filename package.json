@@ -1,7 +1,7 @@
 {
   "name": "@crisellevaldez/speculo-ui",
   "private": false,
-  "version": "0.7.3",
+  "version": "0.7.5",
   "type": "module",
   "main": "./dist/speculo-ui.cjs",
   "module": "./dist/speculo-ui.mjs",
