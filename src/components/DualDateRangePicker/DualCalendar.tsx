@@ -214,41 +214,6 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
       }
     };
 
-    const handleMonthChange = (increment: number) => {
-      const newDate = new Date(
-        currentViewDate.getFullYear(),
-        currentViewDate.getMonth() + increment,
-        1,
-      );
-
-      // Check if new month would be before minViewDate
-      if (minViewDate) {
-        const minMonth = new Date(
-          minViewDate.getFullYear(),
-          minViewDate.getMonth(),
-          1,
-        );
-        if (newDate < minMonth) return;
-      }
-
-      setCurrentViewDate(newDate);
-    };
-
-    const isPrevMonthDisabled = React.useMemo(() => {
-      if (!minViewDate) return false;
-      const prevMonth = new Date(
-        currentViewDate.getFullYear(),
-        currentViewDate.getMonth() - 1,
-        1,
-      );
-      const minMonth = new Date(
-        minViewDate.getFullYear(),
-        minViewDate.getMonth(),
-        1,
-      );
-      return prevMonth < minMonth;
-    }, [currentViewDate, minViewDate]);
-
     return (
       <div
         ref={ref}

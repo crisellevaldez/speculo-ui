@@ -225,15 +225,6 @@ export const DualDateRangePicker = React.forwardRef<
       return new Intl.DateTimeFormat(locale).format(date);
     };
 
-    const buttonStyles = cn(
-      "shadow-sm flex h-10 items-center justify-between rounded-md border border-gray-300 bg-white px-3 py-1.5",
-      "text-sm ring-offset-background placeholder:text-gray-500",
-      "focus:outline-none focus:ring-1 focus:ring-gray-400",
-      "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
-      error &&
-        "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1",
-    );
-
     const getHighlightedDates = () => {
       if (!tempRange.from) return [];
       if (!tempRange.to) return [tempRange.from];
@@ -246,11 +237,6 @@ export const DualDateRangePicker = React.forwardRef<
       }
       return dates;
     };
-
-    // Get the next month after the selected start date for right calendar navigation
-    const rightMinMonth = tempRange.from
-      ? new Date(tempRange.from.getFullYear(), tempRange.from.getMonth() + 1, 1)
-      : minDate;
 
     // For date selection, use the actual start date as minDate
     const rightMinDate = tempRange.from || minDate;
