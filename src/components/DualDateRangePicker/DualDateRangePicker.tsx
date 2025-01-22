@@ -58,14 +58,22 @@ export const DualDateRangePicker = React.forwardRef<
     const triggerRef = React.useRef<HTMLDivElement>(null);
     const dropdownRef = React.useRef<HTMLDivElement>(null);
 
-    // Get current month and next month dates
-    const today = new Date();
-    const [leftMonth, setLeftMonth] = React.useState(
-      new Date(today.getFullYear(), today.getMonth(), 1),
-    );
-    const [rightMonth, setRightMonth] = React.useState(
-      new Date(today.getFullYear(), today.getMonth() + 1, 1),
-    );
+    // Initialize months based on selected date or current date
+    const [leftMonth, setLeftMonth] = React.useState(() => {
+      if (value.from) {
+        return new Date(value.from.getFullYear(), value.from.getMonth(), 1);
+      }
+      const today = new Date();
+      return new Date(today.getFullYear(), today.getMonth(), 1);
+    });
+
+    const [rightMonth, setRightMonth] = React.useState(() => {
+      if (value.from) {
+        return new Date(value.from.getFullYear(), value.from.getMonth() + 1, 1);
+      }
+      const today = new Date();
+      return new Date(today.getFullYear(), today.getMonth() + 1, 1);
+    });
 
     // Configuration for floating position
     const positionConfig = React.useMemo(
