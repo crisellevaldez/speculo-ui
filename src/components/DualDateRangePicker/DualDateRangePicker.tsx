@@ -390,7 +390,7 @@ export const DualDateRangePicker = React.forwardRef<
                       disabledDates={disabledDates}
                       highlightedDates={getHighlightedDates()}
                       viewDate={rightMonth}
-                      className="hidden lg:block"
+                      className="hidden md:block"
                     />
                   </div>
                   <button
