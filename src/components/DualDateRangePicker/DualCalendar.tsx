@@ -6,7 +6,6 @@ export interface DualCalendarProps
     React.HTMLAttributes<HTMLDivElement>,
     "onChange" | "onMouseEnter" | "onMouseLeave"
   > {
-  hideNavigation?: boolean;
   value?: Date | null;
   endValue?: Date | null;
   onChange?: (date: Date) => void;
@@ -20,7 +19,6 @@ export interface DualCalendarProps
   onMouseEnter?: (date: Date) => void;
   onMouseLeave?: (date: Date) => void;
   viewDate: Date;
-  minViewDate?: Date; // Minimum date for month navigation
 }
 
 const DAYS_IN_WEEK = 7;
@@ -115,8 +113,6 @@ export const DualCalendar = React.forwardRef<HTMLDivElement, DualCalendarProps>(
       onMouseEnter,
       onMouseLeave,
       viewDate,
-      minViewDate,
-      hideNavigation,
       ...props
     },
     ref,
