@@ -88,8 +88,8 @@ const PlaygroundPage = () => {
   });
 
   const [dualDateRange, setDualDateRange] = useState<DateRange>({
-    from: new Date(2024, 11, 22), // December 22, 2024
-    to: new Date(2025, 0, 4), // January 4, 2025
+    from: null,
+    to: null,
   });
 
   const handleSort = (key: string, direction: "asc" | "desc") => {

@@ -261,7 +261,7 @@ export const DualDateRangePicker = React.forwardRef<
               "focus:outline-none focus:ring-0",
               "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
               error && "focus:ring-red-500",
-              "w-[120px] rounded-l-md",
+              "w-[130px] rounded-l-md",
               isOpen && !isEditingEndDate && "font-semibold",
             )}
           >
@@ -271,7 +271,7 @@ export const DualDateRangePicker = React.forwardRef<
               ) : (
                 <CalendarIcon className="h-4 w-4 text-gray-500" />
               )}
-              <span className="text-gray-900">
+              <span className="text-sm text-gray-900">
                 {formatDate(value.from) || placeholder.from}
               </span>
             </div>
@@ -289,11 +289,11 @@ export const DualDateRangePicker = React.forwardRef<
               "focus:outline-none focus:ring-0",
               "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
               error && "focus:ring-red-500",
-              "w-[100px] rounded-r-md",
+              "w-[120px] rounded-r-md",
               isOpen && isEditingEndDate && "font-semibold",
             )}
           >
-            <span className="text-gray-900">
+            <span className="text-sm text-gray-900">
               {formatDate(value.to) || placeholder.to}
             </span>
           </button>
