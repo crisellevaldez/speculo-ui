@@ -13,7 +13,6 @@ export interface DatePickerProps
   disabled?: boolean;
   isLoading?: boolean;
   locale?: string;
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   disabledDates?: Date[];
   placeholder?: string;
   error?: string;
@@ -31,7 +30,6 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
       disabled = false,
       isLoading = false,
       locale = "en-US",
-      weekStartsOn = 0,
       disabledDates = [],
       placeholder = "Select date",
       error,
@@ -194,7 +192,6 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               maxDate={maxDate}
               disabled={disabled}
               locale={locale}
-              weekStartsOn={0}
               disabledDates={disabledDates}
             />
             <div className="mt-2 flex justify-end gap-2 border-t pt-2">

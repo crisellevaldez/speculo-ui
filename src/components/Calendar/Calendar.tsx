@@ -12,7 +12,6 @@ export interface CalendarProps
   maxDate?: Date;
   disabled?: boolean;
   locale?: string;
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   disabledDates?: Date[];
   highlightedDates?: Date[];
   onMouseEnter?: (date: Date) => void;
@@ -106,7 +105,6 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       maxDate,
       disabled = false,
       locale = "en-US",
-      weekStartsOn = 0,
       disabledDates = [],
       highlightedDates = [],
       onMouseEnter,
