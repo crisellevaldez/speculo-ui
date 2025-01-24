@@ -18,7 +18,6 @@ export interface DateRangePickerProps
   disabled?: boolean;
   isLoading?: boolean;
   locale?: string;
-  weekStartsOn?: 0 | 1 | 2 | 3 | 4 | 5 | 6;
   disabledDates?: Date[];
   placeholder?: {
     from: string;
@@ -42,7 +41,6 @@ export const DateRangePicker = React.forwardRef<
       disabled = false,
       isLoading = false,
       locale = "en-US",
-      weekStartsOn = 0,
       disabledDates = [],
       placeholder = { from: "Start date", to: "End date" },
       error,
@@ -238,7 +236,6 @@ export const DateRangePicker = React.forwardRef<
                   maxDate={maxDate}
                   disabled={disabled}
                   locale={locale}
-                  weekStartsOn={weekStartsOn}
                   disabledDates={disabledDates}
                   highlightedDates={[
                     ...(tempRange.from && tempRange.to
@@ -284,7 +281,6 @@ export const DateRangePicker = React.forwardRef<
                   maxDate={maxDate}
                   disabled={disabled}
                   locale={locale}
-                  weekStartsOn={weekStartsOn}
                   disabledDates={disabledDates}
                   highlightedDates={[
                     ...(tempRange.from && tempRange.to

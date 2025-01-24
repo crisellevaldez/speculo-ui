@@ -178,7 +178,6 @@ const PlaygroundPage = () => {
                 onChange={setSelectedDate}
                 placeholder="Select date"
                 locale="en-US"
-                weekStartsOn={0}
               />
               <div className="text-sm text-gray-600">
                 Selected: {selectedDate?.toLocaleDateString()}
