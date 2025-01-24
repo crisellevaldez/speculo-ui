@@ -126,24 +126,19 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
     const weekDays = React.useMemo(() => {
       const formatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
       const days = Array.from({ length: DAYS_IN_WEEK }, (_, i) => {
-        // Use January 3, 2022 as reference (a Monday)
-        const day = new Date(2022, 0, 3 + i);
+        // Start from Sunday (January 2, 2022)
+        const day = new Date(2022, 0, 2 + i);
         return formatter.format(day);
       });
 
-      const reorderedDays = [
-        ...days.slice(weekStartsOn),
-        ...days.slice(0, weekStartsOn),
-      ];
-
-      return reorderedDays;
-    }, [locale, weekStartsOn]);
+      return days;
+    }, [locale]);
 
     const getDaysToDisplay = React.useCallback(() => {
       const year = viewDate.getFullYear();
       const month = viewDate.getMonth();
       const daysInMonth = getDaysInMonth(year, month);
-      const firstDay = (getFirstDayOfMonth(year, month) - weekStartsOn + 7) % 7;
+      const firstDay = getFirstDayOfMonth(year, month);
 
       const days: (Date | null)[] = Array(firstDay).fill(null);
 
@@ -156,7 +151,7 @@ export const Calendar = React.forwardRef<HTMLDivElement, CalendarProps>(
       }
 
       return days;
-    }, [viewDate, weekStartsOn]);
+    }, [viewDate]);
 
     const handleDateSelect = (date: Date) => {
       if (
