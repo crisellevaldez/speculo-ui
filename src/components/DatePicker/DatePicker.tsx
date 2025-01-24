@@ -1,7 +1,7 @@
 import React from "react";
 import { cn } from "../../utils/cn";
 import { Calendar as CalendarIcon, Loader2 } from "lucide-react";
-import { Calendar } from "../Calendar/Calendar";
+import { DualCalendar } from "../DualDateRangePicker/DualCalendar";
 import { Button } from "../Button/Button";
 
 export interface DatePickerProps
@@ -131,6 +131,15 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
         "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1",
     );
 
+    // Get the current view date based on selected date or current date
+    const viewDate = React.useMemo(() => {
+      if (value) {
+        return new Date(value.getFullYear(), value.getMonth(), 1);
+      }
+      const today = new Date();
+      return new Date(today.getFullYear(), today.getMonth(), 1);
+    }, [value]);
+
     return (
       <div ref={ref} className={cn("relative w-full", className)} {...props}>
         <button
@@ -187,8 +196,8 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               "animate-in fade-in-0 zoom-in-95 z-[9999] border border-gray-200",
             )}
           >
-            <Calendar
-              value={tempDate || undefined}
+            <DualCalendar
+              value={tempDate}
               onChange={handleDateSelect}
               minDate={minDate}
               maxDate={maxDate}
@@ -196,6 +205,7 @@ export const DatePicker = React.forwardRef<HTMLDivElement, DatePickerProps>(
               locale={locale}
               weekStartsOn={weekStartsOn}
               disabledDates={disabledDates}
+              viewDate={viewDate}
             />
             <div className="mt-2 flex justify-end gap-2 border-t pt-2">
               <Button variant="outline" size="sm" onClick={handleClear}>

@@ -7,6 +7,7 @@ import {
   DateRange,
 } from "../../../components/DateRangePicker/DateRangePicker";
 import { DualDateRangePicker } from "../../../components/DualDateRangePicker/DualDateRangePicker";
+import { DatePicker } from "../../../components/DatePicker/DatePicker";
 import { Home, Users, Settings, FileText, Bell } from "lucide-react";
 
 interface TableData {
@@ -92,6 +93,8 @@ const PlaygroundPage = () => {
     to: null,
   });
 
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
   const handleSort = (key: string, direction: "asc" | "desc") => {
     console.log("Table Sort:", { key, direction });
     setSortKey(key as SortableKeys);
@@ -166,6 +169,21 @@ const PlaygroundPage = () => {
               onChange={setDualDateRange}
               placeholder={{ from: "Start date", to: "End date" }}
             />
+          </div>
+          <div className="mb-4 space-y-4">
+            <h2 className="font-semibold">Date Picker Example</h2>
+            <div className="flex items-center gap-4">
+              <DatePicker
+                value={selectedDate}
+                onChange={setSelectedDate}
+                placeholder="Select date"
+                locale="en-US"
+                weekStartsOn={0}
+              />
+              <div className="text-sm text-gray-600">
+                Selected: {selectedDate?.toLocaleDateString()}
+              </div>
+            </div>
           </div>
           <div className="flex items-center justify-between gap-4">
             <h2 className="font-semibold">Table with Right Pinned Columns</h2>
