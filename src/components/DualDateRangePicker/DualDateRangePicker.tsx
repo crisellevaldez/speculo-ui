@@ -16,7 +16,10 @@ export interface DateRange {
 }
 
 export interface DualDateRangePickerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, "onChange"> {
+  extends Omit<
+    React.HTMLAttributes<HTMLDivElement>,
+    "onChange" | "showPresets"
+  > {
   value: DateRange;
   onChange: (range: DateRange) => void;
   minDate?: Date;
