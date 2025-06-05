@@ -32,6 +32,7 @@ export interface DualDateRangePickerProps
   };
   error?: string;
   helperText?: string;
+  showPresets?: boolean;
 }
 
 export const DualDateRangePicker = React.forwardRef<
@@ -53,6 +54,7 @@ export const DualDateRangePicker = React.forwardRef<
       placeholder = { from: "Start date", to: "End date" },
       error,
       helperText,
+      showPresets = true,
       ...props
     },
     ref,
@@ -187,6 +189,42 @@ export const DualDateRangePicker = React.forwardRef<
       setTempRange({ from: null, to: null });
       onChange({ from: null, to: null });
       setIsEditingEndDate(false);
+    };
+
+    const applyPreset = (preset: string) => {
+      const today = new Date();
+      let from: Date | null = null;
+      let to: Date | null = null;
+
+      switch (preset) {
+        case "today":
+          from = new Date(today);
+          to = new Date(today);
+          break;
+        case "last7days":
+          from = new Date(today);
+          from.setDate(today.getDate() - 6);
+          to = new Date(today);
+          break;
+        case "thisMonth":
+          from = new Date(today.getFullYear(), today.getMonth(), 1);
+          to = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of current month
+          break;
+        case "lastMonth":
+          from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+          to = new Date(today.getFullYear(), today.getMonth(), 0);
+          break;
+        default:
+          break;
+      }
+
+      if (from && to) {
+        setTempRange({ from, to });
+
+        // Update calendar view to show the selected range
+        setLeftMonth(new Date(from.getFullYear(), from.getMonth(), 1));
+        setRightMonth(new Date(from.getFullYear(), from.getMonth() + 1, 1));
+      }
     };
 
     const handleOk = () => {
@@ -328,6 +366,50 @@ export const DualDateRangePicker = React.forwardRef<
           >
             <div className="flex min-h-fit flex-col gap-4 p-2 pt-5 lg:p-4">
               <div className="flex flex-col lg:flex-row">
+                {showPresets && (
+                  <div className="flex flex-col border-r border-gray-200 p-4 pr-6">
+                    <div className="w-[150px]">
+                      <button
+                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
+                        onClick={() => applyPreset("today")}
+                      >
+                        Today
+                      </button>
+                      <div className="h-px w-full bg-gray-200"></div>
+
+                      <button
+                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
+                        onClick={() => applyPreset("last7days")}
+                      >
+                        Last 7 Days
+                      </button>
+                      <div className="h-px w-full bg-gray-200"></div>
+
+                      <button
+                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
+                        onClick={() => applyPreset("thisMonth")}
+                      >
+                        This Month
+                      </button>
+                      <div className="h-px w-full bg-gray-200"></div>
+
+                      <button
+                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
+                        onClick={() => applyPreset("lastMonth")}
+                      >
+                        Last Month
+                      </button>
+                      <div className="h-px w-full bg-gray-200"></div>
+
+                      <button
+                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
+                        onClick={() => handleClear()}
+                      >
+                        Custom
+                      </button>
+                    </div>
+                  </div>
+                )}
                 <div className="flex">
                   <button
                     className={cn(
@@ -430,11 +512,13 @@ export const DualDateRangePicker = React.forwardRef<
                   </button>
                 </div>
               </div>
-              <div className="sticky bottom-0 right-0 flex w-full justify-end gap-2 border-t bg-white p-2">
-                <Button variant="outline" onClick={handleClear}>
-                  Clear
-                </Button>
-                <Button onClick={handleOk}>OK</Button>
+              <div className="sticky bottom-0 right-0 flex w-full justify-end border-t bg-white p-2">
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={handleClear}>
+                    Clear
+                  </Button>
+                  <Button onClick={handleOk}>OK</Button>
+                </div>
               </div>
             </div>
           </div>

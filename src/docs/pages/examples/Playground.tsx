@@ -164,11 +164,30 @@ const PlaygroundPage = () => {
           </div>
           <div className="mb-4 space-y-4">
             <h2 className="font-semibold">Dual Date Range Picker Example</h2>
-            <DualDateRangePicker
-              value={dualDateRange}
-              onChange={setDualDateRange}
-              placeholder={{ from: "Start date", to: "End date" }}
-            />
+            <div className="flex flex-col gap-4">
+              <div>
+                <h3 className="mb-2 text-sm font-medium text-gray-700">
+                  With Presets
+                </h3>
+                <DualDateRangePicker
+                  value={dualDateRange}
+                  onChange={setDualDateRange}
+                  placeholder={{ from: "Start date", to: "End date" }}
+                  showPresets={true}
+                />
+              </div>
+              <div>
+                <h3 className="mb-2 text-sm font-medium text-gray-700">
+                  Without Presets
+                </h3>
+                <DualDateRangePicker
+                  value={dualDateRange}
+                  onChange={setDualDateRange}
+                  placeholder={{ from: "Start date", to: "End date" }}
+                  showPresets={false}
+                />
+              </div>
+            </div>
           </div>
           <div className="mb-4 space-y-4">
             <h2 className="font-semibold">Date Picker Example</h2>
