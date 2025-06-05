@@ -282,11 +282,15 @@ export const DualDateRangePicker = React.forwardRef<
     // For date selection, use the actual start date as minDate
     const rightMinDate = tempRange.from || minDate;
 
+    // Filter out showPresets from props to prevent it from being passed to the DOM
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    const { showPresets: _, ...domProps } = props as any;
+
     return (
       <div
         ref={ref}
         className={cn("relative inline-block", className)}
-        {...props}
+        {...domProps}
       >
         <div
           ref={triggerRef}
