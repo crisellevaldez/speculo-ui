@@ -194,28 +194,104 @@ export const DualDateRangePicker = React.forwardRef<
       setIsEditingEndDate(false);
     };
 
-    const applyPreset = (preset: string) => {
+    // Helper function to check if a date is before minDate
+    const isBeforeMinDate = (date: Date) => {
+      if (!minDate) return false;
+
+      const dateStartOfDay = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate(),
+        0,
+        0,
+        0,
+        0,
+      );
+
+      const minDateStartOfDay = new Date(
+        minDate.getFullYear(),
+        minDate.getMonth(),
+        minDate.getDate(),
+        0,
+        0,
+        0,
+        0,
+      );
+
+      return dateStartOfDay < minDateStartOfDay;
+    };
+
+    // Calculate preset dates and their validity based on minDate
+    const getPresetDates = React.useMemo(() => {
       const today = new Date();
+
+      // Today
+      const todayDate = new Date(today);
+      const isTodayValid = !isBeforeMinDate(todayDate);
+
+      // Last 7 days
+      const last7Start = new Date(today);
+      last7Start.setDate(today.getDate() - 6);
+      const isLast7Valid = !isBeforeMinDate(last7Start);
+
+      // This month
+      const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+      const isThisMonthValid = !isBeforeMinDate(thisMonthStart);
+
+      // Last month
+      const lastMonthStart = new Date(
+        today.getFullYear(),
+        today.getMonth() - 1,
+        1,
+      );
+      const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
+      const isLastMonthValid = !isBeforeMinDate(lastMonthStart);
+
+      return {
+        today: { from: todayDate, to: todayDate, isValid: isTodayValid },
+        last7days: { from: last7Start, to: today, isValid: isLast7Valid },
+        thisMonth: {
+          from: thisMonthStart,
+          to: new Date(today.getFullYear(), today.getMonth() + 1, 0),
+          isValid: isThisMonthValid,
+        },
+        lastMonth: {
+          from: lastMonthStart,
+          to: lastMonthEnd,
+          isValid: isLastMonthValid,
+        },
+      };
+    }, [minDate]);
+
+    const applyPreset = (preset: string) => {
+      const presets = getPresetDates;
       let from: Date | null = null;
       let to: Date | null = null;
 
       switch (preset) {
         case "today":
-          from = new Date(today);
-          to = new Date(today);
+          if (presets.today.isValid) {
+            from = presets.today.from;
+            to = presets.today.to;
+          }
           break;
         case "last7days":
-          from = new Date(today);
-          from.setDate(today.getDate() - 6);
-          to = new Date(today);
+          if (presets.last7days.isValid) {
+            from = presets.last7days.from;
+            to = presets.last7days.to;
+          }
           break;
         case "thisMonth":
-          from = new Date(today.getFullYear(), today.getMonth(), 1);
-          to = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of current month
+          if (presets.thisMonth.isValid) {
+            from = presets.thisMonth.from;
+            to = presets.thisMonth.to;
+          }
           break;
         case "lastMonth":
-          from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-          to = new Date(today.getFullYear(), today.getMonth(), 0);
+          if (presets.lastMonth.isValid) {
+            from = presets.lastMonth.from;
+            to = presets.lastMonth.to;
+          }
           break;
         default:
           break;
@@ -377,32 +453,67 @@ export const DualDateRangePicker = React.forwardRef<
                   <div className="flex flex-col border-r border-gray-200 p-4 pr-6">
                     <div className="w-[150px]">
                       <button
-                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
-                        onClick={() => applyPreset("today")}
+                        className={cn(
+                          "w-full py-2 text-left text-xs font-medium md:py-3 md:text-sm",
+                          getPresetDates.today.isValid
+                            ? "text-gray-800 hover:text-primary focus:text-primary active:text-primary"
+                            : "cursor-not-allowed text-gray-400",
+                        )}
+                        onClick={() =>
+                          getPresetDates.today.isValid && applyPreset("today")
+                        }
+                        disabled={!getPresetDates.today.isValid}
                       >
                         Today
                       </button>
                       <div className="h-px w-full bg-gray-200"></div>
 
                       <button
-                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
-                        onClick={() => applyPreset("last7days")}
+                        className={cn(
+                          "w-full py-2 text-left text-xs font-medium md:py-3 md:text-sm",
+                          getPresetDates.last7days.isValid
+                            ? "text-gray-800 hover:text-primary focus:text-primary active:text-primary"
+                            : "cursor-not-allowed text-gray-400",
+                        )}
+                        onClick={() =>
+                          getPresetDates.last7days.isValid &&
+                          applyPreset("last7days")
+                        }
+                        disabled={!getPresetDates.last7days.isValid}
                       >
                         Last 7 Days
                       </button>
                       <div className="h-px w-full bg-gray-200"></div>
 
                       <button
-                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
-                        onClick={() => applyPreset("thisMonth")}
+                        className={cn(
+                          "w-full py-2 text-left text-xs font-medium md:py-3 md:text-sm",
+                          getPresetDates.thisMonth.isValid
+                            ? "text-gray-800 hover:text-primary focus:text-primary active:text-primary"
+                            : "cursor-not-allowed text-gray-400",
+                        )}
+                        onClick={() =>
+                          getPresetDates.thisMonth.isValid &&
+                          applyPreset("thisMonth")
+                        }
+                        disabled={!getPresetDates.thisMonth.isValid}
                       >
                         This Month
                       </button>
                       <div className="h-px w-full bg-gray-200"></div>
 
                       <button
-                        className="w-full py-2 text-left text-xs font-medium text-gray-800 hover:text-primary focus:text-primary active:text-primary md:py-3 md:text-sm"
-                        onClick={() => applyPreset("lastMonth")}
+                        className={cn(
+                          "w-full py-2 text-left text-xs font-medium md:py-3 md:text-sm",
+                          getPresetDates.lastMonth.isValid
+                            ? "text-gray-800 hover:text-primary focus:text-primary active:text-primary"
+                            : "cursor-not-allowed text-gray-400",
+                        )}
+                        onClick={() =>
+                          getPresetDates.lastMonth.isValid &&
+                          applyPreset("lastMonth")
+                        }
+                        disabled={!getPresetDates.lastMonth.isValid}
                       >
                         Last Month
                       </button>

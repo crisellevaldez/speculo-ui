@@ -187,6 +187,38 @@ const PlaygroundPage = () => {
                   showPresets={false}
                 />
               </div>
+              <div>
+                <h3 className="mb-2 text-sm font-medium text-gray-700">
+                  With MinDate (15 days ago - disables Last Month)
+                </h3>
+                <DualDateRangePicker
+                  value={dualDateRange}
+                  onChange={setDualDateRange}
+                  placeholder={{ from: "Start date", to: "End date" }}
+                  showPresets={true}
+                  minDate={(() => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - 15);
+                    return date;
+                  })()}
+                />
+              </div>
+              <div>
+                <h3 className="mb-2 text-sm font-medium text-gray-700">
+                  With MinDate (3 days ago - disables Last Month & Last 7 Days)
+                </h3>
+                <DualDateRangePicker
+                  value={dualDateRange}
+                  onChange={setDualDateRange}
+                  placeholder={{ from: "Start date", to: "End date" }}
+                  showPresets={true}
+                  minDate={(() => {
+                    const date = new Date();
+                    date.setDate(date.getDate() - 3);
+                    return date;
+                  })()}
+                />
+              </div>
             </div>
           </div>
           <div className="mb-4 space-y-4">
