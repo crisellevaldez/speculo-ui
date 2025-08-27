@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "../../utils/cn";
+import { X } from "lucide-react";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -8,6 +9,8 @@ export interface InputProps
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   isLoading?: boolean;
+  clearable?: boolean;
+  onClear?: () => void;
 }
 
 export const Input = React.forwardRef<HTMLInputElement, InputProps>(
@@ -20,6 +23,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       endIcon,
       disabled,
       isLoading,
+      clearable = false,
+      onClear,
       ...props
     },
     ref,
@@ -28,20 +33,49 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       "shadow-sm block w-full border rounded-md border-gray-300 py-1.5 text-gray-900 text-sm " +
       "placeholder-gray-500 placeholder:text-sm focus:outline-none focus:ring-1 focus:ring-gray-400 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500";
 
+    const [inputValue, setInputValue] = useState(props.value || "");
+    const [showClearButton, setShowClearButton] = useState(false);
+
+    useEffect(() => {
+      setInputValue(props.value || "");
+      setShowClearButton(Boolean(props.value) && clearable);
+    }, [props.value, clearable]);
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value);
+      setShowClearButton(Boolean(e.target.value) && clearable);
+      props.onChange?.(e);
+    };
+
+    const handleClear = () => {
+      setInputValue("");
+      setShowClearButton(false);
+
+      // Create a synthetic event to trigger onChange
+      const syntheticEvent = {
+        target: { value: "" },
+      } as React.ChangeEvent<HTMLInputElement>;
+
+      props.onChange?.(syntheticEvent);
+      onClear?.();
+    };
+
     const errorStyles = error
       ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
       : "";
 
-    const iconWrapperStyles =
-      "absolute inset-y-0 flex items-center pointer-events-none";
-    const iconSpacing = "px-3"; // Consistent padding for icon containers
+    const iconWrapperStyles = "absolute inset-y-0 flex items-center";
+
+    const clearButtonStyles =
+      "absolute right-0 inset-y-0 flex items-center pr-3 cursor-pointer";
+    const iconSpacing = "px-2 md:px-3 lg:px-4"; // Responsive padding for icon containers
 
     const inputStyles = cn(
       baseStyles,
       errorStyles,
       className,
       startIcon ? "pl-9" : "pl-3",
-      endIcon || isLoading ? "pr-9" : "pr-3",
+      endIcon || isLoading || (clearable && showClearButton) ? "pr-9" : "pr-3",
     );
 
     return (
@@ -64,6 +98,8 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             disabled={disabled || isLoading}
             className={inputStyles}
+            value={inputValue}
+            onChange={handleChange}
             aria-invalid={error ? "true" : "false"}
             aria-describedby={
               error
@@ -76,7 +112,14 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
           />
 
           {isLoading ? (
-            <div className={cn(iconWrapperStyles, "right-0", iconSpacing)}>
+            <div
+              className={cn(
+                iconWrapperStyles,
+                "right-0",
+                iconSpacing,
+                "pointer-events-none",
+              )}
+            >
               <svg
                 className="h-4 w-4 animate-spin text-gray-500"
                 xmlns="http://www.w3.org/2000/svg"
@@ -98,6 +141,17 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                 />
               </svg>
             </div>
+          ) : clearable && showClearButton ? (
+            <div
+              className={clearButtonStyles}
+              onClick={handleClear}
+              role="button"
+              aria-label="Clear input"
+            >
+              <div className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300">
+                <X className="h-2 w-2" />
+              </div>
+            </div>
           ) : (
             endIcon && (
               <div
@@ -105,6 +159,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
                   iconWrapperStyles,
                   "right-0",
                   iconSpacing,
+                  "pointer-events-none",
                   error && "text-red-500",
                 )}
               >

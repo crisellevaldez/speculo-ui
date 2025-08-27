@@ -1,7 +1,7 @@
 {
   "name": "@crisellevaldez/speculo-ui",
   "private": false,
-  "version": "0.7.14",
+  "version": "0.7.16",
   "type": "module",
   "main": "./dist/speculo-ui.cjs",
   "module": "./dist/speculo-ui.mjs",
@@ -35,7 +35,8 @@
     "build:docs": "vite build --config vite.docs.config.ts",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "release": "npm run build && npm publish"
   },
   "peerDependencies": {
     "react": "^18.2.0",

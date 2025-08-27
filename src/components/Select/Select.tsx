@@ -140,7 +140,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const baseStyles =
       "relative w-full placeholder-gray-500 placeholder:text-sm";
     const triggerStyles = cn(
-      "flex min-h-[36px] w-full items-center justify-between rounded-md border bg-white px-3 py-1.5 text-sm border-gray-300 shadow-sm",
+      "flex max-h-[36px] w-full items-center justify-between rounded-md border bg-white px-3 py-1.5 text-sm border-gray-300 shadow-sm",
       (disabled || isLoading) && "cursor-not-allowed bg-gray-50",
       error
         ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
@@ -162,12 +162,22 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
           aria-disabled={disabled || isLoading}
           tabIndex={disabled || isLoading ? -1 : 0}
         >
-          <div className="flex flex-1 flex-wrap gap-1">
+          <div
+            className={cn(
+              "flex flex-1 flex-wrap gap-1",
+              multiple &&
+                selectedOptions.length > 3 &&
+                "speculo-scrollbar max-h-7 overflow-y-auto pr-1",
+              !multiple &&
+                selectedOptions.length > 0 &&
+                "speculo-scrollbar max-h-7 overflow-x-auto whitespace-nowrap",
+            )}
+          >
             {selectedOptions.length > 0 ? (
               selectedOptions.map((option) => (
                 <span
                   key={option.value}
-                  className="inline-flex items-center gap-1 rounded-md bg-gray-200 px-2 py-0.5 text-xs"
+                  className="inline-flex items-center gap-1 rounded-md bg-gray-200/80 px-2 py-0.5 text-xs"
                 >
                   {option.label}
                   {multiple && !isLoading && (
@@ -277,10 +287,9 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
               </div>
             )}
             <ul
-              className="flex-1 overflow-auto"
+              className="speculo-scrollbar flex-1 overflow-y-auto"
               role="listbox"
               aria-multiselectable={multiple}
-              style={{ scrollbarWidth: "thin" }}
             >
               {filteredOptions.map((option) => (
                 <li
