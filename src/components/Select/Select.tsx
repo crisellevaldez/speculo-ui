@@ -19,6 +19,7 @@ export interface SelectProps {
   searchable?: boolean;
   className?: string;
   renderOption?: (option: SelectOption) => React.ReactNode;
+  rows?: number; // Number of rows to display in the select component
 }
 
 export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
@@ -36,6 +37,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
       searchable = false,
       className,
       renderOption,
+      rows = 1, // Default to 1 row
     },
     ref,
   ) => {
@@ -140,7 +142,11 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
     const baseStyles =
       "relative w-full placeholder-gray-500 placeholder:text-sm";
     const triggerStyles = cn(
-      "flex max-h-[36px] w-full items-center justify-between rounded-md border bg-white px-3 py-1.5 text-sm border-gray-300 shadow-sm",
+      "flex w-full items-center justify-between rounded-md border bg-white px-3 py-1.5 text-sm border-gray-300 shadow-sm overflow-hidden",
+      rows === 1 && "max-h-[36px]",
+      rows === 2 && "max-h-[60px]",
+      rows === 3 && "max-h-[84px]",
+      rows > 3 && "max-h-[108px]",
       (disabled || isLoading) && "cursor-not-allowed bg-gray-50",
       error
         ? "border-red-500 focus:border-red-500 focus:ring-red-500 focus:ring-1"
@@ -164,13 +170,29 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
         >
           <div
             className={cn(
-              "flex flex-1 flex-wrap gap-1",
+              "relative flex flex-1 flex-wrap gap-1 bg-white",
               multiple &&
                 selectedOptions.length > 3 &&
-                "speculo-scrollbar max-h-7 overflow-y-auto pr-1",
+                "speculo-scrollbar z-[1] overflow-y-auto pr-1",
+              rows === 1 &&
+                multiple &&
+                selectedOptions.length > 3 &&
+                "max-h-[28px]",
+              rows === 2 &&
+                multiple &&
+                selectedOptions.length > 3 &&
+                "max-h-[52px]",
+              rows === 3 &&
+                multiple &&
+                selectedOptions.length > 3 &&
+                "max-h-[76px]",
+              rows > 3 &&
+                multiple &&
+                selectedOptions.length > 3 &&
+                "max-h-[100px]",
               !multiple &&
                 selectedOptions.length > 0 &&
-                "speculo-scrollbar max-h-7 overflow-x-auto whitespace-nowrap",
+                "speculo-scrollbar z-[1] max-h-7 overflow-x-auto whitespace-nowrap",
             )}
           >
             {selectedOptions.length > 0 ? (
@@ -271,7 +293,7 @@ export const Select = React.forwardRef<HTMLDivElement, SelectProps>(
               })(),
               width: buttonRef.current?.getBoundingClientRect().width + "px",
             }}
-            className="z-[9999] flex max-h-[320px] flex-col rounded-md border border-gray-200 bg-white shadow-lg"
+            className="z-[9999] flex max-h-[320px] flex-col overflow-hidden rounded-md border border-gray-200 bg-white shadow-lg"
           >
             {searchable && (
               <div className="p-2">

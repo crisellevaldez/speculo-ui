@@ -28,6 +28,18 @@ export function FormComponentsGroup() {
   const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
   const [selectedSkill, setSelectedSkill] = useState<string>("");
   const [selectedLongOption, setSelectedLongOption] = useState<string>("");
+  const [selectedMultiRowSkills, setSelectedMultiRowSkills] = useState<
+    string[]
+  >([
+    "html",
+    "css",
+    "javascript",
+    "react",
+    "typescript",
+    "node",
+    "python",
+    "java",
+  ]);
 
   const people = [
     { value: "1", label: "John Doe" },
@@ -231,6 +243,39 @@ export function FormComponentsGroup() {
             <p className="mt-2 text-sm text-gray-500">
               This example shows how the component handles options with very
               long text using horizontal scrolling.
+            </p>
+          </Form.Control>
+
+          <Form.Control>
+            <Form.Label>Fixed Width with Multiple Rows</Form.Label>
+            <div className="w-64">
+              <Select
+                options={skills}
+                value={selectedMultiRowSkills}
+                onChange={(value) =>
+                  setSelectedMultiRowSkills(value as string[])
+                }
+                placeholder="Select skills..."
+                multiple
+                searchable
+                rows={3}
+              />
+            </div>
+            <p className="mt-2 text-sm text-gray-500">
+              Selected:{" "}
+              {selectedMultiRowSkills.length > 0
+                ? skills
+                    .filter((skill) =>
+                      selectedMultiRowSkills.includes(skill.value),
+                    )
+                    .map((skill) => skill.label)
+                    .join(", ")
+                : "None"}
+            </p>
+            <p className="mt-2 text-sm text-gray-500">
+              This example shows how the component handles many selected options
+              with the <code>rows={3}</code> prop, which allows the select to
+              display 3 rows of selected options before scrolling.
             </p>
           </Form.Control>
         </div>
