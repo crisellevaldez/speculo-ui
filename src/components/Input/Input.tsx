@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { cn } from "../../utils/cn";
-import { X } from "lucide-react";
+import { XCircle } from "lucide-react";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -52,11 +52,23 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
       setShowClearButton(false);
 
       // Create a synthetic event to trigger onChange
-      const syntheticEvent = {
-        target: { value: "" },
-      } as React.ChangeEvent<HTMLInputElement>;
+      // Use a proper Event object to ensure compatibility with react-hook-form
+      if (ref && "current" in ref && ref.current) {
+        ref.current.value = "";
+        // Dispatch both input and change events to ensure all listeners are triggered
+        const inputEvent = new Event("input", { bubbles: true });
+        ref.current.dispatchEvent(inputEvent);
 
-      props.onChange?.(syntheticEvent);
+        const changeEvent = new Event("change", { bubbles: true });
+        ref.current.dispatchEvent(changeEvent);
+      } else {
+        // Fallback to synthetic event if ref is not available
+        const syntheticEvent = {
+          target: { value: "" },
+        } as React.ChangeEvent<HTMLInputElement>;
+        props.onChange?.(syntheticEvent);
+      }
+
       onClear?.();
     };
 
@@ -148,9 +160,7 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
               role="button"
               aria-label="Clear input"
             >
-              <div className="flex h-3.5 w-3.5 items-center justify-center rounded-full bg-gray-200 text-gray-500 hover:bg-gray-300">
-                <X className="h-2 w-2" />
-              </div>
+              <XCircle className="h-4 w-4 text-gray-400 hover:text-gray-600" />
             </div>
           ) : (
             endIcon && (

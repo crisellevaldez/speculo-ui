@@ -10,6 +10,7 @@ import { Form } from "../../../../components/Form/Form";
 import { Input } from "../../../../components/Input/Input";
 import { Select } from "../../../../components/Select/Select";
 import { Typography } from "../../../../components/Typography/Typography";
+import { InputClearableTest } from "./InputClearableTest";
 
 export function FormComponentsGroup() {
   // State for DatePicker
@@ -112,6 +113,14 @@ export function FormComponentsGroup() {
             <Input placeholder="Error" error="This field is required" />
           </Form.Control>
         </div>
+      </div>
+
+      {/* Clearable Input Test */}
+      <div className="space-y-6">
+        <Typography variant="h2">
+          Clearable Input Test (Fixed Version)
+        </Typography>
+        <InputClearableTest />
       </div>
 
       {/* Checkbox */}
