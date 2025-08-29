@@ -365,7 +365,7 @@ export const DualDateRangePicker = React.forwardRef<
     return (
       <div
         ref={ref}
-        className={cn("relative inline-block", className)}
+        className={cn("relative inline-block flex items-center", className)}
         {...domProps}
       >
         <div
@@ -377,7 +377,7 @@ export const DualDateRangePicker = React.forwardRef<
             onClick={handleStartClick}
             disabled={disabled || isLoading}
             className={cn(
-              "flex h-10 items-center px-3 py-1.5",
+              "flex h-8 items-center px-3 py-1.5",
               "text-sm ring-offset-background placeholder:text-gray-500",
               "focus:outline-none focus:ring-0",
               "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",
@@ -397,7 +397,7 @@ export const DualDateRangePicker = React.forwardRef<
               </span>
             </div>
           </button>
-          <div className="flex h-10 items-center">
+          <div className="flex h-8 items-center">
             <span className="select-none px-1 text-sm text-gray-500">-</span>
           </div>
           <button
@@ -405,7 +405,7 @@ export const DualDateRangePicker = React.forwardRef<
             onClick={handleEndClick}
             disabled={disabled || isLoading}
             className={cn(
-              "flex h-10 items-center px-3 py-1.5",
+              "flex h-8 items-center px-3 py-1.5",
               "text-sm ring-offset-background placeholder:text-gray-500",
               "focus:outline-none focus:ring-0",
               "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",

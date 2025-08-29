@@ -6,11 +6,11 @@ import {
   DateRangePicker,
   DateRange,
 } from "../../../../components/DateRangePicker/DateRangePicker";
+import { DualDateRangePicker } from "../../../../components/DualDateRangePicker/DualDateRangePicker";
 import { Form } from "../../../../components/Form/Form";
 import { Input } from "../../../../components/Input/Input";
 import { Select } from "../../../../components/Select/Select";
 import { Typography } from "../../../../components/Typography/Typography";
-import { InputClearableTest } from "./InputClearableTest";
 
 export function FormComponentsGroup() {
   // State for DatePicker
@@ -21,6 +21,19 @@ export function FormComponentsGroup() {
     from: new Date(2024, 11, 22), // December 22, 2024
     to: new Date(2025, 0, 4), // January 4, 2025
   });
+
+  // State for DualDateRangePicker
+  const [dualDateRange, setDualDateRange] = useState<{
+    from: Date | null;
+    to: Date | null;
+  }>({
+    from: new Date(2024, 11, 22), // December 22, 2024
+    to: new Date(2025, 0, 4), // January 4, 2025
+  });
+
+  // State for combined row components
+  const [selectedOption, setSelectedOption] = useState<string>("");
+  const [inputValue, setInputValue] = useState<string>("");
 
   // State for ComboBox
   const [selectedPerson, setSelectedPerson] = useState<string | string[]>("");
@@ -100,7 +113,6 @@ export function FormComponentsGroup() {
             <Form.Label>Clearable Input</Form.Label>
             <Input
               placeholder="Type to see clear button..."
-              clearable
               defaultValue="This input can be cleared"
             />
           </Form.Control>
@@ -113,14 +125,6 @@ export function FormComponentsGroup() {
             <Input placeholder="Error" error="This field is required" />
           </Form.Control>
         </div>
-      </div>
-
-      {/* Clearable Input Test */}
-      <div className="space-y-6">
-        <Typography variant="h2">
-          Clearable Input Test (Fixed Version)
-        </Typography>
-        <InputClearableTest />
       </div>
 
       {/* Checkbox */}
@@ -323,6 +327,68 @@ export function FormComponentsGroup() {
               placeholder={{ from: "Start date", to: "End date" }}
             />
           </Form.Control>
+        </div>
+      </div>
+
+      {/* Input, Select and DualDateRangePicker in one row */}
+      <div className="space-y-6">
+        <Typography variant="h2">
+          Input, Select and DualDateRangePicker in One Row
+        </Typography>
+        <div className="space-y-4">
+          <div className="flex flex-col gap-4 md:flex-row">
+            <div className="w-full md:w-1/3">
+              <Form.Control>
+                <Form.Label>Input Field</Form.Label>
+                <Input
+                  placeholder="Type something..."
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                />
+              </Form.Control>
+            </div>
+            <div className="w-full md:w-1/3">
+              <Form.Control>
+                <Form.Label>Select Option</Form.Label>
+                <Select
+                  options={skills}
+                  value={selectedOption}
+                  onChange={(value) => setSelectedOption(value as string)}
+                  placeholder="Choose an option"
+                  searchable
+                />
+              </Form.Control>
+            </div>
+            <div className="w-full md:w-1/3">
+              <Form.Control>
+                <Form.Label>Date Range</Form.Label>
+                <DualDateRangePicker
+                  value={dualDateRange}
+                  onChange={setDualDateRange}
+                  placeholder={{ from: "Start date", to: "End date" }}
+                />
+              </Form.Control>
+            </div>
+          </div>
+          <div className="mt-2 text-sm text-gray-500">
+            <p>
+              This example shows how to place an Input, Select, and
+              DualDateRangePicker component in a single row that stacks on
+              mobile.
+            </p>
+            <p className="mt-1">Input value: {inputValue || "None"}</p>
+            <p className="mt-1">
+              Selected option:{" "}
+              {selectedOption
+                ? skills.find((skill) => skill.value === selectedOption)?.label
+                : "None"}
+            </p>
+            <p className="mt-1">
+              Selected date range:{" "}
+              {dualDateRange.from?.toLocaleDateString() || "None"} to{" "}
+              {dualDateRange.to?.toLocaleDateString() || "None"}
+            </p>
+          </div>
         </div>
       </div>
     </div>
